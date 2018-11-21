@@ -1,0 +1,1160 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="S7CcF76Y3WPq3DKyOvsZGmSEALaSes364lNi0PMvhh4" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="机器学习,XGBoost,数据竞赛,原理," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Niu Code" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/default_avatar.jpg?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="前言
+做过数据竞赛的同学对XGBoost肯定不会陌生，它在各类竞赛中大放异彩。它比GBDT有着更快的运行速度以及更高的准确率。在许多Kaggle以及天池竞赛中，第一名的队伍都使用了XGBoost。它无论在分类还是回归问题上都有卓越的表现。
+我们可能只会用XGBoost，但是对其内部实现确不清楚，为了能够更深入地了解算法细节，本人阅读了作者的论文XGBoost: A Scalable Tree Bo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="XGBoost笔记">
+<meta property="og:url" content="https://tianle.me/2018/01/09/xgboost-note/index.html">
+<meta property="og:site_name" content="Niu Code">
+<meta property="og:description" content="前言
+做过数据竞赛的同学对XGBoost肯定不会陌生，它在各类竞赛中大放异彩。它比GBDT有着更快的运行速度以及更高的准确率。在许多Kaggle以及天池竞赛中，第一名的队伍都使用了XGBoost。它无论在分类还是回归问题上都有卓越的表现。
+我们可能只会用XGBoost，但是对其内部实现确不清楚，为了能够更深入地了解算法细节，本人阅读了作者的论文XGBoost: A Scalable Tree Bo">
+<meta property="og:image" content="https://tianle.me//img.tianle.me/image/20180109/f1.png">
+<meta property="og:image" content="https://tianle.me//img.tianle.me/image/20180109/f2.png">
+<meta property="og:image" content="https://tianle.me//img.tianle.me/image/20180109/f3.png">
+<meta property="og:image" content="https://tianle.me//img.tianle.me/image/20180109/f11.png">
+<meta property="og:image" content="https://tianle.me//img.tianle.me/image/20180109/f4.png">
+<meta property="og:image" content="https://tianle.me//img.tianle.me/image/20180109/f5.png">
+<meta property="og:image" content="https://tianle.me//img.tianle.me/image/20180109/f6.png">
+<meta property="og:image" content="https://tianle.me//img.tianle.me/image/20180109/f7.png">
+<meta property="og:image" content="https://tianle.me//img.tianle.me/image/20180109/f8.png">
+<meta property="og:image" content="https://tianle.me//img.tianle.me/image/20180109/f9.png">
+<meta property="og:image" content="https://tianle.me//img.tianle.me/image/20180109/f10.png">
+<meta property="og:image" content="https://tianle.me//img.tianle.me/image/20180109/f12.png">
+<meta property="og:image" content="https://tianle.me//img.tianle.me/image/20180109/f14.png">
+<meta property="og:image" content="https://tianle.me//img.tianle.me/image/20180109/f15.png">
+<meta property="og:image" content="https://tianle.me//img.tianle.me/image/20180109/f16.png">
+<meta property="og:image" content="https://tianle.me//img.tianle.me/image/20180109/f13.png">
+<meta property="og:updated_time" content="2018-06-26T10:57:31.128Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="XGBoost笔记">
+<meta name="twitter:description" content="前言
+做过数据竞赛的同学对XGBoost肯定不会陌生，它在各类竞赛中大放异彩。它比GBDT有着更快的运行速度以及更高的准确率。在许多Kaggle以及天池竞赛中，第一名的队伍都使用了XGBoost。它无论在分类还是回归问题上都有卓越的表现。
+我们可能只会用XGBoost，但是对其内部实现确不清楚，为了能够更深入地了解算法细节，本人阅读了作者的论文XGBoost: A Scalable Tree Bo">
+<meta name="twitter:image" content="https://tianle.me//img.tianle.me/image/20180109/f1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tianle.me/2018/01/09/xgboost-note/"/>
+
+
+
+
+
+  <title> XGBoost笔记 | Niu Code </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-71583311-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Niu Code</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">南山小马</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://tianle.me/2018/01/09/xgboost-note/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tianle Zhang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/title.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Niu Code">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                XGBoost笔记
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-09T13:54:08+08:00">
+                2018-01-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/算法/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/01/09/xgboost-note/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/01/09/xgboost-note/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="&#x524D;&#x8A00;">&#x524D;&#x8A00; <a href="#&#x524D;&#x8A00;" class="header-anchor"> </a></h2>
+<p>&#x505A;&#x8FC7;&#x6570;&#x636E;&#x7ADE;&#x8D5B;&#x7684;&#x540C;&#x5B66;&#x5BF9;XGBoost&#x80AF;&#x5B9A;&#x4E0D;&#x4F1A;&#x964C;&#x751F;&#xFF0C;&#x5B83;&#x5728;&#x5404;&#x7C7B;&#x7ADE;&#x8D5B;&#x4E2D;&#x5927;&#x653E;&#x5F02;&#x5F69;&#x3002;&#x5B83;&#x6BD4;GBDT&#x6709;&#x7740;&#x66F4;&#x5FEB;&#x7684;&#x8FD0;&#x884C;&#x901F;&#x5EA6;&#x4EE5;&#x53CA;&#x66F4;&#x9AD8;&#x7684;&#x51C6;&#x786E;&#x7387;&#x3002;&#x5728;&#x8BB8;&#x591A;Kaggle&#x4EE5;&#x53CA;&#x5929;&#x6C60;&#x7ADE;&#x8D5B;&#x4E2D;&#xFF0C;&#x7B2C;&#x4E00;&#x540D;&#x7684;&#x961F;&#x4F0D;&#x90FD;&#x4F7F;&#x7528;&#x4E86;XGBoost&#x3002;&#x5B83;&#x65E0;&#x8BBA;&#x5728;&#x5206;&#x7C7B;&#x8FD8;&#x662F;&#x56DE;&#x5F52;&#x95EE;&#x9898;&#x4E0A;&#x90FD;&#x6709;&#x5353;&#x8D8A;&#x7684;&#x8868;&#x73B0;&#x3002;<br>
+&#x6211;&#x4EEC;&#x53EF;&#x80FD;&#x53EA;&#x4F1A;&#x7528;XGBoost&#xFF0C;&#x4F46;&#x662F;&#x5BF9;&#x5176;&#x5185;&#x90E8;&#x5B9E;&#x73B0;&#x786E;&#x4E0D;&#x6E05;&#x695A;&#xFF0C;&#x4E3A;&#x4E86;&#x80FD;&#x591F;&#x66F4;&#x6DF1;&#x5165;&#x5730;&#x4E86;&#x89E3;&#x7B97;&#x6CD5;&#x7EC6;&#x8282;&#xFF0C;&#x672C;&#x4EBA;&#x9605;&#x8BFB;&#x4E86;&#x4F5C;&#x8005;&#x7684;&#x8BBA;&#x6587;<a href="https://arxiv.org/abs/1603.02754" target="_blank" rel="external">XGBoost: A Scalable Tree Boosting System</a> &#xFF0C;&#x5E76;&#x53C2;&#x8003;&#x5176;&#x4ED6;&#x8D44;&#x6599;&#xFF0C;&#x5B8C;&#x6210;&#x672C;&#x6587;&#x3002;</p>
+<a id="more"></a>
+<h2 id="&#x63D0;&#x5347;&#x6811;&#x4ECB;&#x7ECD;">&#x63D0;&#x5347;&#x6811;&#x4ECB;&#x7ECD; <a href="#&#x63D0;&#x5347;&#x6811;&#x4ECB;&#x7ECD;" class="header-anchor"> </a></h2>
+<h3 id="&#x96C6;&#x5408;&#x6811;&#x7684;&#x8BA1;&#x7B97;&#x65B9;&#x6CD5;">&#x96C6;&#x5408;&#x6811;&#x7684;&#x8BA1;&#x7B97;&#x65B9;&#x6CD5; <a href="#&#x96C6;&#x5408;&#x6811;&#x7684;&#x8BA1;&#x7B97;&#x65B9;&#x6CD5;" class="header-anchor"> </a></h3>
+<p>&#x7ED9;&#x5B9A;<code>m</code>&#x7EF4;&#x7684;<code>n</code>&#x4E2A;&#x6570;&#x636E;</p>
+$$D = \{ ({{\mathbf{x}}_i},{y_i})\} (\left| D \right| = n,{{\mathbf{x}}_i} \in {\mathbb{R}^m},{y_i} \in \mathbb{R})$$
+<p>&#x6811;&#x7684;&#x96C6;&#x6210;&#x65B9;&#x6CD5;&#x4F7F;&#x7528;<code>K</code>&#x4E2A;&#x65B9;&#x7A0B;&#x6765;&#x9884;&#x6D4B;&#x8F93;&#x51FA;&#xFF0C;&#x4E5F;&#x5C31;&#x662F;&#x628A;&#x5404;&#x4E2A;&#x6811;&#x7684;&#x9884;&#x6D4B;&#x7ED3;&#x679C;&#x7D2F;&#x52A0;&#x4F5C;&#x4E3A;&#x7B97;&#x6CD5;&#x7684;&#x6700;&#x7EC8;&#x7ED3;&#x679C;&#x3002;
+<img src="//img.tianle.me/image/20180109/f1.png" alt="image"><br>
+<code>F</code>&#x8868;&#x793A;&#x56DE;&#x5F52;&#x6811;&#x7684;&#x6A21;&#x578B;&#xFF08;&#x5982;&#xFF1A;CART&#xFF09;&#xFF0C;&#x4E00;&#x4E2A;&#x56DE;&#x5F52;&#x6811;&#x5BF9;&#x5E94;&#x7740;&#x8F93;&#x5165;&#x7A7A;&#x95F4;&#xFF08;&#x5373;&#x7279;&#x5F81;&#x7A7A;&#x95F4;&#xFF09;&#x7684;&#x4E00;&#x4E2A;&#x5212;&#x5206;&#x4EE5;&#x53CA;&#x5728;&#x5212;&#x5206;&#x5355;&#x5143;&#x4E0A;&#x8F93;&#x51FA;&#x503C;&#x3002;<br>
+<code>q</code>&#x8868;&#x793A;&#x6BCF;&#x4E00;&#x68F5;&#x6811;&#x7684;&#x7ED3;&#x6784;&#xFF0C;&#x4E5F;&#x5C31;&#x662F;&#x6BCF;&#x4E00;&#x4E2A;&#x6570;&#x636E;&#x6620;&#x5C04;&#x5230;&#x53F6;&#x5B50;&#x7D22;&#x5F15;&#x4E0A;&#x3002;<code>T</code>&#x662F;&#x6811;&#x7684;&#x53F6;&#x5B50;&#x6570;&#x76EE;&#x3002;&#x6BCF;&#x4E00;&#x4E2A;$f_k$&#x5BF9;&#x5E94;&#x7740;&#x4E00;&#x68F5;&#x72EC;&#x7ACB;&#x7684;&#x6811;
+<img src="//img.tianle.me/image/20180109/f2.png" alt="image"><br>
+&#x4E0A;&#x56FE;&#x5C55;&#x793A;&#x4E86;&#x6811;&#x96C6;&#x6210;&#x6A21;&#x578B;&#x7684;&#x8BA1;&#x7B97;&#x65B9;&#x6CD5;&#x3002;&#x63D0;&#x5347;&#x65B9;&#x6CD5;&#x5B9E;&#x9645;&#x91C7;&#x7528;&#x52A0;&#x6CD5;&#x6A21;&#x578B;&#xFF08;&#x5373;&#x57FA;&#x51FD;&#x6570;&#x7684;&#x7EBF;&#x6027;&#x7EC4;&#x5408;&#xFF09;&#x4E0E;&#x524D;&#x5411;&#x5206;&#x5E03;&#x7B97;&#x6CD5;&#x3002;&#x4EE5;&#x51B3;&#x7B56;&#x6811;&#x4E3A;&#x57FA;&#x51FD;&#x6570;&#x7684;&#x63D0;&#x5347;&#x65B9;&#x6CD5;&#x79F0;&#x4E3A;&#x63D0;&#x5347;&#x6811;&#xFF08;boosting tree)&#x3002;&#x5BF9;&#x5206;&#x7C7B;&#x95EE;&#x9898;&#x51B3;&#x7B56;&#x6811;&#x662F;&#x4E8C;&#x53C9;&#x5206;&#x7C7B;&#x6811;&#xFF0C;&#x5BF9;&#x56DE;&#x5F52;&#x95EE;&#x9898;&#x51B3;&#x7B56;&#x6811;&#x662F;&#x4E8C;&#x53C9;&#x51B3;&#x7B56;&#x6811;&#x3002;&#x63D0;&#x5347;&#x6811;&#x6A21;&#x578B;&#x53EF;&#x4EE5;&#x8868;&#x793A;&#x4E3A;&#x51B3;&#x7B56;&#x6811;&#x7684;&#x52A0;&#x6CD5;&#x6A21;&#x578B;&#x3002;</p>
+<h3 id="&#x6B63;&#x5219;&#x5316;&#x5B66;&#x4E60;&#x76EE;&#x6807;">&#x6B63;&#x5219;&#x5316;&#x5B66;&#x4E60;&#x76EE;&#x6807; <a href="#&#x6B63;&#x5219;&#x5316;&#x5B66;&#x4E60;&#x76EE;&#x6807;" class="header-anchor"> </a></h3>
+<p>&#x4E3A;&#x4E86;&#x5B66;&#x4E60;&#x6811;&#x6A21;&#x578B;&#x4E2D;&#x7684;&#x53C2;&#x6570;&#xFF0C;&#x6784;&#x9020;&#x4E86;&#x5982;&#x4E0B;&#x5E26;&#x6709;&#x6B63;&#x5219;&#x5316;&#x9879;&#x7684;&#x76EE;&#x6807;&#x51FD;&#x6570;&#xFF1A;<br>
+<img src="//img.tianle.me/image/20180109/f3.png" alt="image"><br>
+&#x5176;&#x4E2D;<code>l</code>&#x4E3A;&#x51F8;&#x7684;&#x635F;&#x5931;&#x51FD;&#x6570;&#xFF0C;<code>omega</code>&#x4E3A;&#x6A21;&#x578B;&#x590D;&#x6742;&#x5EA6;&#x7684;&#x4EE3;&#x4EF7;&#x51FD;&#x6570;&#xFF0C;&#x53EF;&#x4EE5;&#x51CF;&#x5C11;&#x8FC7;&#x62DF;&#x5408;&#x7684;&#x98CE;&#x9669;&#x3002;</p>
+<h3 id="&#x68AF;&#x5EA6;&#x63D0;&#x5347;&#x6811;">&#x68AF;&#x5EA6;&#x63D0;&#x5347;&#x6811; <a href="#&#x68AF;&#x5EA6;&#x63D0;&#x5347;&#x6811;" class="header-anchor"> </a></h3>
+<p>&#x63D0;&#x5347;&#x6811;&#x91C7;&#x7528;&#x5411;&#x524D;&#x5206;&#x6B65;&#x7B97;&#x6CD5;&#xFF0C;&#x9996;&#x5148;&#x786E;&#x5B9A;&#x521D;&#x59CB;&#x63D0;&#x5347;&#x6811;${y_0} = 0$&#xFF0C;&#x7B2C;<code>t</code>&#x6B65;&#x7684;&#x6A21;&#x578B;&#x662F;${y_t} = {y_{t - 1}} + {f_t}({\mathbf{x}})$ &#x5176;&#x4E2D;&#xFF0C;${y_{t - 1}}$&#x4E3A;&#x5F53;&#x524D;&#x6A21;&#x578B;&#x3002;<br>
+<img src="//img.tianle.me/image/20180109/f11.png" alt="image"><br>
+&#x901A;&#x8FC7;&#x7ECF;&#x9A8C;&#x98CE;&#x9669;&#x6781;&#x5C0F;&#x5316;&#x786E;&#x5B9A;&#x4E0B;&#x4E00;&#x68F5;&#x51B3;&#x7B56;&#x6811;&#x7684;&#x53C2;&#x6570;<code>q</code>&#xFF0C;&#x6784;&#x9020;&#x5982;&#x4E0B;&#x7684;&#x635F;&#x5931;&#x51FD;&#x6570;&#xFF1A;<br>
+<img src="//img.tianle.me/image/20180109/f4.png" alt="image"><br>
+&#x8FD9;&#x610F;&#x5473;&#x7740;&#xFF0C;&#x6211;&#x4EEC;&#x53EF;&#x4EE5;&#x901A;&#x8FC7;&#x4E0D;&#x65AD;&#x6DFB;&#x52A0;${f_t}$&#x6765;&#x4F18;&#x5316;&#x4E0A;&#x9762;&#x7684;&#x635F;&#x5931;&#x51FD;&#x6570;&#x3002;&#x4E8C;&#x9636;&#x76F8;&#x4F3C;&#x6027;&#x53EF;&#x4EE5;&#x5FEB;&#x901F;&#x7684;&#x4F18;&#x5316;&#x635F;&#x5931;&#x51FD;&#x6570;&#x3002;<br>
+<img src="//img.tianle.me/image/20180109/f5.png" alt="image"><br>
+&#x53BB;&#x6389;&#x5E38;&#x6570;&#x9879;&#xFF0C;&#x5316;&#x7B80;&#x4E3A;&#xFF1A;<br>
+<img src="//img.tianle.me/image/20180109/f6.png" alt="image"><br>
+&#x6700;&#x540E;&#xFF0C;&#x567C;&#x91CC;&#x556A;&#x5566;&#x4E00;&#x987F;&#x64CD;&#x4F5C;&#x5F97;&#x5230;&#x7EA2;&#x6846;&#x4E2D;&#x7684;&#x516C;&#x5F0F;&#xFF1A;<br>
+<img src="//img.tianle.me/image/20180109/f7.png" alt="image"><br>
+&#x7EA2;&#x6846;&#x4E2D;&#x7684;&#x5F0F;&#x5B50;&#x53EF;&#x4EE5;&#x88AB;&#x7528;&#x6765;&#x8861;&#x91CF;&#x6811;&#x7ED3;&#x6784;<code>q</code>&#x3002;<br>
+&#x51B3;&#x7B56;&#x6811;&#x9700;&#x8981;&#x627E;&#x5230;&#x4E00;&#x4E2A;&#x6700;&#x4F18;&#x7684;&#x5207;&#x5206;&#x53D8;&#x91CF;&#x548C;&#x5207;&#x5206;&#x70B9;&#xFF0C;&#x4EE4;$I = {I_L} \cup {I_R}$&#xFF0C;$I_L$ &#x548C; $I_L$ &#x4E3A;&#x67D0;&#x4E2A;&#x5B9E;&#x4F8B;&#x96C6;&#x5408;&#x5B8C;&#x6210;&#x5207;&#x5206;&#x540E;&#x7684;&#x4E24;&#x4E2A;&#x8282;&#x70B9;&#x3002;&#x90A3;&#x4E48;&#x5B83;&#x7684;&#x635F;&#x5931;&#x51CF;&#x5C11;&#x91CF;&#x53EF;&#x4EE5;&#x7531;&#x4E0B;&#x5F0F;&#x8868;&#x793A;&#xFF1A;<br>
+<img src="//img.tianle.me/image/20180109/f8.png" alt="image"></p>
+<h3 id="&#x526A;&#x679D;&#x548C;&#x5217;&#x91C7;&#x6837;">&#x526A;&#x679D;&#x548C;&#x5217;&#x91C7;&#x6837; <a href="#&#x526A;&#x679D;&#x548C;&#x5217;&#x91C7;&#x6837;" class="header-anchor"> </a></h3>
+<p>&#x4E0A;&#x9762;&#x7684;&#x76EE;&#x6807;&#x51FD;&#x6570;&#x53EF;&#x4EE5;&#x901A;&#x8FC7;&#x6DFB;&#x52A0;&#x6B63;&#x5219;&#x5316;&#x9879;&#x6765;&#x51CF;&#x5C11;&#x8FC7;&#x62DF;&#x5408;&#xFF0C;&#x540C;&#x6837;&#x5728;&#x5F88;&#x591A;&#x7B97;&#x6CD5;&#x4E2D;&#x8FD8;&#x4F7F;&#x7528;&#x4E86;&#x526A;&#x679D;&#x548C;&#x5217;&#x91C7;&#x6837;&#x7684;&#x65B9;&#x5F0F;&#x6765;&#x51CF;&#x5C11;&#x8FC7;&#x62DF;&#x5408;&#x3002;</p>
+<h2 id="&#x5207;&#x5206;&#x70B9;&#x67E5;&#x627E;&#x7B97;&#x6CD5;">&#x5207;&#x5206;&#x70B9;&#x67E5;&#x627E;&#x7B97;&#x6CD5; <a href="#&#x5207;&#x5206;&#x70B9;&#x67E5;&#x627E;&#x7B97;&#x6CD5;" class="header-anchor"> </a></h2>
+<h3 id="&#x4F20;&#x7EDF;&#x7684;&#x7CBE;&#x786E;&#x8D2A;&#x5FC3;&#x7B97;&#x6CD5;basic-exact-greedy-algorithm">&#x4F20;&#x7EDF;&#x7684;&#x7CBE;&#x786E;&#x8D2A;&#x5FC3;&#x7B97;&#x6CD5;&#xFF08;Basic Exact Greedy Algorithm&#xFF09; <a href="#&#x4F20;&#x7EDF;&#x7684;&#x7CBE;&#x786E;&#x8D2A;&#x5FC3;&#x7B97;&#x6CD5;basic-exact-greedy-algorithm" class="header-anchor"> </a></h3>
+<p>&#x5728;&#x4E00;&#x822C;&#x7684;&#x7B97;&#x6CD5;&#x4E2D;&#xFF0C;&#x5982;sklearn&#xFF0C;&#x4EE5;&#x53CA;R&#x8BED;&#x97F3;&#x7684;gbm&#xFF0C;&#x4EE5;&#x53CA;&#x7B80;&#x5355;&#x7248;&#x672C;&#x7684;xgboost&#x90FD;&#x4F7F;&#x7528;&#x8FD9;&#x4E00;&#x65B9;&#x6CD5;&#x3002;&#x5B83;&#x9700;&#x8981;&#x8D2A;&#x5FC3;&#x5730;&#x53BB;&#x904D;&#x5386;&#x6BCF;&#x4E00;&#x4E2A;&#x53EF;&#x80FD;&#x7684;&#x5207;&#x5206;&#x70B9;&#xFF0C;&#x7136;&#x540E;&#x901A;&#x8FC7; &#x5F0F;(7) &#x6765;&#x627E;&#x5230;&#x6700;&#x4F18;&#x7684;&#x5207;&#x5206;&#x70B9;&#x3002;&#x4E3A;&#x4E86;&#x63D0;&#x9AD8;&#x6548;&#x7387;&#xFF0C;&#x7B97;&#x6CD5;&#x5FC5;&#x987B;&#x5148;&#x5BF9;&#x7279;&#x5F81;&#x7684;&#x503C;&#x8FDB;&#x884C;&#x4E00;&#x4E2A;&#x6392;&#x5E8F;&#xFF0C;&#x7136;&#x540E;&#x904D;&#x5386;&#x8FD9;&#x4E2A;&#x6709;&#x5E8F;&#x7684;&#x7279;&#x5F81;&#x503C;&#xFF0C;&#x8BA1;&#x7B97;&#x4ED6;&#x4EEC;&#x7684;&#x7D2F;&#x8BA1;&#x68AF;&#x5EA6;&#x503C;&#xFF0C;&#x4ECE;&#x800C;&#x5F97;&#x5230;&#x6700;&#x5927;&#x7684;&#x635F;&#x5931;&#x964D;&#x4F4E;&#x91CF;&#xFF0C;&#x5177;&#x4F53;&#x7B97;&#x6CD5;&#x5982;&#x4E0B;&#x56FE;&#x6240;&#x793A;&#xFF1A;<br>
+<img src="//img.tianle.me/image/20180109/f9.png" alt="image"></p>
+<blockquote>
+<p>&#xFF08;&#x8FD9;&#x4E2A;&#x662F;&#x4E0D;&#x662F;&#x4F20;&#x4E2D;&#x7684;&#x9884;&#x6392;&#x5E8F;&#xFF1F;&#xFF1F;&#xFF09;</p>
+</blockquote>
+<p>&#x4F8B;&#xFF1A;<br>
+&#x5BF9;&#x4E8E;&#x6BCF;&#x6B21;&#x6269;&#x5C55;&#xFF0C;&#x6211;&#x4EEC;&#x8FD8;&#x662F;&#x8981;&#x679A;&#x4E3E;&#x6240;&#x6709;&#x53EF;&#x80FD;&#x7684;&#x5206;&#x5272;&#x65B9;&#x6848;&#xFF0C;&#x5982;&#x4F55;&#x9AD8;&#x6548;&#x5730;&#x679A;&#x4E3E;&#x6240;&#x6709;&#x7684;&#x5206;&#x5272;&#x5462;&#xFF1F;&#x6211;&#x5047;&#x8BBE;&#x6211;&#x4EEC;&#x8981;&#x679A;&#x4E3E;&#x6240;&#x6709;$x &lt; a$&#x8FD9;&#x6837;&#x7684;&#x6761;&#x4EF6;&#xFF0C;&#x5BF9;&#x4E8E;&#x67D0;&#x4E2A;&#x7279;&#x5B9A;&#x7684;&#x5206;&#x5272;$a$&#x6211;&#x4EEC;&#x8981;&#x8BA1;&#x7B97;$a$&#x5DE6;&#x8FB9;&#x548C;&#x53F3;&#x8FB9;&#x7684;&#x5BFC;&#x6570;&#x548C;&#x3002;
+<img src="//img.tianle.me/image/20180109/f10.png" alt="image"><br>
+&#x6211;&#x4EEC;&#x53EF;&#x4EE5;&#x53D1;&#x73B0;&#x5BF9;&#x4E8E;&#x6240;&#x6709;&#x7684;a&#xFF0C;&#x6211;&#x4EEC;&#x53EA;&#x8981;&#x505A;&#x4E00;&#x904D;&#x4ECE;&#x5DE6;&#x5230;&#x53F3;&#x7684;&#x626B;&#x63CF;&#x5C31;&#x53EF;&#x4EE5;&#x679A;&#x4E3E;&#x51FA;&#x6240;&#x6709;&#x5206;&#x5272;&#x7684;&#x68AF;&#x5EA6;&#x548C;$G_L$&#x548C;$G_R$&#x3002;&#x7136;&#x540E;&#x7528;&#x4E0A;&#x9762;&#x7684;&#x516C;&#x5F0F;&#x8BA1;&#x7B97;&#x6BCF;&#x4E2A;&#x5206;&#x5272;&#x65B9;&#x6848;&#x7684;&#x5206;&#x6570;&#x5C31;&#x53EF;&#x4EE5;&#x4E86;&#x3002;</p>
+<h3 id="&#x8FD1;&#x4F3C;&#x5206;&#x88C2;&#x7B97;&#x6CD5;">&#x8FD1;&#x4F3C;&#x5206;&#x88C2;&#x7B97;&#x6CD5; <a href="#&#x8FD1;&#x4F3C;&#x5206;&#x88C2;&#x7B97;&#x6CD5;" class="header-anchor"> </a></h3>
+<p>&#x4F20;&#x7EDF;&#x7684;&#x5206;&#x88C2;&#x65B9;&#x6CD5;&#x867D;&#x7136;&#x7CBE;&#x786E;&#xFF0C;&#x4F46;&#x662F;&#x5341;&#x5206;&#x8017;&#x65F6;&#xFF0C;&#x800C;&#x4E14;&#x4E00;&#x65E6;&#x6570;&#x636E;&#x8F83;&#x591A;&#xFF0C;&#x975E;&#x5E38;&#x5360;&#x7528;&#x5185;&#x5B58;&#xFF0C;&#x4E5F;&#x4E0D;&#x5229;&#x4E8E;&#x5E76;&#x884C;&#x5316;&#x3002;xbg&#x63D0;&#x51FA;&#x4E86;&#x4E00;&#x79CD;&#x8FD1;&#x4F3C;&#x7684;&#x7B97;&#x6CD5;&#xFF0C;&#x5177;&#x4F53;&#x5982;&#x4E0B;&#xFF1A;<br>
+<img src="//img.tianle.me/image/20180109/f12.png" alt="image"><br>
+&#x5BF9;&#x4E8E;&#x6BCF;&#x4E2A;&#x7279;&#x5F81;&#xFF0C;&#x53EA;&#x8003;&#x5BDF;&#x5206;&#x4F4D;&#x70B9;&#xFF0C;&#x51CF;&#x5C11;&#x8BA1;&#x7B97;&#x590D;&#x6742;&#x5EA6;</p>
+<ul>
+<li>Global&#xFF1A;&#x5B66;&#x4E60;&#x6BCF;&#x68F5;&#x6811;&#x524D;&#xFF0C;&#x63D0;&#x51FA;&#x5019;&#x9009;&#x5207;&#x5206;&#x70B9;</li>
+<li>Local&#xFF1A;&#x6BCF;&#x6B21;&#x5206;&#x88C2;&#x524D;&#xFF0C;&#x91CD;&#x65B0;&#x63D0;&#x51FA;&#x5019;&#x9009;&#x5207;&#x5206;&#x70B9;</li>
+</ul>
+<blockquote>
+<p>&#x8FD1;&#x4F3C;&#x7B97;&#x6CD5;&#x4E3E;&#x4F8B;&#xFF1A;&#x4E09;&#x5206;&#x4F4D;&#x6570;<br>
+<img src="//img.tianle.me/image/20180109/f14.png" alt="image"></p>
+</blockquote>
+<p>&#x5B9E;&#x9645;&#x4E0A;XGBoost&#x4E0D;&#x662F;&#x7B80;&#x5355;&#x5730;&#x6309;&#x7167;&#x6837;&#x672C;&#x4E2A;&#x6570;&#x8FDB;&#x884C;&#x5206;&#x4F4D;&#xFF0C;&#x800C;&#x662F;&#x4EE5;&#x4E8C;&#x9636;&#x5BFC;&#x6570;&#x503C;$h_i$&#x4F5C;&#x4E3A;&#x6743;&#x91CD;(WeightedQuantileSketch)&#xFF0C;&#x6BD4;&#x5982;:<br>
+<img src="//img.tianle.me/image/20180109/f15.png" alt="image"><br>
+&#x4E3A;&#x4EC0;&#x4E48;&#x7528;$h_i$&#x52A0;&#x6743;&#xFF1F;<br>
+&#x628A;&#x76EE;&#x6807;&#x51FD;&#x6570;&#x6574;&#x7406;&#x6210;&#x4EE5;&#x4E0B;&#x5F62;&#x5F0F;&#xFF0C;&#x53EF;&#x4EE5;&#x770B;&#x51FA;$h_i$&#x6709;&#x5BF9;loss&#x52A0;&#x6743;&#x7684;&#x4F5C;&#x7528;<br>
+<img src="//img.tianle.me/image/20180109/f16.png" alt="image"></p>
+<p>&#x540C;&#x65F6;&#xFF0C;xgb&#x8FD8;&#x6709;&#x5904;&#x7406;&#x7A00;&#x758F;&#x6570;&#x636E;&#x7684;&#x7B97;&#x6CD5;&#xFF1A;<br>
+&#x771F;&#x5B9E;&#x6570;&#x636E;&#x4E2D;&#xFF0C;&#x7A00;&#x758F;&#x662F;&#x6BD4;&#x8F83;&#x666E;&#x904D;&#x7684;&#xFF0C;&#x9020;&#x6210;&#x7A00;&#x758F;&#x7684;&#x539F;&#x56E0;&#x4E3B;&#x8981;&#x6709;&#x4EE5;&#x4E0B;&#x51E0;&#x70B9;&#xFF1A;</p>
+<ul>
+<li>&#x5B58;&#x5728;&#x7F3A;&#x5931;&#x503C;</li>
+<li>&#x6709;&#x5F88;&#x591A;0</li>
+<li>&#x4EBA;&#x9020;&#x7279;&#x5F81;&#xFF0C;&#x6BD4;&#x5982;ont-hot&#x7F16;&#x7801;<br>
+<img src="//img.tianle.me/image/20180109/f13.png" alt="image"><br>
+&#x4ECE;&#x8BE5;&#x7B97;&#x6CD5;&#x4E2D;&#xFF0C;&#x6211;&#x4EEC;&#x53EF;&#x4EE5;&#x770B;&#x51FA;XGBoost&#x7F3A;&#x5931;&#x503C;&#x5904;&#x7406;&#x65B9;&#x5F0F;&#x662F;&#xFF0C;&#x5BF9;&#x4E8E;&#x67D0;&#x4E00;&#x4E2A;&#x7279;&#x5F81;&#xFF0C;&#x5047;&#x8BBE;&#x6240;&#x6709;&#x7F3A;&#x5931;&#x7684;&#x6837;&#x672C;&#x5C5E;&#x4E8E;&#x53F3;&#x5B50;&#x6811;&#x6216;&#x8005;&#x5DE6;&#x5B50;&#x6811;&#xFF0C;&#x7136;&#x540E;&#x5206;&#x522B;&#x8BA1;&#x7B97;&#x5176;&#x635F;&#x5931;&#x51CF;&#x5C11;&#x91CF;&#x5F97;&#x5206;&#xFF0C;&#x6700;&#x540E;&#x53D6;&#x5176;&#x6700;&#x9AD8;&#x503C;&#x5BF9;&#x5E94;&#x7684;&#x5206;&#x88C2;&#x4F4D;&#x548C;&#x5F97;&#x5206;&#x503C;&#x3002;</li>
+</ul>
+<h2 id="&#x5176;&#x4ED6;">&#x5176;&#x4ED6; <a href="#&#x5176;&#x4ED6;" class="header-anchor"> </a></h2>
+<p>&#x5E76;&#x884C;&#x5316;&#xFF0C;Column Block for Parallel Learning<br>
+XGBoost&#x7684;&#x7279;&#x5F81;&#x91CD;&#x8981;&#x6027;&#x662F;&#x5982;&#x4F55;&#x5F97;&#x5230;&#x7684;&#xFF1F;&#x67D0;&#x4E2A;&#x7279;&#x5F81;&#x7684;&#x91CD;&#x8981;&#x6027;&#xFF08;feature score&#xFF09;&#xFF0C;&#x7B49;&#x4E8E;&#x5B83;&#x88AB;&#x9009;&#x4E2D;&#x4E3A;&#x6811;&#x8282;&#x70B9;&#x5206;&#x88C2;&#x7279;&#x5F81;&#x7684;&#x6B21;&#x6570;&#x7684;&#x548C;&#xFF0C;&#x6BD4;&#x5982;&#x7279;&#x5F81;A&#x5728;&#x7B2C;&#x4E00;&#x6B21;&#x8FED;&#x4EE3;&#x4E2D;&#xFF08;&#x5373;&#x7B2C;&#x4E00;&#x68F5;&#x6811;&#xFF09;&#x88AB;&#x9009;&#x4E2D;&#x4E86;1&#x6B21;&#x53BB;&#x5206;&#x88C2;&#x6811;&#x8282;&#x70B9;&#xFF0C;&#x5728;&#x7B2C;&#x4E8C;&#x6B21;&#x8FED;&#x4EE3;&#x88AB;&#x9009;&#x4E2D;2&#x6B21;&#x2026;&#x2026;&#x90A3;&#x4E48;&#x6700;&#x7EC8;&#x7279;&#x5F81;A&#x7684;feature score&#x5C31;&#x662F; 1+2+&#x2026;.</p>
+<h3 id="&#x542B;&#x6709;&#x7F3A;&#x5931;&#x8FDB;&#x884C;&#x8BAD;&#x7EC3;">&#x542B;&#x6709;&#x7F3A;&#x5931;&#x8FDB;&#x884C;&#x8BAD;&#x7EC3; <a href="#&#x542B;&#x6709;&#x7F3A;&#x5931;&#x8FDB;&#x884C;&#x8BAD;&#x7EC3;" class="header-anchor"> </a></h3>
+<p>dtrain = xgb.DMatrix(x_train, y_train, missing=np.nan&#xFF09;</p>
+<h2 id="xgboost&#x76F8;&#x6BD4;&#x4F20;&#x7EDF;gbdt&#x6709;&#x4F55;&#x4E0D;&#x540C;">xgboost&#x76F8;&#x6BD4;&#x4F20;&#x7EDF;gbdt&#x6709;&#x4F55;&#x4E0D;&#x540C;&#xFF1F; <a href="#xgboost&#x76F8;&#x6BD4;&#x4F20;&#x7EDF;gbdt&#x6709;&#x4F55;&#x4E0D;&#x540C;" class="header-anchor"> </a></h2>
+<p>&#x4F5C;&#x8005;&#xFF1A;wepon<br>
+&#x94FE;&#x63A5;&#xFF1A; <a href="https://www.zhihu.com/question/41354392/answer/98658997" target="_blank" rel="external">https://www.zhihu.com/question/41354392/answer/98658997</a><br>
+&#x6765;&#x6E90;&#xFF1A;&#x77E5;&#x4E4E;<br>
+&#x8457;&#x4F5C;&#x6743;&#x5F52;&#x4F5C;&#x8005;&#x6240;&#x6709;&#x3002;&#x5546;&#x4E1A;&#x8F6C;&#x8F7D;&#x8BF7;&#x8054;&#x7CFB;&#x4F5C;&#x8005;&#x83B7;&#x5F97;&#x6388;&#x6743;&#xFF0C;&#x975E;&#x5546;&#x4E1A;&#x8F6C;&#x8F7D;&#x8BF7;&#x6CE8;&#x660E;&#x51FA;&#x5904;&#x3002;</p>
+<ul>
+<li>&#x4F20;&#x7EDF;GBDT&#x4EE5;CART&#x4F5C;&#x4E3A;&#x57FA;&#x5206;&#x7C7B;&#x5668;&#xFF0C;xgboost&#x8FD8;&#x652F;&#x6301;&#x7EBF;&#x6027;&#x5206;&#x7C7B;&#x5668;&#xFF0C;&#x8FD9;&#x4E2A;&#x65F6;&#x5019;xgboost&#x76F8;&#x5F53;&#x4E8E;&#x5E26;L1&#x548C;L2&#x6B63;&#x5219;&#x5316;&#x9879;&#x7684;&#x903B;&#x8F91;&#x65AF;&#x8482;&#x56DE;&#x5F52;&#xFF08;&#x5206;&#x7C7B;&#x95EE;&#x9898;&#xFF09;&#x6216;&#x8005;&#x7EBF;&#x6027;&#x56DE;&#x5F52;&#xFF08;&#x56DE;&#x5F52;&#x95EE;&#x9898;&#xFF09;&#x3002;&#x4F20;&#x7EDF;GBDT&#x5728;&#x4F18;&#x5316;&#x65F6;&#x53EA;&#x7528;&#x5230;&#x4E00;&#x9636;&#x5BFC;&#x6570;&#x4FE1;&#x606F;&#xFF0C;xgboost&#x5219;&#x5BF9;&#x4EE3;&#x4EF7;&#x51FD;&#x6570;&#x8FDB;&#x884C;&#x4E86;&#x4E8C;&#x9636;&#x6CF0;&#x52D2;&#x5C55;&#x5F00;&#xFF0C;&#x540C;&#x65F6;&#x7528;&#x5230;&#x4E86;&#x4E00;&#x9636;&#x548C;&#x4E8C;&#x9636;&#x5BFC;&#x6570;&#x3002;&#x987A;&#x4FBF;&#x63D0;&#x4E00;&#x4E0B;&#xFF0C;xgboost&#x5DE5;&#x5177;&#x652F;&#x6301;&#x81EA;&#x5B9A;&#x4E49;&#x4EE3;&#x4EF7;&#x51FD;&#x6570;&#xFF0C;&#x53EA;&#x8981;&#x51FD;&#x6570;&#x53EF;&#x4E00;&#x9636;&#x548C;&#x4E8C;&#x9636;&#x6C42;&#x5BFC;&#x3002;</li>
+<li>xgboost&#x5728;&#x4EE3;&#x4EF7;&#x51FD;&#x6570;&#x91CC;&#x52A0;&#x5165;&#x4E86;&#x6B63;&#x5219;&#x9879;&#xFF0C;&#x7528;&#x4E8E;&#x63A7;&#x5236;&#x6A21;&#x578B;&#x7684;&#x590D;&#x6742;&#x5EA6;&#x3002;&#x6B63;&#x5219;&#x9879;&#x91CC;&#x5305;&#x542B;&#x4E86;&#x6811;&#x7684;&#x53F6;&#x5B50;&#x8282;&#x70B9;&#x4E2A;&#x6570;&#x3001;&#x6BCF;&#x4E2A;&#x53F6;&#x5B50;&#x8282;&#x70B9;&#x4E0A;&#x8F93;&#x51FA;&#x7684;score&#x7684;L2&#x6A21;&#x7684;&#x5E73;&#x65B9;&#x548C;&#x3002;&#x4ECE;Bias-variance tradeoff&#x89D2;&#x5EA6;&#x6765;&#x8BB2;&#xFF0C;&#x6B63;&#x5219;&#x9879;&#x964D;&#x4F4E;&#x4E86;&#x6A21;&#x578B;&#x7684;variance&#xFF0C;&#x4F7F;&#x5B66;&#x4E60;&#x51FA;&#x6765;&#x7684;&#x6A21;&#x578B;&#x66F4;&#x52A0;&#x7B80;&#x5355;&#xFF0C;&#x9632;&#x6B62;&#x8FC7;&#x62DF;&#x5408;&#xFF0C;&#x8FD9;&#x4E5F;&#x662F;xgboost&#x4F18;&#x4E8E;&#x4F20;&#x7EDF;GBDT&#x7684;&#x4E00;&#x4E2A;&#x7279;&#x6027;&#x3002;</li>
+<li>Shrinkage&#xFF08;&#x7F29;&#x51CF;&#xFF09;&#xFF0C;&#x76F8;&#x5F53;&#x4E8E;&#x5B66;&#x4E60;&#x901F;&#x7387;&#xFF08;xgboost&#x4E2D;&#x7684;eta&#xFF09;&#x3002;xgboost&#x5728;&#x8FDB;&#x884C;&#x5B8C;&#x4E00;&#x6B21;&#x8FED;&#x4EE3;&#x540E;&#xFF0C;&#x4F1A;&#x5C06;&#x53F6;&#x5B50;&#x8282;&#x70B9;&#x7684;&#x6743;&#x91CD;&#x4E58;&#x4E0A;&#x8BE5;&#x7CFB;&#x6570;&#xFF0C;&#x4E3B;&#x8981;&#x662F;&#x4E3A;&#x4E86;&#x524A;&#x5F31;&#x6BCF;&#x68F5;&#x6811;&#x7684;&#x5F71;&#x54CD;&#xFF0C;&#x8BA9;&#x540E;&#x9762;&#x6709;&#x66F4;&#x5927;&#x7684;&#x5B66;&#x4E60;&#x7A7A;&#x95F4;&#x3002;&#x5B9E;&#x9645;&#x5E94;&#x7528;&#x4E2D;&#xFF0C;&#x4E00;&#x822C;&#x628A;eta&#x8BBE;&#x7F6E;&#x5F97;&#x5C0F;&#x4E00;&#x70B9;&#xFF0C;&#x7136;&#x540E;&#x8FED;&#x4EE3;&#x6B21;&#x6570;&#x8BBE;&#x7F6E;&#x5F97;&#x5927;&#x4E00;&#x70B9;&#x3002;&#xFF08;&#x8865;&#x5145;&#xFF1A;&#x4F20;&#x7EDF;GBDT&#x7684;&#x5B9E;&#x73B0;&#x4E5F;&#x6709;&#x5B66;&#x4E60;&#x901F;&#x7387;&#xFF09;</li>
+<li>&#x5217;&#x62BD;&#x6837;&#xFF08;column subsampling&#xFF09;&#x3002;xgboost&#x501F;&#x9274;&#x4E86;&#x968F;&#x673A;&#x68EE;&#x6797;&#x7684;&#x505A;&#x6CD5;&#xFF0C;&#x652F;&#x6301;&#x5217;&#x62BD;&#x6837;&#xFF0C;&#x4E0D;&#x4EC5;&#x80FD;&#x964D;&#x4F4E;&#x8FC7;&#x62DF;&#x5408;&#xFF0C;&#x8FD8;&#x80FD;&#x51CF;&#x5C11;&#x8BA1;&#x7B97;&#xFF0C;&#x8FD9;&#x4E5F;&#x662F;xgboost&#x5F02;&#x4E8E;&#x4F20;&#x7EDF;gbdt&#x7684;&#x4E00;&#x4E2A;&#x7279;&#x6027;&#x3002;&#x5BF9;&#x7F3A;&#x5931;&#x503C;&#x7684;&#x5904;&#x7406;&#x3002;&#x5BF9;&#x4E8E;&#x7279;&#x5F81;&#x7684;&#x503C;&#x6709;&#x7F3A;&#x5931;&#x7684;&#x6837;&#x672C;&#xFF0C;xgboost&#x53EF;&#x4EE5;&#x81EA;&#x52A8;&#x5B66;&#x4E60;&#x51FA;&#x5B83;&#x7684;&#x5206;&#x88C2;&#x65B9;&#x5411;&#x3002;</li>
+<li>xgboost&#x5DE5;&#x5177;&#x652F;&#x6301;&#x5E76;&#x884C;&#x3002;boosting&#x4E0D;&#x662F;&#x4E00;&#x79CD;&#x4E32;&#x884C;&#x7684;&#x7ED3;&#x6784;&#x5417;?&#x600E;&#x4E48;&#x5E76;&#x884C;&#x7684;&#xFF1F;&#x6CE8;&#x610F;xgboost&#x7684;&#x5E76;&#x884C;&#x4E0D;&#x662F;tree&#x7C92;&#x5EA6;&#x7684;&#x5E76;&#x884C;&#xFF0C;xgboost&#x4E5F;&#x662F;&#x4E00;&#x6B21;&#x8FED;&#x4EE3;&#x5B8C;&#x624D;&#x80FD;&#x8FDB;&#x884C;&#x4E0B;&#x4E00;&#x6B21;&#x8FED;&#x4EE3;&#x7684;&#xFF08;&#x7B2C;t&#x6B21;&#x8FED;&#x4EE3;&#x7684;&#x4EE3;&#x4EF7;&#x51FD;&#x6570;&#x91CC;&#x5305;&#x542B;&#x4E86;&#x524D;&#x9762;t-1&#x6B21;&#x8FED;&#x4EE3;&#x7684;&#x9884;&#x6D4B;&#x503C;&#xFF09;&#x3002;xgboost&#x7684;&#x5E76;&#x884C;&#x662F;&#x5728;&#x7279;&#x5F81;&#x7C92;&#x5EA6;&#x4E0A;&#x7684;&#x3002;&#x6211;&#x4EEC;&#x77E5;&#x9053;&#xFF0C;&#x51B3;&#x7B56;&#x6811;&#x7684;&#x5B66;&#x4E60;&#x6700;&#x8017;&#x65F6;&#x7684;&#x4E00;&#x4E2A;&#x6B65;&#x9AA4;&#x5C31;&#x662F;&#x5BF9;&#x7279;&#x5F81;&#x7684;&#x503C;&#x8FDB;&#x884C;&#x6392;&#x5E8F;&#xFF08;&#x56E0;&#x4E3A;&#x8981;&#x786E;&#x5B9A;&#x6700;&#x4F73;&#x5206;&#x5272;&#x70B9;&#xFF09;&#xFF0C;xgboost&#x5728;&#x8BAD;&#x7EC3;&#x4E4B;&#x524D;&#xFF0C;&#x9884;&#x5148;&#x5BF9;&#x6570;&#x636E;&#x8FDB;&#x884C;&#x4E86;&#x6392;&#x5E8F;&#xFF0C;&#x7136;&#x540E;&#x4FDD;&#x5B58;&#x4E3A;block&#x7ED3;&#x6784;&#xFF0C;&#x540E;&#x9762;&#x7684;&#x8FED;&#x4EE3;&#x4E2D;&#x91CD;&#x590D;&#x5730;&#x4F7F;&#x7528;&#x8FD9;&#x4E2A;&#x7ED3;&#x6784;&#xFF0C;&#x5927;&#x5927;&#x51CF;&#x5C0F;&#x8BA1;&#x7B97;&#x91CF;&#x3002;&#x8FD9;&#x4E2A;block&#x7ED3;&#x6784;&#x4E5F;&#x4F7F;&#x5F97;&#x5E76;&#x884C;&#x6210;&#x4E3A;&#x4E86;&#x53EF;&#x80FD;&#xFF0C;&#x5728;&#x8FDB;&#x884C;&#x8282;&#x70B9;&#x7684;&#x5206;&#x88C2;&#x65F6;&#xFF0C;&#x9700;&#x8981;&#x8BA1;&#x7B97;&#x6BCF;&#x4E2A;&#x7279;&#x5F81;&#x7684;&#x589E;&#x76CA;&#xFF0C;&#x6700;&#x7EC8;&#x9009;&#x589E;&#x76CA;&#x6700;&#x5927;&#x7684;&#x90A3;&#x4E2A;&#x7279;&#x5F81;&#x53BB;&#x505A;&#x5206;&#x88C2;&#xFF0C;&#x90A3;&#x4E48;&#x5404;&#x4E2A;&#x7279;&#x5F81;&#x7684;&#x589E;&#x76CA;&#x8BA1;&#x7B97;&#x5C31;&#x53EF;&#x4EE5;&#x5F00;&#x591A;&#x7EBF;&#x7A0B;&#x8FDB;&#x884C;&#x3002;&#x53EF;&#x5E76;&#x884C;&#x7684;&#x8FD1;&#x4F3C;&#x76F4;&#x65B9;&#x56FE;&#x7B97;&#x6CD5;&#x3002;&#x6811;&#x8282;&#x70B9;&#x5728;&#x8FDB;&#x884C;&#x5206;&#x88C2;&#x65F6;&#xFF0C;&#x6211;&#x4EEC;&#x9700;&#x8981;&#x8BA1;&#x7B97;&#x6BCF;&#x4E2A;&#x7279;&#x5F81;&#x7684;&#x6BCF;&#x4E2A;&#x5206;&#x5272;&#x70B9;&#x5BF9;&#x5E94;&#x7684;&#x589E;&#x76CA;&#xFF0C;&#x5373;&#x7528;&#x8D2A;&#x5FC3;&#x6CD5;&#x679A;&#x4E3E;&#x6240;&#x6709;&#x53EF;&#x80FD;&#x7684;&#x5206;&#x5272;&#x70B9;&#x3002;&#x5F53;&#x6570;&#x636E;&#x65E0;&#x6CD5;&#x4E00;&#x6B21;&#x8F7D;&#x5165;&#x5185;&#x5B58;&#x6216;&#x8005;&#x5728;&#x5206;&#x5E03;&#x5F0F;&#x60C5;&#x51B5;&#x4E0B;&#xFF0C;&#x8D2A;&#x5FC3;&#x7B97;&#x6CD5;&#x6548;&#x7387;&#x5C31;&#x4F1A;&#x53D8;&#x5F97;&#x5F88;&#x4F4E;&#xFF0C;&#x6240;&#x4EE5;xgboost&#x8FD8;&#x63D0;&#x51FA;&#x4E86;&#x4E00;&#x79CD;&#x53EF;&#x5E76;&#x884C;&#x7684;&#x8FD1;&#x4F3C;&#x76F4;&#x65B9;&#x56FE;&#x7B97;&#x6CD5;&#xFF0C;&#x7528;&#x4E8E;&#x9AD8;&#x6548;&#x5730;&#x751F;&#x6210;&#x5019;&#x9009;&#x7684;&#x5206;&#x5272;&#x70B9;&#x3002;</li>
+</ul>
+<h2 id="&#x53C2;&#x8003;&#x8D44;&#x6599;">&#x53C2;&#x8003;&#x8D44;&#x6599; <a href="#&#x53C2;&#x8003;&#x8D44;&#x6599;" class="header-anchor"> </a></h2>
+<p><a href="https://arxiv.org/abs/1603.02754" target="_blank" rel="external">XGBoost: A Scalable Tree Boosting System</a><br>
+<a href="https://xgboost.readthedocs.io/en/latest/model.html" target="_blank" rel="external">Introduction to Boosted Trees</a><br>
+<a href="http://blog.csdn.net/a819825294/article/details/51206410" target="_blank" rel="external">xgboost&#x539F;&#x7406; </a><br>
+<a href="http://free.tianle.me/image/20180109/xgboost.pdf" target="_blank" rel="external">xgboost&#x5BFC;&#x8BFB;&#x548C;&#x5B9E;&#x6218;.pdf</a><br>
+<a href="http://free.tianle.me/image/20180109/wepon_gbdt.pdf" target="_blank" rel="external">wepon_gbdt_ppt.pdf</a><br>
+<a href="https://github.com/dmlc/xgboost" target="_blank" rel="external">xgboost github&#x9879;&#x76EE;&#x5730;&#x5740;</a><br>
+<a href="http://free.tianle.me/image/20180109/BoostedTree.pdf" target="_blank" rel="external">Introduction to Boosted Trees_ppt_pdf</a><br>
+<a href="http://wepon.me/2016/05/07/XGBoost%E6%B5%85%E5%85%A5%E6%B5%85%E5%87%BA/" target="_blank" rel="external">XGBoost&#x6D45;&#x5165;&#x6D45;&#x51FA;</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag"># 机器学习</a>
+          
+            <a href="/tags/XGBoost/" rel="tag"># XGBoost</a>
+          
+            <a href="/tags/数据竞赛/" rel="tag"># 数据竞赛</a>
+          
+            <a href="/tags/原理/" rel="tag"># 原理</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/29/my2017/" rel="next" title="我的2017">
+                <i class="fa fa-chevron-left"></i> 我的2017
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/22/missing-value/" rel="prev" title="缺失值处理">
+                缺失值处理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/img/title.gif"
+               alt="Tianle Zhang" />
+          <p class="site-author-name" itemprop="name">Tianle Zhang</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">49</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">88</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhangtianle" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/tianlezh" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="https://creativecommons.org/licenses/by-sa/4.0/" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://coderchat.cn/" title="南山" target="_blank">南山</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.cnblogs.com/rongfangliu/" title="柳如风" target="_blank">柳如风</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.zhangyanlong.xyz/" title="张燕龙" target="_blank">张燕龙</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://baoyuzhang.github.io/" title="浅茉" target="_blank">浅茉</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言  </span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#提升树介绍"><span class="nav-number">2.</span> <span class="nav-text">提升树介绍  </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#集合树的计算方法"><span class="nav-number">2.1.</span> <span class="nav-text">集合树的计算方法  </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#正则化学习目标"><span class="nav-number">2.2.</span> <span class="nav-text">正则化学习目标  </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#梯度提升树"><span class="nav-number">2.3.</span> <span class="nav-text">梯度提升树  </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#剪枝和列采样"><span class="nav-number">2.4.</span> <span class="nav-text">剪枝和列采样  </span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#切分点查找算法"><span class="nav-number">3.</span> <span class="nav-text">切分点查找算法  </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#传统的精确贪心算法basic-exact-greedy-algorithm"><span class="nav-number">3.1.</span> <span class="nav-text">传统的精确贪心算法（Basic Exact Greedy Algorithm）  </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#近似分裂算法"><span class="nav-number">3.2.</span> <span class="nav-text">近似分裂算法  </span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他"><span class="nav-number">4.</span> <span class="nav-text">其他  </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#含有缺失进行训练"><span class="nav-number">4.1.</span> <span class="nav-text">含有缺失进行训练  </span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#xgboost相比传统gbdt有何不同"><span class="nav-number">5.</span> <span class="nav-text">xgboost相比传统gbdt有何不同？  </span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">6.</span> <span class="nav-text">参考资料  </span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tianle Zhang</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+<div>
+  <a class="theme-link" href="http://www.miitbeian.gov.cn/" target="_blank">
+    陕ICP备16015673号-1
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://tianle.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://tianle.me/2018/01/09/xgboost-note/';
+          this.page.identifier = '2018/01/09/xgboost-note/';
+          this.page.title = 'XGBoost笔记';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://tianle.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+</body>
+</html>

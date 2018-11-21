@@ -1,0 +1,1089 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="S7CcF76Y3WPq3DKyOvsZGmSEALaSes364lNi0PMvhh4" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="java," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Niu Code" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/default_avatar.jpg?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="异常介绍
+异常是程序中的一些错误，但并不是所有的错误都是异常，并且错误有时候是可以避免的。
+比如说，你的代码少了一个分号，那么运行出来结果是提示是错误java.lang.Error；如果你用System.out.println(11/0)，那么你是因为你用0做了除数，会抛出java.lang.ArithmeticException的异常。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java异常处理">
+<meta property="og:url" content="https://tianle.me/2016/04/16/Java异常处理/index.html">
+<meta property="og:site_name" content="Niu Code">
+<meta property="og:description" content="异常介绍
+异常是程序中的一些错误，但并不是所有的错误都是异常，并且错误有时候是可以避免的。
+比如说，你的代码少了一个分号，那么运行出来结果是提示是错误java.lang.Error；如果你用System.out.println(11/0)，那么你是因为你用0做了除数，会抛出java.lang.ArithmeticException的异常。">
+<meta property="og:updated_time" content="2018-06-26T10:57:31.050Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java异常处理">
+<meta name="twitter:description" content="异常介绍
+异常是程序中的一些错误，但并不是所有的错误都是异常，并且错误有时候是可以避免的。
+比如说，你的代码少了一个分号，那么运行出来结果是提示是错误java.lang.Error；如果你用System.out.println(11/0)，那么你是因为你用0做了除数，会抛出java.lang.ArithmeticException的异常。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tianle.me/2016/04/16/Java异常处理/"/>
+
+
+
+
+
+  <title> Java异常处理 | Niu Code </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-71583311-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Niu Code</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">南山小马</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://tianle.me/2016/04/16/Java异常处理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tianle Zhang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/title.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Niu Code">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                Java异常处理
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-04-16T16:56:06+08:00">
+                2016-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/应用开发/" itemprop="url" rel="index">
+                    <span itemprop="name">应用开发</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/04/16/Java异常处理/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2016/04/16/Java异常处理/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="&#x5F02;&#x5E38;&#x4ECB;&#x7ECD;">&#x5F02;&#x5E38;&#x4ECB;&#x7ECD; <a href="#&#x5F02;&#x5E38;&#x4ECB;&#x7ECD;" class="header-anchor"> </a></h3>
+<p>&#x5F02;&#x5E38;&#x662F;&#x7A0B;&#x5E8F;&#x4E2D;&#x7684;&#x4E00;&#x4E9B;&#x9519;&#x8BEF;&#xFF0C;&#x4F46;&#x5E76;&#x4E0D;&#x662F;&#x6240;&#x6709;&#x7684;&#x9519;&#x8BEF;&#x90FD;&#x662F;&#x5F02;&#x5E38;&#xFF0C;&#x5E76;&#x4E14;&#x9519;&#x8BEF;&#x6709;&#x65F6;&#x5019;&#x662F;&#x53EF;&#x4EE5;&#x907F;&#x514D;&#x7684;&#x3002;
+&#x6BD4;&#x5982;&#x8BF4;&#xFF0C;&#x4F60;&#x7684;&#x4EE3;&#x7801;&#x5C11;&#x4E86;&#x4E00;&#x4E2A;&#x5206;&#x53F7;&#xFF0C;&#x90A3;&#x4E48;&#x8FD0;&#x884C;&#x51FA;&#x6765;&#x7ED3;&#x679C;&#x662F;&#x63D0;&#x793A;&#x662F;&#x9519;&#x8BEF;java.lang.Error&#xFF1B;&#x5982;&#x679C;&#x4F60;&#x7528;System.out.println(11/0)&#xFF0C;&#x90A3;&#x4E48;&#x4F60;&#x662F;&#x56E0;&#x4E3A;&#x4F60;&#x7528;0&#x505A;&#x4E86;&#x9664;&#x6570;&#xFF0C;&#x4F1A;&#x629B;&#x51FA;java.lang.ArithmeticException&#x7684;&#x5F02;&#x5E38;&#x3002;</p>
+<a id="more"></a>
+<p><em>&#x5F02;&#x5E38;&#x53D1;&#x751F;&#x7684;&#x539F;&#x56E0;&#x6709;&#x5F88;&#x591A;&#xFF0C;&#x901A;&#x5E38;&#x5305;&#x542B;&#x4EE5;&#x4E0B;&#x51E0;&#x5927;&#x7C7B;&#xFF1A;</em></p>
+<ul>
+<li>&#x7528;&#x6237;&#x8F93;&#x5165;&#x4E86;&#x975E;&#x6CD5;&#x6570;&#x636E;&#x3002;</li>
+<li>&#x8981;&#x6253;&#x5F00;&#x7684;&#x6587;&#x4EF6;&#x4E0D;&#x5B58;&#x5728;&#x3002;</li>
+<li>&#x7F51;&#x7EDC;&#x901A;&#x4FE1;&#x65F6;&#x8FDE;&#x63A5;&#x4E2D;&#x65AD;&#xFF0C;&#x6216;&#x8005;JVM&#x5185;&#x5B58;&#x6EA2;&#x51FA;&#x3002;</li>
+</ul>
+<p>&#x8FD9;&#x4E9B;&#x5F02;&#x5E38;&#x6709;&#x7684;&#x662F;&#x56E0;&#x4E3A;&#x7528;&#x6237;&#x9519;&#x8BEF;&#x5F15;&#x8D77;&#xFF0C;&#x6709;&#x7684;&#x662F;&#x7A0B;&#x5E8F;&#x9519;&#x8BEF;&#x5F15;&#x8D77;&#x7684;&#xFF0C;&#x8FD8;&#x6709;&#x5176;&#x5B83;&#x4E00;&#x4E9B;&#x662F;&#x56E0;&#x4E3A;&#x7269;&#x7406;&#x9519;&#x8BEF;&#x5F15;&#x8D77;&#x7684;&#x3002;</p>
+<p><em>&#x8981;&#x7406;&#x89E3;Java&#x5F02;&#x5E38;&#x5904;&#x7406;&#x662F;&#x5982;&#x4F55;&#x5DE5;&#x4F5C;&#x7684;&#xFF0C;&#x4F60;&#x9700;&#x8981;&#x638C;&#x63E1;&#x4EE5;&#x4E0B;&#x4E09;&#x79CD;&#x7C7B;&#x578B;&#x7684;&#x5F02;&#x5E38;&#xFF1A;</em></p>
+<ul>
+<li><strong>&#x68C0;&#x67E5;&#x6027;&#x5F02;&#x5E38;&#xFF1A;</strong> &#x6700;&#x5177;&#x4EE3;&#x8868;&#x7684;&#x68C0;&#x67E5;&#x6027;&#x5F02;&#x5E38;&#x662F;&#x7528;&#x6237;&#x9519;&#x8BEF;&#x6216;&#x95EE;&#x9898;&#x5F15;&#x8D77;&#x7684;&#x5F02;&#x5E38;&#xFF0C;&#x8FD9;&#x662F;&#x7A0B;&#x5E8F;&#x5458;&#x65E0;&#x6CD5;&#x9884;&#x89C1;&#x7684;&#x3002;&#x4F8B;&#x5982;&#x8981;&#x6253;&#x5F00;&#x4E00;&#x4E2A;&#x4E0D;&#x5B58;&#x5728;&#x6587;&#x4EF6;&#x65F6;&#xFF0C;&#x4E00;&#x4E2A;&#x5F02;&#x5E38;&#x5C31;&#x53D1;&#x751F;&#x4E86;&#xFF0C;&#x8FD9;&#x4E9B;&#x5F02;&#x5E38;&#x5728;&#x7F16;&#x8BD1;&#x65F6;&#x4E0D;&#x80FD;&#x88AB;&#x7B80;&#x5355;&#x5730;&#x5FFD;&#x7565;&#x3002;</li>
+<li><strong>&#x8FD0;&#x884C;&#x65F6;&#x5F02;&#x5E38;&#xFF1A;</strong> &#x8FD0;&#x884C;&#x65F6;&#x5F02;&#x5E38;&#x662F;&#x53EF;&#x80FD;&#x88AB;&#x7A0B;&#x5E8F;&#x5458;&#x907F;&#x514D;&#x7684;&#x5F02;&#x5E38;&#x3002;&#x4E0E;&#x68C0;&#x67E5;&#x6027;&#x5F02;&#x5E38;&#x76F8;&#x53CD;&#xFF0C;&#x8FD0;&#x884C;&#x65F6;&#x5F02;&#x5E38;&#x53EF;&#x4EE5;&#x5728;&#x7F16;&#x8BD1;&#x65F6;&#x88AB;&#x5FFD;&#x7565;&#x3002;</li>
+<li><strong>&#x9519;&#x8BEF;&#xFF1A;</strong> &#x9519;&#x8BEF;&#x4E0D;&#x662F;&#x5F02;&#x5E38;&#xFF0C;&#x800C;&#x662F;&#x8131;&#x79BB;&#x7A0B;&#x5E8F;&#x5458;&#x63A7;&#x5236;&#x7684;&#x95EE;&#x9898;&#x3002;&#x9519;&#x8BEF;&#x5728;&#x4EE3;&#x7801;&#x4E2D;&#x901A;&#x5E38;&#x88AB;&#x5FFD;&#x7565;&#x3002;&#x4F8B;&#x5982;&#xFF0C;&#x5F53;&#x6808;&#x6EA2;&#x51FA;&#x65F6;&#xFF0C;&#x4E00;&#x4E2A;&#x9519;&#x8BEF;&#x5C31;&#x53D1;&#x751F;&#x4E86;&#xFF0C;&#x5B83;&#x4EEC;&#x5728;&#x7F16;&#x8BD1;&#x4E5F;&#x68C0;&#x67E5;&#x4E0D;&#x5230;&#x7684;&#x3002;</li>
+</ul>
+<hr>
+<h4 id="&#x5F02;&#x5E38;&#x5206;&#x7C7B;">&#x5F02;&#x5E38;&#x5206;&#x7C7B; <a href="#&#x5F02;&#x5E38;&#x5206;&#x7C7B;" class="header-anchor"> </a></h4>
+<ol>
+<li>
+<p>&#x975E;&#x8FD0;&#x884C;&#x65F6;&#x5F02;&#x5E38;(Checked Exception)
+Java&#x4E2D;&#x51E1;&#x662F;&#x7EE7;&#x627F;&#x81EA;Exception&#x4F46;&#x4E0D;&#x662F;&#x7EE7;&#x627F;&#x81EA;RuntimeException&#x7684;&#x7C7B;&#x90FD;&#x662F;&#x975E;&#x8FD0;&#x884C;&#x65F6;&#x5F02;&#x5E38;&#x3002;</p>
+</li>
+<li>
+<p>&#x8FD0;&#x884C;&#x65F6;&#x5F02;&#x5E38;&#xFF08;Runtime Exception/Unchecked Exception&#xFF09;
+RuntimeException&#x7C7B;&#x76F4;&#x63A5;&#x7EE7;&#x627F;&#x81EA;Exception&#x7C7B;&#xFF0C;&#x79F0;&#x4E3A;&#x8FD0;&#x884C;&#x65F6;&#x5F02;&#x5E38;&#x3002;Java&#x4E2D;&#x6240;&#x6709;&#x7684;&#x8FD0;&#x884C;&#x65F6;&#x5F02;&#x5E38;&#x90FD;&#x76F4;&#x63A5;&#x6216;&#x95F4;&#x63A5;&#x7684;&#x7EE7;&#x627F;&#x81EA;RuntimeException&#x3002;</p>
+</li>
+</ol>
+<p>Java&#x4E2D;&#x6240;&#x6709;&#x7684;&#x5F02;&#x5E38;&#x7C7B;&#x90FD;&#x76F4;&#x63A5;&#x6216;&#x95F4;&#x63A5;&#x7684;&#x7EE7;&#x627F;&#x81EA;Exception&#x3002;</p>
+<h3 id="&#x58F0;&#x660E;&#x81EA;&#x5B9A;&#x4E49;&#x5F02;&#x5E38;">&#x58F0;&#x660E;&#x81EA;&#x5B9A;&#x4E49;&#x5F02;&#x5E38; <a href="#&#x58F0;&#x660E;&#x81EA;&#x5B9A;&#x4E49;&#x5F02;&#x5E38;" class="header-anchor"> </a></h3>
+<p>&#x4F7F;&#x7528;&#x81EA;&#x5B9A;&#x4E49;&#x5F02;&#x5E38;&#x6709;&#x4EC0;&#x4E48;&#x597D;&#x5904;&#x5462;&#xFF1F;&#x4E3A;&#x4F55;&#x8981;&#x5B9A;&#x4E49;&#x65B0;&#x5F02;&#x5E38;&#x7C7B;&#x578B;&#xFF1F;&#x521B;&#x5EFA;&#x81EA;&#x5B9A;&#x4E49;&#x5F02;&#x5E38;&#x662F;&#x4E3A;&#x4E86;&#x8868;&#x793A;&#x5E94;&#x7528;&#x7A0B;&#x5E8F;&#x7684;&#x4E00;&#x4E9B;&#x9519;&#x8BEF;&#x7C7B;&#x578B;&#xFF0C;&#x4E3A;&#x4EE3;&#x7801;&#x53EF;&#x80FD;&#x53D1;&#x751F;&#x7684;&#x4E00;&#x4E2A;&#x6216;&#x591A;&#x4E2A;&#x95EE;&#x9898;&#x63D0;&#x4F9B;&#x65B0;&#x542B;&#x4E49;&#x3002;&#x53EF;&#x4EE5;&#x663E;&#x793A;&#x4EE3;&#x7801;&#x591A;&#x4E2A;&#x4F4D;&#x7F6E;&#x4E4B;&#x95F4;&#x7684;&#x9519;&#x8BEF;&#x7684;&#x76F8;&#x4F3C;&#x6027;&#xFF0C;&#x4E5F;&#x53EF;&#x533A;&#x5206;&#x4EE3;&#x7801;&#x8FD0;&#x884C;&#x65F6;&#x53EF;&#x80FD;&#x51FA;&#x73B0;&#x7684;&#x76F8;&#x4F3C;&#x95EE;&#x9898;&#x7684;&#x4E00;&#x4E2A;&#x6216;&#x591A;&#x4E2A;&#x9519;&#x8BEF;&#xFF0C;&#x6216;&#x7ED9;&#x51FA;&#x5E94;&#x7528;&#x7A0B;&#x5E8F;&#x4E2D;&#x4E00;&#x7EC4;&#x9519;&#x8BEF;&#x7684;&#x7279;&#x5B9A;&#x542B;&#x4E49;&#x3002;</p>
+<p>&#x4F8B;&#x5982;&#xFF0C;&#x8003;&#x8651;&#x4EFB;&#x4F55;&#x7C7B;&#x578B;&#x7684;&#x670D;&#x52A1;&#x5668;&#x3002;&#x670D;&#x52A1;&#x5668;&#x7684;&#x57FA;&#x672C;&#x4F5C;&#x7528;&#x662F;&#x5904;&#x7406;&#x4E0E;&#x5BA2;&#x6237;&#x673A;&#x7684;&#x901A;&#x4FE1;&#x3002;&#x82E5;&#x4F7F;&#x7528;&#x6807;&#x51C6;Java API(&#x5982;java.io&#x548C;java.net&#x5305;&#x4E2D;&#x7684;&#x7C7B;)&#x6765;&#x7F16;&#x5199;&#x670D;&#x52A1;&#x5668;&#xFF0C;&#x5219;&#x53EF;&#x4F7F;&#x7F16;&#x5199;&#x7684;&#x4EE3;&#x7801;&#x5728;&#x591A;&#x4E2A;&#x4F4D;&#x7F6E;&#x629B;IOException&#x3002; &#x5728;&#x8BBE;&#x7F6E;&#x670D;&#x52A1;&#x5668;&#x3001;&#x7B49;&#x5F85;&#x5BA2;&#x6237;&#x673A;&#x8FDE;&#x63A5;&#x548C;&#x83B7;&#x53D6;&#x901A;&#x4FE1;&#x6D41;&#x65F6;&#xFF0C;&#x53EF;&#x629B;&#x51FA;IOExceptions&#xFF1B;&#x5728;&#x901A;&#x4FE1;&#x671F;&#x95F4;&#x53CA;&#x8BD5;&#x56FE;&#x65AD;&#x5F00;&#x8FDE;&#x63A5;&#x65F6;&#xFF0C;&#x4E5F;&#x53EF;&#x629B;&#x51FA;IOExceptions&#x3002;&#x7B80;&#x8A00;&#x4E4B;&#xFF0C;&#x670D;&#x52A1;&#x5668;&#x7684;&#x5404;&#x4E2A;&#x90E8;&#x5206;&#x90FD;&#x53EF;&#x80FD;&#x5F15;&#x53D1;IOException&#x3002;</p>
+<p>&#x5BF9;&#x670D;&#x52A1;&#x5668;&#x800C;&#x8A00;&#xFF0C;&#x8FD9;&#x4E9B;IOException&#x610F;&#x4E49;&#x4E0D;&#x5C3D;&#x76F8;&#x540C;&#x3002;&#x867D;&#x7136;&#x7531;&#x540C;&#x4E00;&#x5F02;&#x5E38;&#x7C7B;&#x578B;&#x8868;&#x793A;&#xFF0C;&#x4F46;&#x4E0E;&#x5404;&#x4E2A;&#x5F02;&#x5E38;&#x76F8;&#x5173;&#x7684;&#x4E1A;&#x52A1;&#x542B;&#x4E49;&#x5B58;&#x5728;&#x5DEE;&#x5F02;&#xFF0C;&#x62A5;&#x544A;&#x548C;&#x6062;&#x590D;&#x64CD;&#x4F5C;&#x4EA6;&#x6709;&#x4E0D;&#x540C;&#x3002;&#x53EF;&#x4EE5;&#x5C06;&#x4E00;&#x4E2A;&#x5F02;&#x5E38;&#x96C6;&#x4E0E;&#x670D;&#x52A1;&#x5668;&#x914D;&#x7F6E;&#x548C;&#x542F;&#x52A8;&#x95EE;&#x9898;&#x5173;&#x8054;&#xFF0C;&#x5C06;&#x53E6;&#x4E00;&#x4E2A;&#x5F02;&#x5E38;&#x96C6;&#x4E0E;&#x5BA2;&#x6237;&#x673A;&#x901A;&#x4FE1;&#x7684;&#x5B9E;&#x9645;&#x884C;&#x52A8;&#x5173;&#x8054;&#xFF0C;&#x5C06;&#x7B2C;&#x4E09;&#x4E2A;&#x5F02;&#x5E38;&#x96C6;&#x4E0E;&#x670D;&#x52A1;&#x5668;&#x5173;&#x95ED;&#x4EFB;&#x52A1;&#x5173;&#x8054;&#x3002;&#x4F7F;&#x7528;&#x81EA;&#x5B9A;&#x4E49;&#x5F02;&#x5E38;&#xFF0C;&#x53EF;&#x91C7;&#x7528;&#x5BF9;&#x5E94;&#x7528;&#x7A0B;&#x5E8F;&#x6709;&#x610F;&#x4E49;&#x7684;&#x65B9;&#x5F0F;&#x6765;&#x7075;&#x6D3B;&#x5730;&#x8868;&#x793A;&#x9519;&#x8BEF;&#x3002;</p>
+<p>&#x5728;Java&#x4E2D;&#x4F60;&#x53EF;&#x4EE5;&#x81EA;&#x5B9A;&#x4E49;&#x5F02;&#x5E38;&#x3002;&#x7F16;&#x5199;&#x81EA;&#x5DF1;&#x7684;&#x5F02;&#x5E38;&#x7C7B;&#x65F6;&#x9700;&#x8981;&#x8BB0;&#x4F4F;&#x4E0B;&#x9762;&#x7684;&#x51E0;&#x70B9;&#x3002;</p>
+<ul>
+<li>&#x6240;&#x6709;&#x5F02;&#x5E38;&#x90FD;&#x5FC5;&#x987B;&#x662F;Throwable&#x7684;&#x5B50;&#x7C7B;&#x3002;</li>
+<li>&#x5982;&#x679C;&#x5E0C;&#x671B;&#x5199;&#x4E00;&#x4E2A;&#x68C0;&#x67E5;&#x6027;&#x5F02;&#x5E38;&#x7C7B;&#xFF0C;&#x5219;&#x9700;&#x8981;&#x7EE7;&#x627F;Exception&#x7C7B;&#x3002;</li>
+<li>&#x5982;&#x679C;&#x4F60;&#x60F3;&#x5199;&#x4E00;&#x4E2A;&#x8FD0;&#x884C;&#x65F6;&#x5F02;&#x5E38;&#x7C7B;&#xFF0C;&#x90A3;&#x4E48;&#x9700;&#x8981;&#x7EE7;&#x627F;RuntimeException &#x7C7B;&#x3002;</li>
+</ul>
+<p>Java&#x81EA;&#x5B9A;&#x4E49;&#x5F02;&#x5E38;&#x7684;&#x4F7F;&#x7528;&#x8981;&#x7ECF;&#x5386;&#x5982;&#x4E0B;&#x56DB;&#x4E2A;&#x6B65;&#x9AA4;&#xFF1A;</p>
+<ol>
+<li>&#x5B9A;&#x4E49;&#x4E00;&#x4E2A;&#x7C7B;&#x7EE7;&#x627F;Throwable&#x6216;&#x5176;&#x5B50;&#x7C7B;&#x3002;</li>
+<li>&#x6DFB;&#x52A0;&#x6784;&#x9020;&#x65B9;&#x6CD5;(&#x5F53;&#x7136;&#x4E5F;&#x53EF;&#x4EE5;&#x4E0D;&#x7528;&#x6DFB;&#x52A0;&#xFF0C;&#x4F7F;&#x7528;&#x9ED8;&#x8BA4;&#x6784;&#x9020;&#x65B9;&#x6CD5;)&#x3002;</li>
+<li>&#x5728;&#x67D0;&#x4E2A;&#x65B9;&#x6CD5;&#x7C7B;&#x629B;&#x51FA;&#x8BE5;&#x5F02;&#x5E38;&#x3002;</li>
+<li>&#x6355;&#x6349;&#x8BE5;&#x5F02;&#x5E38;&#x3002;</li>
+</ol>
+<p><em>&#x53EF;&#x4EE5;&#x50CF;&#x4E0B;&#x9762;&#x8FD9;&#x6837;&#x5B9A;&#x4E49;&#x81EA;&#x5DF1;&#x7684;&#x5F02;&#x5E38;&#x7C7B;&#xFF1A;</em></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/** &#x81EA;&#x5B9A;&#x4E49;&#x5F02;&#x5E38; &#x7EE7;&#x627F;Exception&#x7C7B; **/</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyException</span> <span class="keyword">extends</span> <span class="title">Exception</span></span>{</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyException</span><span class="params">()</span></span>{</div><div class="line"></div><div class="line">    }</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyException</span><span class="params">(String message)</span></span>{</div><div class="line">        <span class="keyword">super</span>(message);</div><div class="line">    }</div><div class="line">}</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>{</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">display</span><span class="params">(<span class="keyword">int</span> i)</span> <span class="keyword">throws</span> MyException</span>{</div><div class="line">        <span class="keyword">if</span>(i == <span class="number">0</span>){</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> MyException(<span class="string">&quot;&#x8BE5;&#x503C;&#x4E0D;&#x80FD;&#x4E3A;0.......&quot;</span>);</div><div class="line">        }</div><div class="line">        <span class="keyword">else</span>{</div><div class="line">            System.out.println( i / <span class="number">2</span>);</div><div class="line">        }</div><div class="line">    }</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>{</div><div class="line">        Test test = <span class="keyword">new</span> Test();</div><div class="line">        <span class="keyword">try</span> {</div><div class="line">            test.display(<span class="number">0</span>);</div><div class="line">            System.out.println(<span class="string">&quot;---------------------&quot;</span>);</div><div class="line">        } <span class="keyword">catch</span> (MyException e) {</div><div class="line">            e.printStackTrace();</div><div class="line">        }</div><div class="line">    }</div><div class="line">}</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/02/04/一位父亲的心声/" rel="next" title="一位父亲的心声">
+                <i class="fa fa-chevron-left"></i> 一位父亲的心声
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/04/22/学生会主席团竞选演讲稿/" rel="prev" title="学生会主席团竞选演讲稿">
+                学生会主席团竞选演讲稿 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/img/title.gif"
+               alt="Tianle Zhang" />
+          <p class="site-author-name" itemprop="name">Tianle Zhang</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">49</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">88</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhangtianle" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/tianlezh" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="https://creativecommons.org/licenses/by-sa/4.0/" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://coderchat.cn/" title="南山" target="_blank">南山</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.cnblogs.com/rongfangliu/" title="柳如风" target="_blank">柳如风</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.zhangyanlong.xyz/" title="张燕龙" target="_blank">张燕龙</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://baoyuzhang.github.io/" title="浅茉" target="_blank">浅茉</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#异常介绍"><span class="nav-number">1.</span> <span class="nav-text">异常介绍  </span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#异常分类"><span class="nav-number">1.1.</span> <span class="nav-text">异常分类  </span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#声明自定义异常"><span class="nav-number">2.</span> <span class="nav-text">声明自定义异常  </span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tianle Zhang</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+<div>
+  <a class="theme-link" href="http://www.miitbeian.gov.cn/" target="_blank">
+    陕ICP备16015673号-1
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://tianle.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://tianle.me/2016/04/16/Java异常处理/';
+          this.page.identifier = '2016/04/16/Java异常处理/';
+          this.page.title = 'Java异常处理';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://tianle.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+</body>
+</html>

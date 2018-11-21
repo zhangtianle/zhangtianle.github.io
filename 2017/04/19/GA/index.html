@@ -1,0 +1,1112 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="S7CcF76Y3WPq3DKyOvsZGmSEALaSes364lNi0PMvhh4" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="计算智能,GA,目标优化,遗传,算法," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Niu Code" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/default_avatar.jpg?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="遗传算法(genetic algorithm, GA)是一种进化算法，其基本原理是仿效生物界中的“物竞天择，适者生存”的演化法则。遗传算法是把问题参数编码为染色体，再利用迭代的方式进行选择、交叉以及变异等运算来交换种群中染色体的信息，最终生成符合优化目标的染色体。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【计算智能】目标优化智能算法之遗传算法（Python实现）">
+<meta property="og:url" content="https://tianle.me/2017/04/19/GA/index.html">
+<meta property="og:site_name" content="Niu Code">
+<meta property="og:description" content="遗传算法(genetic algorithm, GA)是一种进化算法，其基本原理是仿效生物界中的“物竞天择，适者生存”的演化法则。遗传算法是把问题参数编码为染色体，再利用迭代的方式进行选择、交叉以及变异等运算来交换种群中染色体的信息，最终生成符合优化目标的染色体。">
+<meta property="og:image" content="https://tianle.me//img.tianle.me/image/20170419/maxfunction.jpg">
+<meta property="og:image" content="https://tianle.me//img.tianle.me/image/20170419/coding.jpg">
+<meta property="og:image" content="https://tianle.me//img.tianle.me/image/20170419/selection.jpg">
+<meta property="og:image" content="https://tianle.me//img.tianle.me/image/20170419/mutation.jpg">
+<meta property="og:image" content="https://tianle.me//img.tianle.me/image/20170419/crossover.jpg">
+<meta property="og:image" content="https://tianle.me//img.tianle.me/image/20170419/crossoverCode.jpg">
+<meta property="og:image" content="https://tianle.me//img.tianle.me/image/20170419/result.png">
+<meta property="og:updated_time" content="2018-06-26T10:57:31.035Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【计算智能】目标优化智能算法之遗传算法（Python实现）">
+<meta name="twitter:description" content="遗传算法(genetic algorithm, GA)是一种进化算法，其基本原理是仿效生物界中的“物竞天择，适者生存”的演化法则。遗传算法是把问题参数编码为染色体，再利用迭代的方式进行选择、交叉以及变异等运算来交换种群中染色体的信息，最终生成符合优化目标的染色体。">
+<meta name="twitter:image" content="https://tianle.me//img.tianle.me/image/20170419/maxfunction.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tianle.me/2017/04/19/GA/"/>
+
+
+
+
+
+  <title> 【计算智能】目标优化智能算法之遗传算法（Python实现） | Niu Code </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-71583311-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Niu Code</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">南山小马</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://tianle.me/2017/04/19/GA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tianle Zhang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/title.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Niu Code">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                【计算智能】目标优化智能算法之遗传算法（Python实现）
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-19T11:40:12+08:00">
+                2017-04-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/算法/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/04/19/GA/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/04/19/GA/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>&#x9057;&#x4F20;&#x7B97;&#x6CD5;(genetic algorithm, GA)&#x662F;&#x4E00;&#x79CD;&#x8FDB;&#x5316;&#x7B97;&#x6CD5;&#xFF0C;&#x5176;&#x57FA;&#x672C;&#x539F;&#x7406;&#x662F;&#x4EFF;&#x6548;&#x751F;&#x7269;&#x754C;&#x4E2D;&#x7684;&#x201C;&#x7269;&#x7ADE;&#x5929;&#x62E9;&#xFF0C;&#x9002;&#x8005;&#x751F;&#x5B58;&#x201D;&#x7684;&#x6F14;&#x5316;&#x6CD5;&#x5219;&#x3002;&#x9057;&#x4F20;&#x7B97;&#x6CD5;&#x662F;&#x628A;&#x95EE;&#x9898;&#x53C2;&#x6570;&#x7F16;&#x7801;&#x4E3A;&#x67D3;&#x8272;&#x4F53;&#xFF0C;&#x518D;&#x5229;&#x7528;&#x8FED;&#x4EE3;&#x7684;&#x65B9;&#x5F0F;&#x8FDB;&#x884C;&#x9009;&#x62E9;&#x3001;&#x4EA4;&#x53C9;&#x4EE5;&#x53CA;&#x53D8;&#x5F02;&#x7B49;&#x8FD0;&#x7B97;&#x6765;&#x4EA4;&#x6362;&#x79CD;&#x7FA4;&#x4E2D;&#x67D3;&#x8272;&#x4F53;&#x7684;&#x4FE1;&#x606F;&#xFF0C;&#x6700;&#x7EC8;&#x751F;&#x6210;&#x7B26;&#x5408;&#x4F18;&#x5316;&#x76EE;&#x6807;&#x7684;&#x67D3;&#x8272;&#x4F53;&#x3002;</p>
+<a id="more"></a>
+<h3 id="&#x540D;&#x8BCD;&#x89E3;&#x91CA;">&#x540D;&#x8BCD;&#x89E3;&#x91CA; <a href="#&#x540D;&#x8BCD;&#x89E3;&#x91CA;" class="header-anchor"> </a></h3>
+<p>&#x5728;&#x9057;&#x4F20;&#x7B97;&#x6CD5;&#x4E2D;&#xFF0C;&#x67D3;&#x8272;&#x4F53;&#x5BF9;&#x5E94;&#x7684;&#x662F;&#x6570;&#x636E;&#x6216;&#x6570;&#x7EC4;&#xFF0C;&#x901A;&#x5E38;&#x662F;&#x7531;&#x4E00;&#x7EF4;&#x7684;&#x4E32;&#x7ED3;&#x6784;&#x6570;&#x636E;&#x6765;&#x8868;&#x793A;&#xFF0C;&#x4E32;&#x4E0A;&#x5404;&#x4E2A;&#x4F4D;&#x7F6E;&#x5BF9;&#x5E94;&#x57FA;&#x56E0;&#x7684;&#x53D6;&#x503C;&#x3002;&#x57FA;&#x56E0;&#x7EC4;&#x6210;&#x7684;&#x4E32;&#x5C31;&#x662F;&#x67D3;&#x8272;&#x4F53;(chromosome)&#xFF0C;&#x6216;&#x8005;&#x79F0;&#x4E3A;&#x57FA;&#x56E0;&#x578B;&#x4E2A;&#x4F53;(individual)&#x3002;&#x4E00;&#x5B9A;&#x6570;&#x91CF;&#x7684;&#x4E2A;&#x4F53;&#x7EC4;&#x6210;&#x4E86;&#x7FA4;&#x4F53;(population)&#x3002;&#x7FA4;&#x4F53;&#x4E2D;&#x7684;&#x4E2A;&#x4F53;&#x6570;&#x76EE;&#x79F0;&#x4E3A;&#x7FA4;&#x4F53;&#x5927;&#x5C0F;(population size)&#xFF0C;&#x4E5F;&#x6210;&#x4E3A;&#x7FA4;&#x4F53;&#x89C4;&#x6A21;&#x3002;&#x800C;&#x5404;&#x4E2A;&#x4E2A;&#x4F53;&#x5BF9;&#x73AF;&#x5883;&#x7684;&#x9002;&#x5E94;&#x7A0B;&#x5EA6;&#x53EB;&#x9002;&#x5E94;&#x5EA6;(fitness)&#x3002;</p>
+<h3 id="&#x57FA;&#x672C;&#x6B65;&#x9AA4;">&#x57FA;&#x672C;&#x6B65;&#x9AA4; <a href="#&#x57FA;&#x672C;&#x6B65;&#x9AA4;" class="header-anchor"> </a></h3>
+<h4 id="&#x7F16;&#x7801;">&#x7F16;&#x7801; <a href="#&#x7F16;&#x7801;" class="header-anchor"> </a></h4>
+<p>GA&#x5728;&#x8FDB;&#x884C;&#x641C;&#x7D22;&#x4E4B;&#x524D;&#x5148;&#x5C06;&#x89E3;&#x7A7A;&#x95F4;&#x7684;&#x89E3;&#x6570;&#x636E;&#x8868;&#x793A;&#x6210;&#x9057;&#x4F20;&#x7A7A;&#x95F4;&#x7684;&#x57FA;&#x56E0;&#x578B;&#x4E32;&#x7ED3;&#x6784;&#x6570;&#x636E;&#xFF0C;&#x8FD9;&#x4E9B;&#x4E32;&#x7ED3;&#x6784;&#x6570;&#x636E;&#x7684;&#x4E0D;&#x540C;&#x7EC4;&#x5408;&#x4FBF;&#x6784;&#x6210;&#x4E86;&#x4E0D;&#x540C;&#x7684;&#x70B9;&#x3002;</p>
+<h4 id="&#x521D;&#x59CB;&#x7FA4;&#x4F53;&#x7684;&#x751F;&#x6210;">&#x521D;&#x59CB;&#x7FA4;&#x4F53;&#x7684;&#x751F;&#x6210; <a href="#&#x521D;&#x59CB;&#x7FA4;&#x4F53;&#x7684;&#x751F;&#x6210;" class="header-anchor"> </a></h4>
+<p>&#x968F;&#x673A;&#x4EA7;&#x751F;N&#x4E2A;&#x521D;&#x59CB;&#x4E32;&#x7ED3;&#x6784;&#x6570;&#x636E;&#xFF0C;&#x6BCF;&#x4E2A;&#x4E32;&#x7ED3;&#x6784;&#x6570;&#x636E;&#x79F0;&#x4E3A;&#x4E00;&#x4E2A;&#x4E2A;&#x4F53;&#xFF0C;N&#x4E2A;&#x4E2A;&#x4F53;&#x6784;&#x6210;&#x4E86;&#x4E00;&#x4E2A;&#x7FA4;&#x4F53;&#x3002;GA&#x4EE5;&#x8FD9;N&#x4E2A;&#x4E32;&#x7ED3;&#x6784;&#x6570;&#x636E;&#x4F5C;&#x4E3A;&#x521D;&#x59CB;&#x70B9;&#x5F00;&#x59CB;&#x8FDB;&#x5316;&#x3002;</p>
+<h4 id="&#x9002;&#x5E94;&#x5EA6;&#x8BC4;&#x4F30;">&#x9002;&#x5E94;&#x5EA6;&#x8BC4;&#x4F30; <a href="#&#x9002;&#x5E94;&#x5EA6;&#x8BC4;&#x4F30;" class="header-anchor"> </a></h4>
+<p>&#x9002;&#x5E94;&#x5EA6;&#x8868;&#x660E;&#x4E2A;&#x4F53;&#x6216;&#x89E3;&#x7684;&#x4F18;&#x52A3;&#x6027;&#x3002;&#x4E0D;&#x540C;&#x7684;&#x95EE;&#x9898;&#xFF0C;&#x9002;&#x5E94;&#x5EA6;&#x51FD;&#x6570;&#x7684;&#x5B9A;&#x4E49;&#x65B9;&#x5F0F;&#x4E5F;&#x4E0D;&#x540C;&#x3002;</p>
+<h4 id="&#x9009;&#x62E9;">&#x9009;&#x62E9; <a href="#&#x9009;&#x62E9;" class="header-anchor"> </a></h4>
+<p>&#x9009;&#x62E9;&#x7684;&#x76EE;&#x7684;&#x662F;&#x4E3A;&#x4E86;&#x4ECE;&#x5F53;&#x524D;&#x7FA4;&#x4F53;&#x4E2D;&#x9009;&#x51FA;&#x4F18;&#x826F;&#x7684;&#x4E2A;&#x4F53;&#xFF0C;&#x4F7F;&#x5B83;&#x4EEC;&#x6709;&#x673A;&#x4F1A;&#x4F5C;&#x4E3A;&#x7236;&#x4EE3;&#x4E3A;&#x4E0B;&#x4E00;&#x4EE3;&#x7E41;&#x6B96;&#x5B50;&#x5B59;&#x3002;&#x9057;&#x4F20;&#x7B97;&#x6CD5;&#x901A;&#x8FC7;&#x9009;&#x62E9;&#x8FC7;&#x7A0B;&#x4F53;&#x73B0;&#x8FD9;&#x4E00;&#x601D;&#x60F3;&#xFF0C;&#x8FDB;&#x884C;&#x9009;&#x62E9;&#x7684;&#x539F;&#x5219;&#x662F;&#x9002;&#x5E94;&#x5EA6;&#x5F3A;&#x7684;&#x4E2A;&#x4F53;&#x4E3A;&#x4E0B;&#x4E00;&#x4EE3;&#x8D21;&#x732E;&#x4E00;&#x4E2A;&#x6216;&#x591A;&#x4E2A;&#x540E;&#x4EE3;&#x7684;&#x6982;&#x7387;&#x5927;&#x3002;&#x9009;&#x62E9;&#x4F53;&#x73B0;&#x4E86;&#x8FBE;&#x5C14;&#x6587;&#x7684;&#x9002;&#x8005;&#x751F;&#x5B58;&#x539F;&#x5219;&#x3002;</p>
+<h4 id="&#x4EA4;&#x53C9;">&#x4EA4;&#x53C9; <a href="#&#x4EA4;&#x53C9;" class="header-anchor"> </a></h4>
+<p>&#x4EA4;&#x53C9;&#x64CD;&#x4F5C;&#x662F;&#x9057;&#x4F20;&#x7B97;&#x6CD5;&#x4E2D;&#x6700;&#x4E3B;&#x8981;&#x7684;&#x9057;&#x4F20;&#x64CD;&#x4F5C;&#x3002;&#x901A;&#x8FC7;&#x4EA4;&#x53C9;&#x64CD;&#x4F5C;&#x53EF;&#x4EE5;&#x5F97;&#x5230;&#x65B0;&#x4E00;&#x4EE3;&#x4E2A;&#x4F53;&#xFF0C;&#x65B0;&#x4E2A;&#x4F53;&#x7EC4;&#x5408;&#x4E86;&#x5176;&#x7236;&#x8F88;&#x4E2A;&#x4F53;&#x7684;&#x7279;&#x6027;&#x3002;&#x4EA4;&#x53C9;&#x4F53;&#x73B0;&#x4E86;&#x4FE1;&#x606F;&#x4EA4;&#x6362;&#x7684;&#x601D;&#x60F3;&#x3002;</p>
+<h4 id="&#x53D8;&#x5F02;">&#x53D8;&#x5F02; <a href="#&#x53D8;&#x5F02;" class="header-anchor"> </a></h4>
+<p>&#x53D8;&#x5F02;&#x9996;&#x5148;&#x5728;&#x7FA4;&#x4F53;&#x4E2D;&#x968F;&#x673A;&#x9009;&#x62E9;&#x4E00;&#x4E2A;&#x4E2A;&#x4F53;&#xFF0C;&#x5BF9;&#x4E8E;&#x9009;&#x4E2D;&#x7684;&#x4E2A;&#x4F53;&#x4EE5;&#x4E00;&#x5B9A;&#x7684;&#x6982;&#x7387;&#x968F;&#x673A;&#x5730;&#x6539;&#x53D8;&#x4E32;&#x7ED3;&#x6784;&#x6570;&#x636E;&#x4E2D;&#x67D0;&#x4E2A;&#x4E32;&#x7684;&#x7684;&#x503C;&#x3002;&#x540C;&#x751F;&#x7269;&#x754C;&#x4E00;&#x6837;&#xFF0C;GA&#x4E2D;&#x53D8;&#x5F02;&#x53D1;&#x751F;&#x7684;&#x6982;&#x7387;&#x5F88;&#x4F4E;&#xFF0C;&#x901A;&#x5E38;&#x53D6;&#x503C;&#x5F88;&#x5C0F;&#x3002;</p>
+<h3 id="&#x5B9E;&#x4F8B;&#x8BE6;&#x89E3;">&#x5B9E;&#x4F8B;&#x8BE6;&#x89E3; <a href="#&#x5B9E;&#x4F8B;&#x8BE6;&#x89E3;" class="header-anchor"> </a></h3>
+<p>&#x4E4B;&#x524D;&#x5DF2;&#x7ECF;&#x4F7F;&#x7528;matlab&#x5B9E;&#x73B0;&#x4E86;&#x4E00;&#x6B21;&#xFF0C;&#x7531;&#x4E8E;&#x73B0;&#x5728;&#x53C8;&#x5E03;&#x7F6E;&#x4E86;&#x4F5C;&#x4E1A;&#xFF0C;&#x6B63;&#x597D;&#x73B0;&#x5728;&#x5BF9;python&#x4E0D;&#x662F;&#x7279;&#x522B;&#x719F;&#x6089;&#xFF0C;&#x90A3;&#x5C31;&#x5199;&#x4E2A;&#x4EE3;&#x7801;&#x7EC3;&#x7EC3;&#x624B;&#x5427;&#x3002;</p>
+<h4 id="&#x76EE;&#x6807;&#x51FD;&#x6570;">&#x76EE;&#x6807;&#x51FD;&#x6570; <a href="#&#x76EE;&#x6807;&#x51FD;&#x6570;" class="header-anchor"> </a></h4>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">max    f (x1, x2) = 21.5 + x1&#xB7;sin(4 pi x1) + x2&#xB7;sin(20 pi x2)  </div><div class="line">  </div><div class="line">s. t.    -3.0 &lt;= x1 &lt;= 12.1  </div><div class="line">          4.1 &lt;= x2 &lt;= 5.8</div></pre></td></tr></table></figure>
+<p><img src="//img.tianle.me/image/20170419/maxfunction.jpg" alt="function"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">func</span><span class="params">(self)</span>:</span></div><div class="line">        self.decoding(self.code_x1, self.code_x2)</div><div class="line">        self.y = <span class="number">21.5</span> + self.x1 * math.sin(<span class="number">4</span> * math.pi * self.x1) + self.x2 * math.sin(<span class="number">20</span> * math.pi * self.x2)</div></pre></td></tr></table></figure>
+<h4 id="&#x4E8C;&#x8FDB;&#x5236;&#x7F16;&#x7801;">&#x4E8C;&#x8FDB;&#x5236;&#x7F16;&#x7801; <a href="#&#x4E8C;&#x8FDB;&#x5236;&#x7F16;&#x7801;" class="header-anchor"> </a></h4>
+<p>&#x5728;&#x521A;&#x521A;&#x63D0;&#x5230;&#x7684;&#x9057;&#x4F20;&#x7B97;&#x6CD5;&#x4E2D;&#xFF0C;&#x6211;&#x4EEC;&#x9996;&#x5148;&#x8981;&#x5C06;&#x6570;&#x636E;&#x8FDB;&#x884C;&#x7F16;&#x7801;&#xFF0C;&#x8FD9;&#x91CC;&#x6211;&#x4EEC;&#x91C7;&#x7528;&#x4E8C;&#x8FDB;&#x5236;&#x7684;&#x65B9;&#x5F0F;&#x8FDB;&#x884C;&#x7F16;&#x7801;&#x3002;&#x7B2C;&#x4E00;&#x6B65;&#xFF0C;&#x6211;&#x4EEC;&#x6839;&#x636E;&#x9898;&#x76EE;&#x7684;&#x4ECB;&#x7ECD;&#x53EF;&#x4EE5;&#x5F97;&#x77E5;&#x8BE5;&#x51FD;&#x6570;&#x542B;&#x6709;&#x4E24;&#x4E2A;&#x53D8;&#x91CF;&#xFF0C;&#x4EE5;&#x53CA;&#x5404;&#x81EA;&#x7684;&#x5B9A;&#x4E49;&#x57DF;&#x3002;&#x5728;&#x4E8C;&#x8FDB;&#x5236;&#x7F16;&#x7801;&#x4E2D;&#xFF0C;&#x6211;&#x4EEC;&#x9996;&#x5148;&#x8981;&#x5148;&#x8BA1;&#x7B97;&#x5B83;&#x7684;&#x7F16;&#x7801;&#x957F;&#x5EA6;&#x3002;&#x8BA1;&#x7B97;&#x516C;&#x5F0F;&#x5982;&#x4E0B;:</p>
+$${2^{{m_j} - 1}} &lt; ({b_j} - {a_j})*precision \le {2^{{m_j}}} - 1$$
+<p>&#x5176;&#x4E2D;precision&#x4E3A;&#x7CBE;&#x5EA6;&#xFF0C;&#x5982;&#x5C0F;&#x6570;&#x70B9;&#x540E;5&#x4F4D;&#xFF0C;&#x5219;precision=10^5&#xFF0C;m<sub>j</sub>&#x4E3A;&#x7F16;&#x7801;&#x957F;&#x5EA6;&#xFF0C;${x_j} \in [{a_j},{b_j}]$</p>
+<h4 id="&#x4E8C;&#x8FDB;&#x5236;&#x89E3;&#x7801;">&#x4E8C;&#x8FDB;&#x5236;&#x89E3;&#x7801; <a href="#&#x4E8C;&#x8FDB;&#x5236;&#x89E3;&#x7801;" class="header-anchor"> </a></h4>
+<p>&#x89E3;&#x7801;&#x5373;&#x7F16;&#x7801;&#x7684;&#x9006;&#x8FC7;&#x7A0B;:</p>
+$${x_j} = {a_j} + {\rm{decimal}}(substrin{g_j}) \times \frac{{{b_j} - {a_j}}}{{{2^{{m_j}}} - 1}}$$
+<p><img src="//img.tianle.me/image/20170419/coding.jpg" alt="function"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">decoding</span><span class="params">(self, code_x1, code_x2)</span>:</span></div><div class="line">        self.x1 = self.bounds[<span class="number">0</span>][<span class="number">0</span>] + int(code_x1, <span class="number">2</span>) * (self.bounds[<span class="number">0</span>][<span class="number">1</span>] - self.bounds[<span class="number">0</span>][<span class="number">0</span>]) / (</div><div class="line">        <span class="number">2</span> ** self.code_x1_length - <span class="number">1</span>)</div><div class="line">        self.x2 = self.bounds[<span class="number">1</span>][<span class="number">0</span>] + int(code_x2, <span class="number">2</span>) * (self.bounds[<span class="number">1</span>][<span class="number">1</span>] - self.bounds[<span class="number">1</span>][<span class="number">0</span>]) / (</div><div class="line">        <span class="number">2</span> ** self.code_x2_length - <span class="number">1</span>)</div></pre></td></tr></table></figure>
+<h4 id="&#x79CD;&#x7FA4;&#x521D;&#x59CB;&#x5316;">&#x79CD;&#x7FA4;&#x521D;&#x59CB;&#x5316; <a href="#&#x79CD;&#x7FA4;&#x521D;&#x59CB;&#x5316;" class="header-anchor"> </a></h4>
+<p>&#x7F16;&#x7801;&#x5B8C;&#x6210;&#x90A3;&#x6211;&#x4EEC;&#x5C31;&#x5F00;&#x59CB;&#x5BF9;&#x79CD;&#x7FA4;&#x521D;&#x59CB;&#x5316;&#x5427;&#xFF0C;&#x4E3A;&#x4E86;&#x7B80;&#x4FBF;&#x6211;&#x91C7;&#x7528;&#x4E86;&#x968F;&#x673A;&#x5730;&#x65B9;&#x5F0F;&#x8FDB;&#x884C;&#x521D;&#x59CB;&#x5316;&#x3002;</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, bounds, precision)</span>:</span></div><div class="line">        self.x1 = <span class="number">1</span></div><div class="line">        self.x2 = <span class="number">1</span></div><div class="line"></div><div class="line">        self.y = <span class="number">0</span></div><div class="line"></div><div class="line">        self.code_x1 = <span class="string">&apos;&apos;</span></div><div class="line">        self.code_x2 = <span class="string">&apos;&apos;</span></div><div class="line"></div><div class="line">        self.bounds = bounds</div><div class="line"></div><div class="line">        temp1 = (bounds[<span class="number">0</span>][<span class="number">1</span>] - bounds[<span class="number">0</span>][<span class="number">0</span>]) * precision</div><div class="line">        self.code_x1_length = math.ceil(math.log(temp1, <span class="number">2</span>))</div><div class="line"></div><div class="line">        temp2 = (bounds[<span class="number">1</span>][<span class="number">1</span>] - bounds[<span class="number">1</span>][<span class="number">0</span>]) * precision</div><div class="line">        self.code_x2_length = math.ceil(math.log(temp2, <span class="number">2</span>))</div><div class="line"></div><div class="line">        self.rand_init()</div><div class="line">        self.func()</div><div class="line">        </div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">rand_init</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(self.code_x1_length):</div><div class="line">            self.code_x1 += str(random.randint(<span class="number">0</span>, <span class="number">1</span>))</div><div class="line"></div><div class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(self.code_x2_length):</div><div class="line">            self.code_x2 += str(random.randint(<span class="number">0</span>, <span class="number">1</span>))</div></pre></td></tr></table></figure>
+<h4 id="&#x9009;&#x62E9;">&#x9009;&#x62E9; <a href="#&#x9009;&#x62E9;" class="header-anchor"> </a></h4>
+<p>&#x9009;&#x62E9;&#x6211;&#x4EEC;&#x91C7;&#x7528;&#x8F6E;&#x76D8;&#x8D4C;&#x65B9;&#x5F0F;&#x8FDB;&#x884C;&#x9009;&#x62E9;&#xFF0C;&#x4E3B;&#x8981;&#x601D;&#x60F3;&#x662F;&#x9002;&#x5E94;&#x5EA6;&#x9AD8;&#x7684;&#xFF0C;&#x88AB;&#x9009;&#x62E9;&#x5230;&#x7684;&#x6982;&#x7387;&#x5927;&#x3002;<br>
+<img src="//img.tianle.me/image/20170419/selection.jpg" alt="function"></p>
+<p>&#x6CA1;&#x600E;&#x4E48;&#x4F18;&#x5316;&#xFF0C;&#x7528;&#x4E86;&#x4E00;&#x5806;for&#x5FAA;&#x73AF;&#x3002;&#x3002;&#x3002;&#x3002;</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">select</span><span class="params">(self)</span>:</span></div><div class="line">    <span class="string">&quot;&quot;&quot;</span></div><div class="line">    &#x8F6E;&#x76D8;&#x8D4C;&#x9009;&#x62E9;</div><div class="line">    :return:</div><div class="line">    &quot;&quot;&quot;</div><div class="line">    <span class="comment"># calculate fitness function</span></div><div class="line">    sum_f = <span class="number">0</span></div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(self.pop_size):</div><div class="line">        self.pop[i].func()</div><div class="line"></div><div class="line">    <span class="comment"># guarantee fitness &gt; 0</span></div><div class="line">    min = self.pop[<span class="number">0</span>].y</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(self.pop_size):</div><div class="line">        <span class="keyword">if</span> self.pop[i].y &lt; min:</div><div class="line">            min = self.pop[i].y</div><div class="line">    <span class="keyword">if</span> min &lt; <span class="number">0</span>:</div><div class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(self.pop_size):</div><div class="line">            self.pop[i].y = self.pop[i].y + (<span class="number">-1</span>) * min</div><div class="line"></div><div class="line">    <span class="comment"># roulette</span></div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(self.pop_size):</div><div class="line">        sum_f += self.pop[i].y</div><div class="line">    p = [<span class="number">0</span>] * self.pop_size</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(self.pop_size):</div><div class="line">        p[i] = self.pop[i].y / sum_f</div><div class="line">    q = [<span class="number">0</span>] * self.pop_size</div><div class="line">    q[<span class="number">0</span>] = <span class="number">0</span></div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(self.pop_size):</div><div class="line">        s = <span class="number">0</span></div><div class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">0</span>, i+<span class="number">1</span>):</div><div class="line">            s += p[j]</div><div class="line">        q[i] = s</div><div class="line">    <span class="comment"># start roulette</span></div><div class="line">    v = []</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(self.pop_size):</div><div class="line">        r = random.random()</div><div class="line">        <span class="keyword">if</span> r &lt; q[<span class="number">0</span>]:</div><div class="line">            v.append(self.pop[<span class="number">0</span>])</div><div class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">1</span>, self.pop_size):</div><div class="line">            <span class="keyword">if</span> q[j - <span class="number">1</span>] &lt; r &lt;= q[j]:</div><div class="line">                v.append(self.pop[j])</div><div class="line">    self.pop = v</div></pre></td></tr></table></figure>
+<h4 id="&#x53D8;&#x5F02;">&#x53D8;&#x5F02; <a href="#&#x53D8;&#x5F02;" class="header-anchor"> </a></h4>
+<p>&#x8FD9;&#x91CC;&#x7684;&#x53D8;&#x5F02;&#xFF0C;&#x6211;&#x4EEC;&#x5148;&#x4EE5;&#x53D8;&#x5F02;&#x6982;&#x7387;&#xFF0C;&#x4ECE;&#x79CD;&#x7FA4;&#x4E2D;&#x9009;&#x4E00;&#x4E2A;&#xFF0C;&#x7136;&#x540E;&#x5BF9;&#x9009;&#x4E2D;&#x7684;&#x4E2A;&#x4F53;&#xFF0C;&#x968F;&#x673A;&#x9009;&#x4E00;&#x4E2A;&#x53D8;&#x5F02;&#x4F4D;&#x70B9;&#x8FDB;&#x884C;&#x53D8;&#x5F02;&#x3002;<br>
+<img src="//img.tianle.me/image/20170419/mutation.jpg" alt="function"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">mutation</span><span class="params">(self)</span>:</span></div><div class="line">    <span class="string">&quot;&quot;&quot;</span></div><div class="line">    &#x53D8;&#x5F02;</div><div class="line">    :return:</div><div class="line">    &quot;&quot;&quot;</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(self.pop_size):</div><div class="line">        <span class="keyword">if</span> self.pm &gt; random.random():</div><div class="line">            pop = self.pop[i]</div><div class="line">            <span class="comment"># select mutation index</span></div><div class="line">            index1 = random.randint(<span class="number">0</span>, pop.code_x1_length<span class="number">-1</span>)</div><div class="line">            index2 = random.randint(<span class="number">0</span>, pop.code_x2_length<span class="number">-1</span>)</div><div class="line"></div><div class="line">            i = pop.code_x1[index1]</div><div class="line">            i = self.__inverse(i)</div><div class="line">            pop.code_x1 = pop.code_x1[:index1] + i + pop.code_x1[index1+<span class="number">1</span>:]</div><div class="line"></div><div class="line">            i = pop.code_x2[index2]</div><div class="line">            i = self.__inverse(i)</div><div class="line">            pop.code_x2 = pop.code_x2[:index2] + i + pop.code_x2[index2+<span class="number">1</span>:]</div></pre></td></tr></table></figure>
+<h4 id="&#x4EA4;&#x53C9;">&#x4EA4;&#x53C9; <a href="#&#x4EA4;&#x53C9;" class="header-anchor"> </a></h4>
+<p>&#x8FD9;&#x91CC;&#x91C7;&#x7528;&#x5355;&#x70B9;&#x4EA4;&#x53C9;&#x6CD5;&#x3002;&#x968F;&#x673A;&#x4ECE;&#x79CD;&#x7FA4;&#x4E2D;&#x9009;&#x4E24;&#x4E2A;&#x4E2A;&#x4F53;&#xFF0C;&#x7136;&#x540E;&#x518D;&#x968F;&#x673A;&#x9009;&#x4E00;&#x4E2A;&#x4EA4;&#x53C9;&#x70B9;&#xFF0C;&#x4EA4;&#x6362;&#x4F4D;&#x7F6E;&#x3002;&#x770B;&#x56FE; = . =</p>
+<p><img src="//img.tianle.me/image/20170419/crossover.jpg" alt="function"></p>
+<p><img src="//img.tianle.me/image/20170419/crossoverCode.jpg" alt="function"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">cross</span><span class="params">(self)</span>:</span></div><div class="line">    <span class="string">&quot;&quot;&quot;</span></div><div class="line">    &#x4EA4;&#x53C9;</div><div class="line">    :return:</div><div class="line">    &quot;&quot;&quot;</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(int(self.pop_size / <span class="number">2</span>)):</div><div class="line">        <span class="keyword">if</span> self.pc &gt; random.random():</div><div class="line">            <span class="comment"># randon select 2 chromosomes in pops</span></div><div class="line">            i = <span class="number">0</span></div><div class="line">            j = <span class="number">0</span></div><div class="line">            <span class="keyword">while</span> i == j:</div><div class="line">                i = random.randint(<span class="number">0</span>, self.pop_size<span class="number">-1</span>)</div><div class="line">                j = random.randint(<span class="number">0</span>, self.pop_size<span class="number">-1</span>)</div><div class="line">            pop_i = self.pop[i]</div><div class="line">            pop_j = self.pop[j]</div><div class="line"></div><div class="line">            <span class="comment"># select cross index</span></div><div class="line">            pop_1 = random.randint(<span class="number">0</span>, pop_i.code_x1_length - <span class="number">1</span>)</div><div class="line">            pop_2 = random.randint(<span class="number">0</span>, pop_i.code_x2_length - <span class="number">1</span>)</div><div class="line"></div><div class="line">            <span class="comment"># get new code</span></div><div class="line">            new_pop_i_code1 = pop_i.code_x1[<span class="number">0</span>: pop_1] + pop_j.code_x1[pop_1: pop_i.code_x1_length]</div><div class="line">            new_pop_i_code2 = pop_i.code_x2[<span class="number">0</span>: pop_2] + pop_j.code_x2[pop_2: pop_i.code_x2_length]</div><div class="line"></div><div class="line">            new_pop_j_code1 = pop_j.code_x1[<span class="number">0</span>: pop_1] + pop_i.code_x1[pop_1: pop_i.code_x1_length]</div><div class="line">            new_pop_j_code2 = pop_j.code_x2[<span class="number">0</span>: pop_2] + pop_i.code_x2[pop_2: pop_i.code_x2_length]</div><div class="line"></div><div class="line">            pop_i.code_x1 = new_pop_i_code1</div><div class="line">            pop_i.code_x2 = new_pop_i_code2</div><div class="line"></div><div class="line">            pop_j.code_x1 = new_pop_j_code1</div><div class="line">            pop_j.code_x2 = new_pop_j_code2</div></pre></td></tr></table></figure>
+<h4 id="&#x7B97;&#x6CD5;&#x4E3B;&#x6D41;&#x7A0B;">&#x7B97;&#x6CD5;&#x4E3B;&#x6D41;&#x7A0B; <a href="#&#x7B97;&#x6CD5;&#x4E3B;&#x6D41;&#x7A0B;" class="header-anchor"> </a></h4>
+<p>&#x81F3;&#x6B64;&#xFF0C;&#x9057;&#x4F20;&#x7684;&#x4E3B;&#x8981;&#x6846;&#x67B6;&#x5DF2;&#x7ECF;&#x5B8C;&#x6BD5;&#xFF0C;&#x4E0B;&#x9762;&#x5C55;&#x793A;&#x4E3B;&#x6D41;&#x7A0B;&#xFF0C;&#x53CA;&#x753B;&#x56FE;&#x90E8;&#x5206;&#x4EE3;&#x7801;&#x3002;</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">ga</span><span class="params">(self)</span>:</span></div><div class="line">    <span class="string">&quot;&quot;&quot;</span></div><div class="line">    &#x7B97;&#x6CD5;&#x4E3B;&#x51FD;&#x6570;</div><div class="line">    :return:</div><div class="line">    &quot;&quot;&quot;</div><div class="line">    self.init_pop()</div><div class="line">    best = self.find_best()</div><div class="line">    self.g_best = copy.deepcopy(best)</div><div class="line">    y = [<span class="number">0</span>] * self.pop_size</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(self.max_gen):</div><div class="line">        self.cross()</div><div class="line">        self.mutation()</div><div class="line">        self.select()</div><div class="line">        best = self.find_best()</div><div class="line">        self.bests[i] = best</div><div class="line">        <span class="keyword">if</span> self.g_best.y &lt; best.y:</div><div class="line">            self.g_best = copy.deepcopy(best)</div><div class="line">        y[i] = self.g_best.y</div><div class="line">        print(self.g_best.y)</div><div class="line"></div><div class="line">    <span class="comment"># plt</span></div><div class="line">    plt.figure(<span class="number">1</span>)</div><div class="line">    x = range(self.pop_size)</div><div class="line">    plt.plot(x, y)</div><div class="line">    plt.ylabel(<span class="string">&apos;generations&apos;</span>)</div><div class="line">    plt.xlabel(<span class="string">&apos;function value&apos;</span>)</div><div class="line">    plt.show()</div></pre></td></tr></table></figure>
+<h4 id="&#x5B9E;&#x9A8C;&#x7ED3;&#x679C;&#x56FE;">&#x5B9E;&#x9A8C;&#x7ED3;&#x679C;&#x56FE; <a href="#&#x5B9E;&#x9A8C;&#x7ED3;&#x679C;&#x56FE;" class="header-anchor"> </a></h4>
+<p><img src="//img.tianle.me/image/20170419/result.png" alt="function"></p>
+<h3 id="&#x603B;&#x7ED3;">&#x603B;&#x7ED3; <a href="#&#x603B;&#x7ED3;" class="header-anchor"> </a></h3>
+<p>&#x5728;&#x7F16;&#x7801;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x6211;&#x5077;&#x61D2;&#x4E86;&#x4E00;&#x4E0B;&#xFF0C;&#x628A;&#x4E24;&#x4E2A;&#x53D8;&#x91CF;&#x62C6;&#x5F00;&#x5199;&#xFF0C;x1&#x548C;x2&#xFF0C;&#x5BFC;&#x81F4;&#x4E4B;&#x540E;&#x7684;&#x64CD;&#x4F5C;&#x53D8;&#x5F97;&#x5F02;&#x5E38;&#x590D;&#x6742;&#xFF0C;&#x5E76;&#x4E14;&#x4E0D;&#x5229;&#x4E8E;&#x4EE3;&#x7801;&#x91CD;&#x6784;&#x3002;<br>
+&#x7A0B;&#x5E8F;&#x4E2D;&#x8FC7;&#x591A;&#x7684;&#x4F7F;&#x7528;&#x4E86;for&#x5FAA;&#x73AF;&#xFF0C;&#x5E76;&#x6CA1;&#x6709;&#x5BF9;&#x6B64;&#x8FDB;&#x884C;&#x4F18;&#x5316;&#x3002;<br>
+&#x9488;&#x5BF9;&#x4E0A;&#x8FF0;&#x4E24;&#x4E2A;&#x95EE;&#x9898;&#xFF0C;&#x5728;&#x6B64;&#x8BB0;&#x5F55;&#x4E00;&#x4E0B;&#x3002;</p>
+<h3 id="&#x7A0B;&#x5E8F;&#x5B8C;&#x6574;&#x4EE3;&#x7801;">&#x7A0B;&#x5E8F;&#x5B8C;&#x6574;&#x4EE3;&#x7801; <a href="#&#x7A0B;&#x5E8F;&#x5B8C;&#x6574;&#x4EE3;&#x7801;" class="header-anchor"> </a></h3>
+<p><a href="https://github.com/zhangtianle/Genetic-Algorithms" target="_blank" rel="external">Genetic-Algorithms</a></p>
+<h3 id="&#x53C2;&#x8003;&#x8D44;&#x6599;">&#x53C2;&#x8003;&#x8D44;&#x6599; <a href="#&#x53C2;&#x8003;&#x8D44;&#x6599;" class="header-anchor"> </a></h3>
+<p>&#x300A;MATLAB&#x667A;&#x80FD;&#x7B97;&#x6CD5;-30&#x4E2A;&#x6848;&#x4F8B;&#x5206;&#x6790;&#x300B;</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/计算智能/" rel="tag"># 计算智能</a>
+          
+            <a href="/tags/GA/" rel="tag"># GA</a>
+          
+            <a href="/tags/目标优化/" rel="tag"># 目标优化</a>
+          
+            <a href="/tags/遗传/" rel="tag"># 遗传</a>
+          
+            <a href="/tags/算法/" rel="tag"># 算法</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/06/huawei2017/" rel="next" title="2017华为软件精英挑战赛心得">
+                <i class="fa fa-chevron-left"></i> 2017华为软件精英挑战赛心得
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/08/shitinPython/" rel="prev" title="Python中遇到的坑">
+                Python中遇到的坑 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/img/title.gif"
+               alt="Tianle Zhang" />
+          <p class="site-author-name" itemprop="name">Tianle Zhang</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">49</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">88</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhangtianle" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/tianlezh" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="https://creativecommons.org/licenses/by-sa/4.0/" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://coderchat.cn/" title="南山" target="_blank">南山</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.cnblogs.com/rongfangliu/" title="柳如风" target="_blank">柳如风</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.zhangyanlong.xyz/" title="张燕龙" target="_blank">张燕龙</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://baoyuzhang.github.io/" title="浅茉" target="_blank">浅茉</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#名词解释"><span class="nav-number">1.</span> <span class="nav-text">名词解释  </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基本步骤"><span class="nav-number">2.</span> <span class="nav-text">基本步骤  </span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#编码"><span class="nav-number">2.1.</span> <span class="nav-text">编码  </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#初始群体的生成"><span class="nav-number">2.2.</span> <span class="nav-text">初始群体的生成  </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#适应度评估"><span class="nav-number">2.3.</span> <span class="nav-text">适应度评估  </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#选择"><span class="nav-number">2.4.</span> <span class="nav-text">选择  </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#交叉"><span class="nav-number">2.5.</span> <span class="nav-text">交叉  </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#变异"><span class="nav-number">2.6.</span> <span class="nav-text">变异  </span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实例详解"><span class="nav-number">3.</span> <span class="nav-text">实例详解  </span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#目标函数"><span class="nav-number">3.1.</span> <span class="nav-text">目标函数  </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二进制编码"><span class="nav-number">3.2.</span> <span class="nav-text">二进制编码  </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二进制解码"><span class="nav-number">3.3.</span> <span class="nav-text">二进制解码  </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#种群初始化"><span class="nav-number">3.4.</span> <span class="nav-text">种群初始化  </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#选择"><span class="nav-number">3.5.</span> <span class="nav-text">选择  </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#变异"><span class="nav-number">3.6.</span> <span class="nav-text">变异  </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#交叉"><span class="nav-number">3.7.</span> <span class="nav-text">交叉  </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#算法主流程"><span class="nav-number">3.8.</span> <span class="nav-text">算法主流程  </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实验结果图"><span class="nav-number">3.9.</span> <span class="nav-text">实验结果图  </span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结  </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#程序完整代码"><span class="nav-number">5.</span> <span class="nav-text">程序完整代码  </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考资料"><span class="nav-number">6.</span> <span class="nav-text">参考资料  </span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tianle Zhang</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+<div>
+  <a class="theme-link" href="http://www.miitbeian.gov.cn/" target="_blank">
+    陕ICP备16015673号-1
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://tianle.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://tianle.me/2017/04/19/GA/';
+          this.page.identifier = '2017/04/19/GA/';
+          this.page.title = '【计算智能】目标优化智能算法之遗传算法（Python实现）';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://tianle.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1083 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="S7CcF76Y3WPq3DKyOvsZGmSEALaSes364lNi0PMvhh4" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="java," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Niu Code" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/default_avatar.jpg?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="Intellij IDEA中有很多快捷键让人爱不释手，stackoverflow上也有一些有趣的讨论。每个人都有自己的最爱，想排出个理想的榜单还真是困难。以前也整理过Intellij的快捷键，这次就按照我日常开发时的使用频率，简单分类列一下我最喜欢的十大快捷-神-键吧。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【转】十大Intellij IDEA快捷键">
+<meta property="og:url" content="https://tianle.me/2016/08/24/Intellij-IDEA-Shortcut-Keys/index.html">
+<meta property="og:site_name" content="Niu Code">
+<meta property="og:description" content="Intellij IDEA中有很多快捷键让人爱不释手，stackoverflow上也有一些有趣的讨论。每个人都有自己的最爱，想排出个理想的榜单还真是困难。以前也整理过Intellij的快捷键，这次就按照我日常开发时的使用频率，简单分类列一下我最喜欢的十大快捷-神-键吧。">
+<meta property="og:updated_time" content="2018-06-26T10:57:31.050Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【转】十大Intellij IDEA快捷键">
+<meta name="twitter:description" content="Intellij IDEA中有很多快捷键让人爱不释手，stackoverflow上也有一些有趣的讨论。每个人都有自己的最爱，想排出个理想的榜单还真是困难。以前也整理过Intellij的快捷键，这次就按照我日常开发时的使用频率，简单分类列一下我最喜欢的十大快捷-神-键吧。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tianle.me/2016/08/24/Intellij-IDEA-Shortcut-Keys/"/>
+
+
+
+
+
+  <title> 【转】十大Intellij IDEA快捷键 | Niu Code </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-71583311-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Niu Code</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">南山小马</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://tianle.me/2016/08/24/Intellij-IDEA-Shortcut-Keys/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tianle Zhang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/title.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Niu Code">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                【转】十大Intellij IDEA快捷键
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-08-24T23:42:47+08:00">
+                2016-08-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/应用开发/" itemprop="url" rel="index">
+                    <span itemprop="name">应用开发</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/08/24/Intellij-IDEA-Shortcut-Keys/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2016/08/24/Intellij-IDEA-Shortcut-Keys/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Intellij IDEA&#x4E2D;&#x6709;&#x5F88;&#x591A;&#x5FEB;&#x6377;&#x952E;&#x8BA9;&#x4EBA;&#x7231;&#x4E0D;&#x91CA;&#x624B;&#xFF0C;stackoverflow&#x4E0A;&#x4E5F;&#x6709;&#x4E00;&#x4E9B;&#x6709;&#x8DA3;&#x7684;&#x8BA8;&#x8BBA;&#x3002;&#x6BCF;&#x4E2A;&#x4EBA;&#x90FD;&#x6709;&#x81EA;&#x5DF1;&#x7684;&#x6700;&#x7231;&#xFF0C;&#x60F3;&#x6392;&#x51FA;&#x4E2A;&#x7406;&#x60F3;&#x7684;&#x699C;&#x5355;&#x8FD8;&#x771F;&#x662F;&#x56F0;&#x96BE;&#x3002;&#x4EE5;&#x524D;&#x4E5F;&#x6574;&#x7406;&#x8FC7;Intellij&#x7684;&#x5FEB;&#x6377;&#x952E;&#xFF0C;&#x8FD9;&#x6B21;&#x5C31;&#x6309;&#x7167;&#x6211;&#x65E5;&#x5E38;&#x5F00;&#x53D1;&#x65F6;&#x7684;&#x4F7F;&#x7528;&#x9891;&#x7387;&#xFF0C;&#x7B80;&#x5355;&#x5206;&#x7C7B;&#x5217;&#x4E00;&#x4E0B;&#x6211;&#x6700;&#x559C;&#x6B22;&#x7684;<strong>&#x5341;&#x5927;&#x5FEB;&#x6377;-&#x795E;-&#x952E;</strong>&#x5427;&#x3002;</p>
+<a id="more"></a>
+<h2 id="1&#x667A;&#x80FD;&#x63D0;&#x793A;">1.&#x667A;&#x80FD;&#x63D0;&#x793A; <a href="#1&#x667A;&#x80FD;&#x63D0;&#x793A;" class="header-anchor"> </a></h2>
+<p>Intellij&#x9996;&#x5F53;&#x5176;&#x51B2;&#x7684;&#x5F53;&#x7136;&#x5C31;&#x662F;Intelligence&#x667A;&#x80FD;&#xFF01;&#x57FA;&#x672C;&#x7684;&#x4EE3;&#x7801;&#x63D0;&#x793A;&#x7528;<strong>Ctrl+Space</strong>&#xFF0C;&#x8FD8;&#x6709;&#x66F4;&#x667A;&#x80FD;&#x5730;&#x6309;&#x7C7B;&#x578B;&#x4FE1;&#x606F;&#x63D0;&#x793A;<strong>Ctrl+Shift+Space</strong>&#xFF0C;&#x4F46;&#x56E0;&#x4E3A;Intellij&#x603B;&#x662F;&#x968F;&#x7740;&#x6211;&#x4EEC;&#x6572;&#x51FB;&#x800C;&#x81EA;&#x52A8;&#x63D0;&#x793A;&#xFF0C;&#x6240;&#x4EE5;&#x5F88;&#x591A;&#x65F6;&#x5019;&#x90FD;&#x4E0D;&#x4F1A;&#x624B;&#x52A8;&#x6572;&#x8FD9;&#x4E24;&#x4E2A;&#x5FEB;&#x6377;&#x952E;(&#x9664;&#x975E;&#x63D0;&#x793A;&#x6846;&#x6D88;&#x5931;&#x4E86;)&#x3002;&#x7528;<strong>F2/ Shift+F2</strong>&#x79FB;&#x52A8;&#x5230;&#x6709;&#x9519;&#x8BEF;&#x7684;&#x4EE3;&#x7801;&#xFF0C;<strong>Alt+Enter</strong>&#x5FEB;&#x901F;&#x4FEE;&#x590D;(&#x5373;Eclipse&#x4E2D;&#x7684;Quick Fix&#x529F;&#x80FD;)&#x3002;&#x5F53;&#x667A;&#x80FD;&#x63D0;&#x793A;&#x4E3A;&#x6211;&#x4EEC;&#x81EA;&#x52A8;&#x8865;&#x5168;&#x65B9;&#x6CD5;&#x540D;&#x65F6;&#xFF0C;&#x6211;&#x4EEC;&#x901A;&#x5E38;&#x8981;&#x81EA;&#x5DF1;&#x8865;&#x4E0A;&#x884C;&#x5C3E;&#x7684;&#x53CD;&#x62EC;&#x53F7;&#x548C;&#x5206;&#x53F7;&#xFF0C;&#x5F53;&#x62EC;&#x53F7;&#x5D4C;&#x5957;&#x5F88;&#x591A;&#x5C42;&#x65F6;&#x4F1A;&#x5F88;&#x9EBB;&#x70E6;&#xFF0C;&#x8FD9;&#x65F6;&#x6211;&#x4EEC;&#x53EA;&#x9700;&#x6572;<strong>Ctrl+Shift+Enter</strong>&#x5C31;&#x80FD;&#x81EA;&#x52A8;&#x8865;&#x5168;&#x672B;&#x5C3E;&#x7684;&#x5B57;&#x7B26;&#x3002;&#x800C;&#x4E14;&#x4E0D;&#x53EA;&#x662F;&#x62EC;&#x53F7;&#xFF0C;&#x4F8B;&#x5982;&#x6572;&#x5B8C;if/for&#x65F6;&#x4E5F;&#x53EF;&#x4EE5;&#x81EA;&#x52A8;&#x8865;&#x4E0A;{}&#x82B1;&#x62EC;&#x53F7;&#x3002;<br>
+&#x6700;&#x540E;&#x8981;&#x8BF4;&#x4E00;&#x70B9;&#xFF0C;Intellij&#x80FD;&#x591F;&#x667A;&#x80FD;&#x611F;&#x77E5;spring&#x3001;hibernate&#x7B49;&#x4E3B;&#x6D41;&#x6846;&#x67B6;&#x7684;&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x548C;&#x7C7B;&#xFF0C;&#x4EE5;&#x9759;&#x5236;&#x52A8;&#xFF0C;&#x5728;&#x770B;&#x4F3C;&#x201C;&#x9759;&#x6001;&#x201D;&#x7684;&#x5916;&#x8868;&#x4E0B;&#xFF0C;&#x667A;&#x80FD;&#x5730;&#x626B;&#x63CF;&#x7406;&#x89E3;&#x4F60;&#x7684;&#x9879;&#x76EE;&#x662F;&#x5982;&#x4F55;&#x6784;&#x9020;&#x548C;&#x914D;&#x7F6E;&#x7684;&#x3002;</p>
+<h2 id="2&#x91CD;&#x6784;">2.&#x91CD;&#x6784; <a href="#2&#x91CD;&#x6784;" class="header-anchor"> </a></h2>
+<p>Intellij&#x91CD;&#x6784;&#x662F;&#x53E6;&#x4E00;&#x5B8C;&#x7206;Eclipse&#x7684;&#x529F;&#x80FD;&#xFF0C;&#x5176;&#x667A;&#x80FD;&#x7A0B;&#x5EA6;&#x4EE4;&#x4EBA;&#x77A0;&#x76EE;&#x7ED3;&#x820C;&#xFF0C;&#x6BD4;&#x5982;&#x63D0;&#x53D6;&#x53D8;&#x91CF;&#x65F6;&#x81EA;&#x52A8;&#x68C0;&#x67E5;&#x5230;&#x6240;&#x6709;&#x5339;&#x914D;&#x540C;&#x65F6;&#x63D0;&#x53D6;&#x6210;&#x4E00;&#x4E2A;&#x53D8;&#x91CF;&#x7B49;&#x3002;&#x5C24;&#x5176;&#x770B;&#x8FC7;&#x300A;&#x91CD;&#x6784;-&#x6539;&#x5584;&#x65E2;&#x6709;&#x4EE3;&#x7801;&#x8BBE;&#x8BA1;&#x300B;&#x4E4B;&#x540E;&#xFF0C;&#x6709;&#x4E86;Intellij&#x7684;&#x914D;&#x5408;&#x7B80;&#x76F4;&#x662F;&#x4EE4;&#x4EBA;&#x5927;&#x547C;&#x8FC7;&#x763E;&#xFF01;&#x4E5F;&#x6B63;&#x662F;&#x5F3A;&#x5927;&#x7684;&#x667A;&#x80FD;&#x548C;&#x91CD;&#x6784;&#x529F;&#x80FD;&#xFF0C;&#x4F7F;Intellij&#x4E0B;&#x7684;TDD&#x5F00;&#x53D1;&#x975E;&#x5E38;&#x987A;&#x7545;&#x3002;<br>
+&#x5207;&#x5165;&#x6B63;&#x9898;&#xFF0C;&#x5148;&#x8BF4;&#x4E00;&#x4E2A;&#x65E0;&#x654C;&#x7684;&#x91CD;&#x6784;&#x529F;&#x80FD;&#x5927;&#x6C47;&#x603B;&#x5FEB;&#x6377;&#x952E;<strong>Ctrl+Shift+Alt+T</strong>&#xFF0C;&#x53EB;&#x505A;Refactor This&#x3002;&#x6309;&#x6CD5;&#x6709;&#x70B9;&#x590D;&#x6742;&#xFF0C;&#x4F46;&#x4E5F;&#x7B26;&#x5408;Intellij&#x7684;&#x98CE;&#x683C;&#xFF0C;&#x5F88;&#x591A;&#x5FEB;&#x6377;&#x952E;&#x90FD;&#x8981;&#x53CC;&#x624B;&#x5B8C;&#x6210;&#xFF0C;&#x800C;&#x4E0D;&#x50CF;Eclipse&#x4E0D;&#x5C11;&#x6700;&#x6709;&#x7528;&#x7684;&#x5FEB;&#x6377;&#x952E;&#x53EF;&#x4EE5;&#x6F47;&#x6D12;&#x5730;&#x5355;&#x624B;&#x5B8C;&#x6210;(&#x4E0D;&#x77E5;&#x9053;&#x7B97;&#x4E0D;&#x7B97;Eclipse&#x7684;&#x4E00;&#x5927;&#x4F18;&#x70B9;)&#xFF0C;&#x4F46;&#x5404;&#x4F4D;&#x7528;&#x8FC7;Emacs&#x7684;&#x8BDD;&#x5C31;&#x4F1A;&#x89C9;&#x5F97;&#x4E5F;&#x6CA1;&#x4EC0;&#x4E48;&#x4E86;(&#x975E;Emacs&#x9ED1;)&#x3002;&#x6B64;&#x5916;&#xFF0C;&#x8FD8;&#x6709;&#x4E9B;&#x6700;&#x5E38;&#x7528;&#x7684;&#x91CD;&#x6784;&#x6280;&#x5DE7;&#xFF0C;&#x56E0;&#x4E3A;&#x592A;&#x5E38;&#x7528;&#x4E86;&#xFF0C;&#x82E5;&#x6BCF;&#x6B21;&#x90FD;&#x5728;Refactor This&#x83DC;&#x5355;&#x91CC;&#x9009;&#x7684;&#x8BDD;&#x6548;&#x7387;&#x6709;&#x4E9B;&#x4F4E;&#x3002;&#x6BD4;&#x5982;<strong>Shift+F6</strong>&#x76F4;&#x63A5;&#x5C31;&#x662F;&#x6539;&#x540D;&#xFF0C;<strong>Ctrl+Alt+V</strong>&#x5219;&#x662F;&#x63D0;&#x53D6;&#x53D8;&#x91CF;&#x3002;</p>
+<h2 id="3&#x4EE3;&#x7801;&#x751F;&#x6210;">3.&#x4EE3;&#x7801;&#x751F;&#x6210; <a href="#3&#x4EE3;&#x7801;&#x751F;&#x6210;" class="header-anchor"> </a></h2>
+<p>&#x8FD9;&#x4E00;&#x70B9;&#x7C7B;&#x4F3C;Eclipse&#xFF0C;&#x867D;&#x4E0D;&#x662F;&#x72EC;&#x5230;&#x4E4B;&#x5904;&#xFF0C;&#x4F46;&#x56E0;&#x4E3A;&#x65E5;&#x5E38;&#x4F7F;&#x7528;&#x9891;&#x7387;&#x6781;&#x9AD8;&#xFF0C;&#x6240;&#x4EE5;&#x8FD8;&#x662F;&#x7F57;&#x5217;&#x5728;&#x699C;&#x5355;&#x524D;&#x9762;&#x3002;&#x5E38;&#x7528;&#x7684;&#x6709;<strong>fori/sout/psvm+Tab</strong>&#x5373;&#x53EF;&#x751F;&#x6210;&#x5FAA;&#x73AF;&#x3001;System.out&#x3001;main&#x65B9;&#x6CD5;&#x7B49;boilerplate&#x6837;&#x677F;&#x4EE3;&#x7801;&#xFF0C;&#x7528;<strong>Ctrl+J</strong>&#x53EF;&#x4EE5;&#x67E5;&#x770B;&#x6240;&#x6709;&#x6A21;&#x677F;&#x3002;&#x540E;&#x9762;&#x201C;&#x8F85;&#x52A9;&#x201D;&#x4E00;&#x8282;&#x4E2D;&#x5C06;&#x4F1A;&#x8BB2;&#x5230;<strong>Alt+Insert</strong>&#xFF0C;&#x5728;&#x7F16;&#x8F91;&#x7A97;&#x53E3;&#x4E2D;&#x70B9;&#x51FB;&#x53EF;&#x4EE5;&#x751F;&#x6210;&#x6784;&#x9020;&#x51FD;&#x6570;&#x3001;toString&#x3001;getter/setter&#x3001;&#x91CD;&#x5199;&#x7236;&#x7C7B;&#x65B9;&#x6CD5;&#x7B49;&#x3002;&#x8FD9;&#x4E24;&#x4E2A;&#x6280;&#x5DE7;&#x5B9E;&#x5728;&#x592A;&#x5E38;&#x7528;&#x4E86;&#xFF0C;&#x51E0;&#x4E4E;&#x6BCF;&#x5929;&#x90FD;&#x8981;&#x751F;&#x6210;&#x4E00;&#x5806;main&#x3001;System.out&#x548C;getter/setter&#x3002;<br>
+&#x53E6;&#x5916;&#xFF0C;Intellij IDEA 13&#x4E2D;&#x52A0;&#x5165;&#x4E86;&#x540E;&#x7F00;&#x81EA;&#x52A8;&#x8865;&#x5168;&#x529F;&#x80FD;(Postfix Completion)&#xFF0C;&#x6BD4;&#x6A21;&#x677F;&#x751F;&#x6210;&#x66F4;&#x52A0;&#x7075;&#x6D3B;&#x548C;&#x5F3A;&#x5927;&#x3002;&#x4F8B;&#x5982;&#x8981;&#x8F93;&#x5165;for(User user : users)&#x53EA;&#x9700;&#x8F93;&#x5165;<strong>user.for+Tab</strong>&#x3002;&#x518D;&#x6BD4;&#x5982;&#xFF0C;&#x8981;&#x8F93;&#x5165;Date birthday = user.getBirthday();&#x53EA;&#x9700;&#x8F93;&#x5165;<strong>user.getBirthday().var+Tab</strong>&#x5373;&#x53EF;&#x3002;</p>
+<h2 id="4&#x7F16;&#x8F91;">4.&#x7F16;&#x8F91; <a href="#4&#x7F16;&#x8F91;" class="header-anchor"> </a></h2>
+<p>&#x7F16;&#x8F91;&#x4E2D;&#x4E0D;&#x5F97;&#x4E0D;&#x8BF4;&#x7684;&#x4E00;&#x5927;&#x795E;&#x952E;&#x5C31;&#x662F;&#x80FD;&#x591F;&#x81EA;&#x52A8;&#x6309;&#x8BED;&#x6CD5;&#x9009;&#x4E2D;&#x4EE3;&#x7801;&#x7684;<strong>Ctrl+W</strong>&#x4EE5;&#x53CA;&#x53CD;&#x5411;&#x7684;<strong>Ctrl+Shift+W</strong>&#x4E86;&#x3002;&#x6B64;&#x5916;&#xFF0C;<strong>Ctrl+Left/Right</strong>&#x79FB;&#x52A8;&#x5149;&#x6807;&#x5230;&#x524D;/&#x540E;&#x5355;&#x8BCD;&#xFF0C;<strong>Ctrl+[/]<strong>&#x79FB;&#x52A8;&#x5230;&#x524D;/&#x540E;&#x4EE3;&#x7801;&#x5757;&#xFF0C;&#x8FD9;&#x4E9B;&#x7C7B;Vim&#x98CE;&#x683C;&#x7684;&#x5149;&#x6807;&#x79FB;&#x52A8;&#x4E5F;&#x662F;&#x4E00;&#x5927;&#x4EAE;&#x70B9;&#x3002;&#x4EE5;&#x4E0A;Ctrl+Left/Right/[]&#x52A0;&#x4E0A;Shift&#x7684;&#x8BDD;&#x5C31;&#x80FD;&#x9009;&#x4E2D;&#x8DF3;&#x8DC3;&#x8303;&#x56F4;&#x5185;&#x7684;&#x4EE3;&#x7801;&#x3002;<strong>Alt+Forward/Backward</strong>&#x79FB;&#x52A8;&#x5230;&#x524D;/&#x540E;&#x65B9;&#x6CD5;&#x3002;&#x8FD8;&#x6709;&#x4E9B;&#x975E;&#x5E38;&#x666E;&#x901A;&#x7684;&#x50CF;</strong>Ctrl+Y</strong>&#x5220;&#x9664;&#x884C;&#x3001;<strong>Ctrl+D</strong>&#x590D;&#x5236;&#x884C;&#x3001;<strong>Ctrl+&lt;/&gt;<strong>&#x6298;&#x53E0;&#x4EE3;&#x7801;&#x5C31;&#x4E0D;&#x591A;&#x8BF4;&#x4E86;&#x3002;<br>
+&#x5173;&#x4E8E;&#x5149;&#x6807;&#x79FB;&#x52A8;&#x518D;&#x591A;&#x6269;&#x5C55;&#x4E00;&#x70B9;&#xFF0C;&#x9664;&#x4E86;Intellij&#x672C;&#x8EAB;&#x5DF2;&#x63D0;&#x4F9B;&#x7684;&#x529F;&#x80FD;&#x5916;&#xFF0C;&#x6211;&#x4EEC;&#x8FD8;&#x53EF;&#x4EE5;&#x5B89;&#x88C5;ideaVim&#x6216;&#x8005;emacsIDEAs&#x4EAB;&#x53D7;&#x5230;Vim&#x7684;&#x5FEB;&#x901F;&#x79FB;&#x52A8;&#x548C;Emacs&#x7684;AceJump&#x529F;&#x80FD;(&#x8D85;&#x723D;&#xFF01;)&#x3002;&#x53E6;&#x5916;&#xFF0C;Intellij&#x7684;&#x4E66;&#x7B7E;&#x529F;&#x80FD;&#x4E5F;&#x662F;&#x4E0D;&#x9519;&#x7684;&#xFF0C;&#x7528;</strong>Ctrl+Shift+Num</strong>&#x5B9A;&#x4E49;1-10&#x4E66;&#x7B7E;(&#x518D;&#x6B21;&#x6309;&#x8FD9;&#x7EC4;&#x5FEB;&#x6377;&#x952E;&#x5219;&#x662F;&#x5220;&#x9664;&#x4E66;&#x7B7E;)&#xFF0C;&#x7136;&#x540E;&#x901A;&#x8FC7;<strong>Ctrl+Num</strong>&#x8DF3;&#x8F6C;&#x3002;&#x8FD9;&#x907F;&#x514D;&#x4E86;&#x591A;&#x6B21;&#x4F7F;&#x7528;&#x524D;/&#x4E0B;&#x4E00;&#x7F16;&#x8F91;&#x4F4D;&#x7F6E;<strong>Ctrl+Left/Right</strong>&#x6765;&#x56DE;&#x8DF3;&#x8F6C;&#x7684;&#x9EBB;&#x70E6;&#xFF0C;&#x800C;&#x4E14;&#x6B64;&#x5FEB;&#x6377;&#x952E;&#x9ED8;&#x8BA4;&#x4E0E;Windows&#x70ED;&#x952E;&#x51B2;&#x7A81;(&#x9ED8;&#x8BA4;&#x591A;&#x4E86;Alt&#xFF0C;&#x4E0E;Windows&#x6539;&#x53D8;&#x663E;&#x793A;&#x5668;&#x663E;&#x793A;&#x65B9;&#x5411;&#x51B2;&#x7A81;&#xFF0C;&#x4E00;&#x4E0D;&#x5C0F;&#x5FC3;&#x663E;&#x793A;&#x5668;&#x5C31;&#x53D8;&#x6210;&#x5012;&#x7740;&#x663E;&#x5F0F;&#x7684;&#x4E86;&#xFF0C;&#x518F;&#x554A;)&#x3002;</p>
+<h2 id="5&#x67E5;&#x627E;&#x6253;&#x5F00;">5.&#x67E5;&#x627E;&#x6253;&#x5F00; <a href="#5&#x67E5;&#x627E;&#x6253;&#x5F00;" class="header-anchor"> </a></h2>
+<p>&#x7C7B;&#x4F3C;Eclipse&#xFF0C;Intellij&#x7684;Ctrl+N/Ctrl+Shift+N&#x53EF;&#x4EE5;&#x6253;&#x5F00;&#x7C7B;&#x6216;&#x8D44;&#x6E90;&#xFF0C;&#x4F46;Intellij&#x66F4;&#x52A0;&#x667A;&#x80FD;&#x4E00;&#x4E9B;&#xFF0C;&#x6211;&#x4EEC;&#x8F93;&#x5165;&#x7684;&#x4EFB;&#x4F55;&#x5B57;&#x7B26;&#x90FD;&#x5C06;&#x770B;&#x4F5C;&#x6A21;&#x7CCA;&#x5339;&#x914D;&#xFF0C;&#x7701;&#x5374;&#x4E86;Eclipse&#x4E2D;&#x8FD8;&#x6709;&#x8F93;&#x5165;*&#x7684;&#x9EBB;&#x70E6;&#x3002;&#x6700;&#x65B0;&#x7248;&#x672C;&#x7684;IDEA&#x8FD8;&#x52A0;&#x5165;&#x4E86;Search Everywhere&#x529F;&#x80FD;&#xFF0C;&#x53EA;&#x9700;&#x6309;<strong>Shift+Shift</strong>&#x5373;&#x53EF;&#x5728;&#x4E00;&#x4E2A;&#x5F39;&#x51FA;&#x6846;&#x4E2D;&#x641C;&#x7D22;&#x4EFB;&#x4F55;&#x4E1C;&#x897F;&#xFF0C;&#x5305;&#x62EC;&#x7C7B;&#x3001;&#x8D44;&#x6E90;&#x3001;&#x914D;&#x7F6E;&#x9879;&#x3001;&#x65B9;&#x6CD5;&#x7B49;&#x7B49;&#x3002;<br>
+&#x7C7B;&#x7684;&#x7EE7;&#x627F;&#x5173;&#x7CFB;&#x5219;&#x53EF;&#x7528;<strong>Ctrl+H</strong>&#x6253;&#x5F00;&#x7C7B;&#x5C42;&#x6B21;&#x7A97;&#x53E3;&#xFF0C;&#x5728;&#x7EE7;&#x627F;&#x5C42;&#x6B21;&#x4E0A;&#x8DF3;&#x8F6C;&#x5219;&#x7528;<strong>Ctrl+B/Ctrl+Alt+B</strong>&#x5206;&#x522B;&#x5BF9;&#x5E94;&#x7236;&#x7C7B;&#x6216;&#x7236;&#x65B9;&#x6CD5;&#x5B9A;&#x4E49;&#x548C;&#x5B50;&#x7C7B;&#x6216;&#x5B50;&#x65B9;&#x6CD5;&#x5B9E;&#x73B0;&#xFF0C;&#x67E5;&#x770B;&#x5F53;&#x524D;&#x7C7B;&#x7684;&#x6240;&#x6709;&#x65B9;&#x6CD5;&#x7528;<strong>Ctrl+F12</strong>&#x3002;<br>
+&#x8981;&#x627E;&#x7C7B;&#x6216;&#x65B9;&#x6CD5;&#x7684;&#x4F7F;&#x7528;&#x4E5F;&#x5F88;&#x7B80;&#x5355;&#xFF0C;<strong>Alt+F7</strong>&#x3002;&#x8981;&#x67E5;&#x627E;&#x6587;&#x672C;&#x7684;&#x51FA;&#x73B0;&#x4F4D;&#x7F6E;&#x5C31;&#x7528;<strong>Ctrl+F/Ctrl+Shift+F</strong>&#x5728;&#x5F53;&#x524D;&#x7A97;&#x53E3;&#x6216;&#x5168;&#x5DE5;&#x7A0B;&#x4E2D;&#x67E5;&#x627E;&#xFF0C;&#x518D;&#x914D;&#x5408;<strong>F3/Shift+F3</strong>&#x524D;&#x540E;&#x79FB;&#x52A8;&#x5230;&#x4E0B;&#x4E00;&#x5339;&#x914D;&#x5904;&#x3002;<br>
+Intellij&#x66F4;&#x52A0;&#x667A;&#x80FD;&#x7684;&#x53C8;&#x4E00;&#x4F50;&#x8BC1;&#x662F;&#x5728;&#x4EFB;&#x610F;&#x83DC;&#x5355;&#x6216;&#x663E;&#x793A;&#x7A97;&#x53E3;&#xFF0C;&#x90FD;&#x53EF;&#x4EE5;&#x76F4;&#x63A5;&#x8F93;&#x5165;&#x4F60;&#x8981;&#x627E;&#x7684;&#x5355;&#x8BCD;&#xFF0C;Intellij&#x5C31;&#x4F1A;&#x81EA;&#x52A8;&#x4E3A;&#x4F60;&#x8FC7;&#x6EE4;&#x3002;</p>
+<h2 id="6&#x5176;&#x4ED6;&#x8F85;&#x52A9;">6.&#x5176;&#x4ED6;&#x8F85;&#x52A9; <a href="#6&#x5176;&#x4ED6;&#x8F85;&#x52A9;" class="header-anchor"> </a></h2>
+<p>&#x4EE5;&#x4E0A;&#x8FD9;&#x4E9B;&#x795E;&#x952E;&#x914D;&#x4E0A;&#x4E00;&#x4E9B;&#x8F85;&#x52A9;&#x5FEB;&#x6377;&#x952E;&#xFF0C;&#x5373;&#x53EF;&#x8BA9;&#x4F60;&#x7684;&#x53CC;&#x624B;90%&#x4EE5;&#x4E0A;&#x7684;&#x65F6;&#x95F4;&#x6446;&#x8131;&#x9F20;&#x6807;&#xFF0C;&#x4E13;&#x6CE8;&#x4E8E;&#x952E;&#x76D8;&#x4EFF;&#x4F5B;&#x5728;&#x8FDB;&#x884C;&#x94A2;&#x7434;&#x8868;&#x6F14;&#x3002;&#x8FD9;&#x4E9B;&#x4E0D;&#x8D77;&#x773C;&#x5374;&#x662F;&#x81F3;&#x5173;&#x91CD;&#x8981;&#x7684;&#x6700;&#x540E;&#x4E00;&#x5757;&#x62FC;&#x56FE;&#x6709;&#xFF1A;</p>
+<ul>
+<li>&#x547D;&#x4EE4;&#xFF1A;<strong>Ctrl+Shift+A</strong>&#x53EF;&#x4EE5;&#x67E5;&#x627E;&#x6240;&#x6709;Intellij&#x7684;&#x547D;&#x4EE4;&#xFF0C;&#x5E76;&#x4E14;&#x6BCF;&#x4E2A;&#x547D;&#x4EE4;&#x540E;&#x9762;&#x8FD8;&#x6709;&#x5176;&#x5FEB;&#x6377;&#x952E;&#x3002;&#x6240;&#x4EE5;&#x5B83;&#x4E0D;&#x4EC5;&#x662F;&#x4E00;&#x5927;&#x795E;&#x952E;&#xFF0C;&#x4E5F;&#x662F;&#x67E5;&#x627E;&#x5B66;&#x4E60;&#x5FEB;&#x6377;&#x952E;&#x7684;&#x5DE5;&#x5177;&#x3002;</li>
+<li>&#x65B0;&#x5EFA;&#xFF1A;<strong>Alt+Insert</strong>&#x53EF;&#x4EE5;&#x65B0;&#x5EFA;&#x7C7B;&#x3001;&#x65B9;&#x6CD5;&#x7B49;&#x4EFB;&#x4F55;&#x4E1C;&#x897F;&#x3002;</li>
+<li>&#x683C;&#x5F0F;&#x5316;&#x4EE3;&#x7801;&#xFF1A;&#x683C;&#x5F0F;&#x5316;import&#x5217;&#x8868;<strong>Ctrl+Alt+O</strong>&#xFF0C;&#x683C;&#x5F0F;&#x5316;&#x4EE3;&#x7801;<strong>Ctrl+Alt+L</strong>&#x3002;</li>
+<li>&#x5207;&#x6362;&#x7A97;&#x53E3;&#xFF1A;<strong>Alt+Num</strong>&#xFF0C;&#x5E38;&#x7528;&#x7684;&#x6709;1-&#x9879;&#x76EE;&#x7ED3;&#x6784;&#xFF0C;3-&#x641C;&#x7D22;&#x7ED3;&#x679C;&#xFF0C;4/5-&#x8FD0;&#x884C;&#x8C03;&#x8BD5;&#x3002;<strong>Ctrl+Tab</strong>&#x5207;&#x6362;&#x6807;&#x7B7E;&#x9875;&#xFF0C;<strong>Ctrl+E/Ctrl+Shift+E</strong>&#x6253;&#x5F00;&#x6700;&#x8FD1;&#x6253;&#x5F00;&#x8FC7;&#x7684;&#x6216;&#x7F16;&#x8F91;&#x8FC7;&#x7684;&#x6587;&#x4EF6;&#x3002;</li>
+<li>&#x5355;&#x5143;&#x6D4B;&#x8BD5;&#xFF1A;<strong>Ctrl+Alt+T</strong>&#x521B;&#x5EFA;&#x5355;&#x5143;&#x6D4B;&#x8BD5;&#x7528;&#x4F8B;&#x3002;</li>
+<li>&#x8FD0;&#x884C;&#xFF1A;<strong>Alt+Shift+F10</strong>&#x8FD0;&#x884C;&#x7A0B;&#x5E8F;&#xFF0C;<strong>Shift+F9</strong>&#x542F;&#x52A8;&#x8C03;&#x8BD5;&#xFF0C;<strong>Ctrl+F2</strong>&#x505C;&#x6B62;&#x3002;</li>
+<li>&#x8C03;&#x8BD5;&#xFF1A;<strong>F7/F8/F9</strong>&#x5206;&#x522B;&#x5BF9;&#x5E94;Step into&#xFF0C;Step over&#xFF0C;Continue&#x3002;</li>
+</ul>
+<p>&#x6B64;&#x5916;&#x8FD8;&#x6709;&#x4E9B;&#x6211;&#x81EA;&#x5B9A;&#x4E49;&#x7684;&#xFF0C;&#x4F8B;&#x5982;&#x6C34;&#x5E73;&#x5206;&#x5C4F;Ctrl+|&#x7B49;&#xFF0C;&#x548C;&#x4E00;&#x4E9B;&#x795E;&#x5947;&#x7684;&#x5C0F;&#x529F;&#x80FD;Ctrl+Shift+V&#x7C98;&#x8D34;&#x5F88;&#x65E9;&#x4EE5;&#x524D;&#x62F7;&#x8D1D;&#x8FC7;&#x7684;&#xFF0C;Alt+Shift+Insert&#x8FDB;&#x5165;&#x5230;&#x5217;&#x6A21;&#x5F0F;&#x8FDB;&#x884C;&#x6309;&#x5217;&#x9009;&#x4E2D;&#x3002;</p>
+<h2 id="7&#x6700;&#x7EC8;&#x699C;&#x5355;">7.&#x6700;&#x7EC8;&#x699C;&#x5355; <a href="#7&#x6700;&#x7EC8;&#x699C;&#x5355;" class="header-anchor"> </a></h2>
+<p>&#x8FD9;&#x699C;&#x5355;&#x9635;&#x5BB9;&#x592A;&#x8C6A;&#x534E;&#x4E86;&#xFF0C;&#x540E;&#x51E0;&#x540D;&#x90FD;&#x662F;&#x5982;&#x6B64;&#x6709;&#x7528;&#xFF0C;&#x6BEB;&#x4E0D;&#x793A;&#x5F31;&#x3002;</p>
+<ul>
+<li>Top #10&#x5207;&#x6765;&#x5207;&#x53BB;&#xFF1A;Ctrl+Tab</li>
+<li>Top #9&#x9009;&#x4F60;&#x6240;&#x60F3;&#xFF1A;Ctrl+W</li>
+<li>Top #8&#x4EE3;&#x7801;&#x751F;&#x6210;&#xFF1A;Template/Postfix +Tab</li>
+<li>Top #7&#x53D1;&#x53F7;&#x65BD;&#x4EE4;&#xFF1A;Ctrl+Shift+A</li>
+<li>Top #6&#x65E0;&#x5904;&#x85CF;&#x8EAB;&#xFF1A;Shift+Shift</li>
+<li>Top #5&#x81EA;&#x52A8;&#x5B8C;&#x6210;&#xFF1A;Ctrl+Shift+Enter</li>
+<li>Top #4&#x521B;&#x9020;&#x4E07;&#x7269;&#xFF1A;Alt+Insert</li>
+</ul>
+<p>&#x592A;&#x96BE;&#x5272;&#x820D;&#xFF0C;&#x524D;&#x4E09;&#x540D;&#x5E76;&#x5217;&#x5427;&#xFF01;</p>
+<ul>
+<li>Top #1&#x667A;&#x80FD;&#x8865;&#x5168;&#xFF1A;Ctrl+Shift+Space</li>
+<li>Top #1&#x81EA;&#x6211;&#x4FEE;&#x590D;&#xFF1A;Alt+Enter</li>
+<li>Top #1&#x91CD;&#x6784;&#x4E00;&#x5207;&#xFF1A;Ctrl+Shift+Alt+T</li>
+</ul>
+<p>&#x3010;&#x8F6C;&#x81EA;&#x3011;<a href="http://blog.csdn.net/dc_726/article/details/42784275" title="&#x5341;&#x5927;Intellij IDEA&#x5FEB;&#x6377;&#x952E;" target="_blank" rel="external">&#x5341;&#x5927;Intellij IDEA&#x5FEB;&#x6377;&#x952E;</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/08/23/mybatis-comparison-operators-in-xml/" rel="next" title="mybatis的xml中< >的写法">
+                <i class="fa fa-chevron-left"></i> mybatis的xml中< >的写法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/09/05/BeautyOfMathematics1/" rel="prev" title="《数学之美》读书笔记">
+                《数学之美》读书笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/img/title.gif"
+               alt="Tianle Zhang" />
+          <p class="site-author-name" itemprop="name">Tianle Zhang</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">49</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">88</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhangtianle" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/tianlezh" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="https://creativecommons.org/licenses/by-sa/4.0/" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://coderchat.cn/" title="南山" target="_blank">南山</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.cnblogs.com/rongfangliu/" title="柳如风" target="_blank">柳如风</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.zhangyanlong.xyz/" title="张燕龙" target="_blank">张燕龙</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://baoyuzhang.github.io/" title="浅茉" target="_blank">浅茉</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1智能提示"><span class="nav-number">1.</span> <span class="nav-text">1.智能提示  </span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2重构"><span class="nav-number">2.</span> <span class="nav-text">2.重构  </span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3代码生成"><span class="nav-number">3.</span> <span class="nav-text">3.代码生成  </span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4编辑"><span class="nav-number">4.</span> <span class="nav-text">4.编辑  </span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5查找打开"><span class="nav-number">5.</span> <span class="nav-text">5.查找打开  </span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6其他辅助"><span class="nav-number">6.</span> <span class="nav-text">6.其他辅助  </span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7最终榜单"><span class="nav-number">7.</span> <span class="nav-text">7.最终榜单  </span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tianle Zhang</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+<div>
+  <a class="theme-link" href="http://www.miitbeian.gov.cn/" target="_blank">
+    陕ICP备16015673号-1
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://tianle.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://tianle.me/2016/08/24/Intellij-IDEA-Shortcut-Keys/';
+          this.page.identifier = '2016/08/24/Intellij-IDEA-Shortcut-Keys/';
+          this.page.title = '【转】十大Intellij IDEA快捷键';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://tianle.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+</body>
+</html>

@@ -4,6 +4,28 @@
 
     
   <url>
+    <loc>https://tianle.me/2019/01/01/my2018/</loc>
+    <lastmod>2019-01-06T14:52:47.851Z</lastmod>
+    <data>
+        <display>
+        <title>我的2018</title>
+        <pubTime>2019-01-01T04:24:13.000Z</pubTime>
+        
+        <tag>随想</tag>
+         
+         
+           
+             
+              <breadCrumb title="生活记录" url="https://tianle.me/categories/%E7%94%9F%E6%B4%BB%E8%AE%B0%E5%BD%95/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+    
+    
+  <url>
     <loc>https://tianle.me/2018/11/23/internshipSummary/</loc>
     <lastmod>2018-11-22T16:33:13.056Z</lastmod>
     <data>
@@ -61,29 +83,26 @@
     </url>
 
     
-    
   <url>
-    <loc>https://tianle.me/2018/05/02/springbootlogin/</loc>
+    <loc>https://tianle.me/2018/01/09/xgboost-note/</loc>
     <lastmod>2018-06-26T10:57:31.128Z</lastmod>
     <data>
         <display>
-        <title>基于Spring Boot的登录demo</title>
-        <pubTime>2018-05-02T08:21:19.000Z</pubTime>
+        <title>XGBoost笔记</title>
+        <pubTime>2018-01-09T05:54:08.000Z</pubTime>
         
-        <tag>java</tag>
+        <tag>机器学习</tag>
          
-        <tag>spring</tag>
+        <tag>XGBoost</tag>
          
-        <tag>spring boot</tag>
+        <tag>数据竞赛</tag>
          
-        <tag>demo</tag>
-         
-        <tag>login</tag>
+        <tag>原理</tag>
          
          
            
              
-              <breadCrumb title="应用开发" url="https://tianle.me/categories/%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/"/>
+              <breadCrumb title="算法" url="https://tianle.me/categories/%E7%AE%97%E6%B3%95/"/>
           
         </display>
     </data>
@@ -110,27 +129,28 @@
     </url>
 
     
-    
   <url>
-    <loc>https://tianle.me/2018/01/09/xgboost-note/</loc>
+    <loc>https://tianle.me/2018/05/02/springbootlogin/</loc>
     <lastmod>2018-06-26T10:57:31.128Z</lastmod>
     <data>
         <display>
-        <title>XGBoost笔记</title>
-        <pubTime>2018-01-09T05:54:08.000Z</pubTime>
+        <title>基于Spring Boot的登录demo</title>
+        <pubTime>2018-05-02T08:21:19.000Z</pubTime>
         
-        <tag>机器学习</tag>
+        <tag>java</tag>
          
-        <tag>XGBoost</tag>
+        <tag>spring</tag>
          
-        <tag>数据竞赛</tag>
+        <tag>spring boot</tag>
          
-        <tag>原理</tag>
+        <tag>demo</tag>
+         
+        <tag>login</tag>
          
          
            
              
-              <breadCrumb title="算法" url="https://tianle.me/categories/%E7%AE%97%E6%B3%95/"/>
+              <breadCrumb title="应用开发" url="https://tianle.me/categories/%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/"/>
           
         </display>
     </data>
@@ -179,20 +199,18 @@
 
     
   <url>
-    <loc>https://tianle.me/2015/12/17/spring-websocket%E5%BC%80%E5%8F%91/</loc>
+    <loc>https://tianle.me/2016/10/09/spring-transaction/</loc>
     <lastmod>2018-06-26T10:57:31.113Z</lastmod>
     <data>
         <display>
-        <title>spring websocket开发</title>
-        <pubTime>2015-12-17T11:44:48.000Z</pubTime>
+        <title>【转】深入理解 Spring 事务原理</title>
+        <pubTime>2016-10-09T12:11:14.000Z</pubTime>
         
         <tag>java</tag>
          
-        <tag>mybatis</tag>
-         
         <tag>spring</tag>
          
-        <tag>websocket</tag>
+        <tag>transaction</tag>
          
          
            
@@ -275,18 +293,20 @@
 
     
   <url>
-    <loc>https://tianle.me/2016/10/09/spring-transaction/</loc>
+    <loc>https://tianle.me/2015/12/17/spring-websocket%E5%BC%80%E5%8F%91/</loc>
     <lastmod>2018-06-26T10:57:31.113Z</lastmod>
     <data>
         <display>
-        <title>【转】深入理解 Spring 事务原理</title>
-        <pubTime>2016-10-09T12:11:14.000Z</pubTime>
+        <title>spring websocket开发</title>
+        <pubTime>2015-12-17T11:44:48.000Z</pubTime>
         
         <tag>java</tag>
          
+        <tag>mybatis</tag>
+         
         <tag>spring</tag>
          
-        <tag>transaction</tag>
+        <tag>websocket</tag>
          
          
            
@@ -345,20 +365,18 @@
 
     
   <url>
-    <loc>https://tianle.me/2017/10/30/permutations/</loc>
+    <loc>https://tianle.me/2018/03/25/probability-problem/</loc>
     <lastmod>2018-06-26T10:57:31.097Z</lastmod>
     <data>
         <display>
-        <title>Johnson-Trotter算法生成排列数</title>
-        <pubTime>2017-10-30T09:00:42.000Z</pubTime>
+        <title>从等公交概率问题引发的思考</title>
+        <pubTime>2018-03-25T08:31:08.000Z</pubTime>
         
-        <tag>算法</tag>
+        <tag>数学</tag>
          
-        <tag>Johnson-Trotter</tag>
+        <tag>概率</tag>
          
-        <tag>排列</tag>
-         
-        <tag>permutation</tag>
+        <tag>几何</tag>
          
          
            
@@ -392,28 +410,6 @@
            
              
               <breadCrumb title="算法" url="https://tianle.me/categories/%E7%AE%97%E6%B3%95/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://tianle.me/2017/02/28/python-array/</loc>
-    <lastmod>2018-06-26T10:57:31.097Z</lastmod>
-    <data>
-        <display>
-        <title>python二维数组重复赋值问题</title>
-        <pubTime>2017-02-28T10:09:16.000Z</pubTime>
-        
-        <tag>python</tag>
-         
-        <tag>array</tag>
-         
-         
-           
-             
-              <breadCrumb title="应用开发" url="https://tianle.me/categories/%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/"/>
           
         </display>
     </data>
@@ -491,18 +487,42 @@
 
     
   <url>
-    <loc>https://tianle.me/2018/03/25/probability-problem/</loc>
+    <loc>https://tianle.me/2017/02/28/python-array/</loc>
     <lastmod>2018-06-26T10:57:31.097Z</lastmod>
     <data>
         <display>
-        <title>从等公交概率问题引发的思考</title>
-        <pubTime>2018-03-25T08:31:08.000Z</pubTime>
+        <title>python二维数组重复赋值问题</title>
+        <pubTime>2017-02-28T10:09:16.000Z</pubTime>
         
-        <tag>数学</tag>
+        <tag>python</tag>
          
-        <tag>概率</tag>
+        <tag>array</tag>
          
-        <tag>几何</tag>
+         
+           
+             
+              <breadCrumb title="应用开发" url="https://tianle.me/categories/%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://tianle.me/2017/10/30/permutations/</loc>
+    <lastmod>2018-06-26T10:57:31.097Z</lastmod>
+    <data>
+        <display>
+        <title>Johnson-Trotter算法生成排列数</title>
+        <pubTime>2017-10-30T09:00:42.000Z</pubTime>
+        
+        <tag>算法</tag>
+         
+        <tag>Johnson-Trotter</tag>
+         
+        <tag>排列</tag>
+         
+        <tag>permutation</tag>
          
          
            
@@ -541,27 +561,19 @@
 
     
   <url>
-    <loc>https://tianle.me/2018/01/22/missing-value/</loc>
+    <loc>https://tianle.me/2017/12/29/my2017/</loc>
     <lastmod>2018-06-26T10:57:31.081Z</lastmod>
     <data>
         <display>
-        <title>缺失值处理</title>
-        <pubTime>2018-01-22T14:37:54.000Z</pubTime>
+        <title>我的2017</title>
+        <pubTime>2017-12-29T13:31:07.000Z</pubTime>
         
-        <tag>机器学习</tag>
-         
-        <tag>数据挖掘</tag>
-         
-        <tag>竞赛</tag>
-         
-        <tag>缺失值</tag>
-         
-        <tag>特征工程</tag>
+        <tag>随想</tag>
          
          
            
              
-              <breadCrumb title="算法" url="https://tianle.me/categories/%E7%AE%97%E6%B3%95/"/>
+              <breadCrumb title="生活记录" url="https://tianle.me/categories/%E7%94%9F%E6%B4%BB%E8%AE%B0%E5%BD%95/"/>
           
         </display>
     </data>
@@ -608,32 +620,6 @@
 
     
   <url>
-    <loc>https://tianle.me/2017/12/12/jd/</loc>
-    <lastmod>2018-06-26T10:57:31.081Z</lastmod>
-    <data>
-        <display>
-        <title>2017京东金融信贷需求预测 赛题总结</title>
-        <pubTime>2017-12-12T08:40:16.000Z</pubTime>
-        
-        <tag>机器学习</tag>
-         
-        <tag>数据挖掘</tag>
-         
-        <tag>竞赛</tag>
-         
-        <tag>京东</tag>
-         
-         
-           
-             
-              <breadCrumb title="算法" url="https://tianle.me/categories/%E7%AE%97%E6%B3%95/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>https://tianle.me/2017/02/01/installCUDA/</loc>
     <lastmod>2018-06-26T10:57:31.081Z</lastmod>
     <data>
@@ -658,19 +644,25 @@
 
     
   <url>
-    <loc>https://tianle.me/2017/12/29/my2017/</loc>
+    <loc>https://tianle.me/2017/12/12/jd/</loc>
     <lastmod>2018-06-26T10:57:31.081Z</lastmod>
     <data>
         <display>
-        <title>我的2017</title>
-        <pubTime>2017-12-29T13:31:07.000Z</pubTime>
+        <title>2017京东金融信贷需求预测 赛题总结</title>
+        <pubTime>2017-12-12T08:40:16.000Z</pubTime>
         
-        <tag>随想</tag>
+        <tag>机器学习</tag>
+         
+        <tag>数据挖掘</tag>
+         
+        <tag>竞赛</tag>
+         
+        <tag>京东</tag>
          
          
            
              
-              <breadCrumb title="生活记录" url="https://tianle.me/categories/%E7%94%9F%E6%B4%BB%E8%AE%B0%E5%BD%95/"/>
+              <breadCrumb title="算法" url="https://tianle.me/categories/%E7%AE%97%E6%B3%95/"/>
           
         </display>
     </data>
@@ -715,6 +707,34 @@
            
              
               <breadCrumb title="开发" url="https://tianle.me/categories/%E5%BC%80%E5%8F%91/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://tianle.me/2018/01/22/missing-value/</loc>
+    <lastmod>2018-06-26T10:57:31.081Z</lastmod>
+    <data>
+        <display>
+        <title>缺失值处理</title>
+        <pubTime>2018-01-22T14:37:54.000Z</pubTime>
+        
+        <tag>机器学习</tag>
+         
+        <tag>数据挖掘</tag>
+         
+        <tag>竞赛</tag>
+         
+        <tag>缺失值</tag>
+         
+        <tag>特征工程</tag>
+         
+         
+           
+             
+              <breadCrumb title="算法" url="https://tianle.me/categories/%E7%AE%97%E6%B3%95/"/>
           
         </display>
     </data>

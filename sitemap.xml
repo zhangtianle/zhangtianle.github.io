@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://tianle.me/2020/01/01/my2019/</loc>
+    
+    <lastmod>2020-01-23T14:57:02.045Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://tianle.me/about/index.html</loc>
     
     <lastmod>2019-12-16T15:38:06.329Z</lastmod>
@@ -107,7 +114,14 @@
   </url>
   
   <url>
-    <loc>https://tianle.me/2016/04/22/%E5%AD%A6%E7%94%9F%E4%BC%9A%E4%B8%BB%E5%B8%AD%E5%9B%A2%E7%AB%9E%E9%80%89%E6%BC%94%E8%AE%B2%E7%A8%BF/</loc>
+    <loc>https://tianle.me/categories/index.html</loc>
+    
+    <lastmod>2018-06-26T10:57:31.128Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://tianle.me/2016/02/04/%E4%B8%80%E4%BD%8D%E7%88%B6%E4%BA%B2%E7%9A%84%E5%BF%83%E5%A3%B0/</loc>
     
     <lastmod>2018-06-26T10:57:31.128Z</lastmod>
     
@@ -128,35 +142,28 @@
   </url>
   
   <url>
-    <loc>https://tianle.me/2016/02/04/%E4%B8%80%E4%BD%8D%E7%88%B6%E4%BA%B2%E7%9A%84%E5%BF%83%E5%A3%B0/</loc>
+    <loc>https://tianle.me/2016/04/22/%E5%AD%A6%E7%94%9F%E4%BC%9A%E4%B8%BB%E5%B8%AD%E5%9B%A2%E7%AB%9E%E9%80%89%E6%BC%94%E8%AE%B2%E7%A8%BF/</loc>
     
     <lastmod>2018-06-26T10:57:31.128Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://tianle.me/categories/index.html</loc>
-    
-    <lastmod>2018-06-26T10:57:31.128Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://tianle.me/2016/01/17/spring-mybatis%E4%BA%8B%E5%8A%A1%E7%AE%A1%E7%90%86%E9%85%8D%E7%BD%AE%E4%B8%8E-Transactional%E6%B3%A8%E8%A7%A3%E4%BD%BF%E7%94%A8/</loc>
-    
-    <lastmod>2018-06-26T10:57:31.113Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://tianle.me/2016/11/14/serverSecurity/</loc>
-    
-    <lastmod>2018-06-26T10:57:31.113Z</lastmod>
     
   </url>
   
   <url>
     <loc>https://tianle.me/2016/10/23/speed-up-npm/</loc>
+    
+    <lastmod>2018-06-26T10:57:31.113Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://tianle.me/2018/03/08/sort/</loc>
+    
+    <lastmod>2018-06-26T10:57:31.113Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://tianle.me/2016/01/17/spring-mybatis%E4%BA%8B%E5%8A%A1%E7%AE%A1%E7%90%86%E9%85%8D%E7%BD%AE%E4%B8%8E-Transactional%E6%B3%A8%E8%A7%A3%E4%BD%BF%E7%94%A8/</loc>
     
     <lastmod>2018-06-26T10:57:31.113Z</lastmod>
     
@@ -184,42 +191,14 @@
   </url>
   
   <url>
-    <loc>https://tianle.me/2018/03/08/sort/</loc>
+    <loc>https://tianle.me/2016/11/14/serverSecurity/</loc>
     
     <lastmod>2018-06-26T10:57:31.113Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://tianle.me/2016/12/20/notExistsSys/</loc>
-    
-    <lastmod>2018-06-26T10:57:31.097Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://tianle.me/2017/02/28/python-array/</loc>
-    
-    <lastmod>2018-06-26T10:57:31.097Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://tianle.me/2016/05/29/pso%20algorithm/</loc>
-    
-    <lastmod>2018-06-26T10:57:31.097Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://tianle.me/2017/11/05/nginxConfig/</loc>
-    
-    <lastmod>2018-06-26T10:57:31.097Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://tianle.me/2016/08/23/mybatis-comparison-operators-in-xml/</loc>
     
     <lastmod>2018-06-26T10:57:31.097Z</lastmod>
     
@@ -233,13 +212,6 @@
   </url>
   
   <url>
-    <loc>https://tianle.me/2017/10/30/permutations/</loc>
-    
-    <lastmod>2018-06-26T10:57:31.097Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://tianle.me/2016/11/22/phicommPassionRoot/</loc>
     
     <lastmod>2018-06-26T10:57:31.097Z</lastmod>
@@ -247,14 +219,49 @@
   </url>
   
   <url>
-    <loc>https://tianle.me/2015/12/16/hello-world/</loc>
+    <loc>https://tianle.me/2016/12/20/notExistsSys/</loc>
+    
+    <lastmod>2018-06-26T10:57:31.097Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://tianle.me/2017/10/30/permutations/</loc>
+    
+    <lastmod>2018-06-26T10:57:31.097Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://tianle.me/2016/08/23/mybatis-comparison-operators-in-xml/</loc>
+    
+    <lastmod>2018-06-26T10:57:31.097Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://tianle.me/2017/02/28/python-array/</loc>
+    
+    <lastmod>2018-06-26T10:57:31.097Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://tianle.me/2017/11/05/nginxConfig/</loc>
+    
+    <lastmod>2018-06-26T10:57:31.097Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://tianle.me/2017/12/29/my2017/</loc>
     
     <lastmod>2018-06-26T10:57:31.081Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://tianle.me/2017/12/29/my2017/</loc>
+    <loc>https://tianle.me/2018/01/22/missing-value/</loc>
     
     <lastmod>2018-06-26T10:57:31.081Z</lastmod>
     
@@ -282,35 +289,14 @@
   </url>
   
   <url>
-    <loc>https://tianle.me/2018/01/22/missing-value/</loc>
+    <loc>https://tianle.me/2015/12/16/hello-world/</loc>
     
     <lastmod>2018-06-26T10:57:31.081Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://tianle.me/2016/09/17/What-are-the-differences-between-NP-NP-Complete-and-NP-Hard/</loc>
-    
-    <lastmod>2018-06-26T10:57:31.066Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://tianle.me/2016/12/06/aliAI/</loc>
-    
-    <lastmod>2018-06-26T10:57:31.066Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://tianle.me/2017/10/15/fuckmysql/</loc>
-    
-    <lastmod>2018-06-26T10:57:31.066Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://tianle.me/2018/02/11/aggregate/</loc>
+    <loc>https://tianle.me/2017/12/28/decision-tree/</loc>
     
     <lastmod>2018-06-26T10:57:31.066Z</lastmod>
     
@@ -324,6 +310,27 @@
   </url>
   
   <url>
+    <loc>https://tianle.me/2016/09/17/What-are-the-differences-between-NP-NP-Complete-and-NP-Hard/</loc>
+    
+    <lastmod>2018-06-26T10:57:31.066Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://tianle.me/2018/02/11/aggregate/</loc>
+    
+    <lastmod>2018-06-26T10:57:31.066Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://tianle.me/2017/10/15/fuckmysql/</loc>
+    
+    <lastmod>2018-06-26T10:57:31.066Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://tianle.me/2017/01/22/disquscantload/</loc>
     
     <lastmod>2018-06-26T10:57:31.066Z</lastmod>
@@ -331,7 +338,7 @@
   </url>
   
   <url>
-    <loc>https://tianle.me/2017/12/28/decision-tree/</loc>
+    <loc>https://tianle.me/2016/12/06/aliAI/</loc>
     
     <lastmod>2018-06-26T10:57:31.066Z</lastmod>
     
@@ -341,6 +348,27 @@
     <loc>https://tianle.me/2018/03/05/coding-interviews/</loc>
     
     <lastmod>2018-06-26T10:57:31.066Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://tianle.me/2016/08/24/Intellij-IDEA-Shortcut-Keys/</loc>
+    
+    <lastmod>2018-06-26T10:57:31.050Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://tianle.me/2016/04/16/Java%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/</loc>
+    
+    <lastmod>2018-06-26T10:57:31.050Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://tianle.me/2016/05/25/LeetCode-ListNode-helper/</loc>
+    
+    <lastmod>2018-06-26T10:57:31.050Z</lastmod>
     
   </url>
   
@@ -359,7 +387,7 @@
   </url>
   
   <url>
-    <loc>https://tianle.me/2016/08/24/Intellij-IDEA-Shortcut-Keys/</loc>
+    <loc>https://tianle.me/2016/10/29/MODPSO/</loc>
     
     <lastmod>2018-06-26T10:57:31.050Z</lastmod>
     
@@ -380,27 +408,6 @@
   </url>
   
   <url>
-    <loc>https://tianle.me/2016/05/25/LeetCode-ListNode-helper/</loc>
-    
-    <lastmod>2018-06-26T10:57:31.050Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://tianle.me/2016/04/16/Java%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/</loc>
-    
-    <lastmod>2018-06-26T10:57:31.050Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://tianle.me/2016/10/29/MODPSO/</loc>
-    
-    <lastmod>2018-06-26T10:57:31.050Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://tianle.me/2017/04/19/GA/</loc>
     
     <lastmod>2018-06-26T10:57:31.035Z</lastmod>
@@ -408,14 +415,14 @@
   </url>
   
   <url>
-    <loc>https://tianle.me/2016/10/20/Big-Network-Analytics-Based-on-Nonconvex-Optimization/</loc>
+    <loc>https://tianle.me/2016/04/29/GitHub%E5%A4%A7%E7%A4%BC%E5%8C%85%E9%A2%86%E5%8F%96%E6%96%B9%E5%BC%8F/</loc>
     
     <lastmod>2018-06-26T10:57:31.035Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://tianle.me/2016/04/29/GitHub%E5%A4%A7%E7%A4%BC%E5%8C%85%E9%A2%86%E5%8F%96%E6%96%B9%E5%BC%8F/</loc>
+    <loc>https://tianle.me/2016/10/20/Big-Network-Analytics-Based-on-Nonconvex-Optimization/</loc>
     
     <lastmod>2018-06-26T10:57:31.035Z</lastmod>
     

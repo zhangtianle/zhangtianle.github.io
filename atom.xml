@@ -170,9 +170,9 @@
       <category term="算法" scheme="https://tianle.me/categories/%E7%AE%97%E6%B3%95/"/>
     
     
-      <category term="聚类" scheme="https://tianle.me/tags/%E8%81%9A%E7%B1%BB/"/>
-    
       <category term="机器学习" scheme="https://tianle.me/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+    
+      <category term="聚类" scheme="https://tianle.me/tags/%E8%81%9A%E7%B1%BB/"/>
     
       <category term="数据挖掘" scheme="https://tianle.me/tags/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/"/>
     
@@ -253,11 +253,11 @@
     
       <category term="感悟" scheme="https://tianle.me/tags/%E6%84%9F%E6%82%9F/"/>
     
-      <category term="阿里" scheme="https://tianle.me/tags/%E9%98%BF%E9%87%8C/"/>
-    
       <category term="小结" scheme="https://tianle.me/tags/%E5%B0%8F%E7%BB%93/"/>
     
       <category term="实习" scheme="https://tianle.me/tags/%E5%AE%9E%E4%B9%A0/"/>
+    
+      <category term="阿里" scheme="https://tianle.me/tags/%E9%98%BF%E9%87%8C/"/>
     
       <category term="天猫" scheme="https://tianle.me/tags/%E5%A4%A9%E7%8C%AB/"/>
     
@@ -331,11 +331,11 @@
     
       <category term="感悟" scheme="https://tianle.me/tags/%E6%84%9F%E6%82%9F/"/>
     
-      <category term="网易" scheme="https://tianle.me/tags/%E7%BD%91%E6%98%93/"/>
-    
       <category term="小结" scheme="https://tianle.me/tags/%E5%B0%8F%E7%BB%93/"/>
     
       <category term="实习" scheme="https://tianle.me/tags/%E5%AE%9E%E4%B9%A0/"/>
+    
+      <category term="网易" scheme="https://tianle.me/tags/%E7%BD%91%E6%98%93/"/>
     
   </entry>
   
@@ -361,6 +361,8 @@
     
       <category term="机器学习" scheme="https://tianle.me/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
     
+      <category term="网易" scheme="https://tianle.me/tags/%E7%BD%91%E6%98%93/"/>
+    
       <category term="面试" scheme="https://tianle.me/tags/%E9%9D%A2%E8%AF%95/"/>
     
       <category term="百度" scheme="https://tianle.me/tags/%E7%99%BE%E5%BA%A6/"/>
@@ -368,8 +370,6 @@
       <category term="阿里" scheme="https://tianle.me/tags/%E9%98%BF%E9%87%8C/"/>
     
       <category term="腾讯" scheme="https://tianle.me/tags/%E8%85%BE%E8%AE%AF/"/>
-    
-      <category term="网易" scheme="https://tianle.me/tags/%E7%BD%91%E6%98%93/"/>
     
   </entry>
   
@@ -393,9 +393,9 @@
       <category term="生活记录" scheme="https://tianle.me/categories/%E7%94%9F%E6%B4%BB%E8%AE%B0%E5%BD%95/"/>
     
     
-      <category term="网易" scheme="https://tianle.me/tags/%E7%BD%91%E6%98%93/"/>
-    
       <category term="实习" scheme="https://tianle.me/tags/%E5%AE%9E%E4%B9%A0/"/>
+    
+      <category term="网易" scheme="https://tianle.me/tags/%E7%BD%91%E6%98%93/"/>
     
       <category term="总结" scheme="https://tianle.me/tags/%E6%80%BB%E7%BB%93/"/>
     

@@ -1,0 +1,1087 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="S7CcF76Y3WPq3DKyOvsZGmSEALaSes364lNi0PMvhh4" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.loli.net/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="网络,网络表示学习,Transformer," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Niu Code" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/default_avatar.jpg?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="核心思想：利用异构图的元关系来参数化异构相互注意力、消息传递和传播步骤的权重矩阵，从而获取不同类型节点的表示。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="论文笔记-HGT Heterogeneous graph transformer">
+<meta property="og:url" content="https://tianle.me/2021/06/12/hgt-reading/index.html">
+<meta property="og:site_name" content="Niu Code">
+<meta property="og:description" content="核心思想：利用异构图的元关系来参数化异构相互注意力、消息传递和传播步骤的权重矩阵，从而获取不同类型节点的表示。">
+<meta property="og:image" content="https://img.blog.tianle.me/image/20210612/1.jpg">
+<meta property="og:image" content="https://img.blog.tianle.me/image/20210612/2.jpg">
+<meta property="og:image" content="https://img.blog.tianle.me/image/20210612/3.jpg">
+<meta property="og:image" content="https://img.blog.tianle.me/image/20210612/4.jpg">
+<meta property="og:image" content="https://img.blog.tianle.me/image/20210612/5.jpg">
+<meta property="og:image" content="https://img.blog.tianle.me/image/20210612/6.jpg">
+<meta property="og:image" content="https://img.blog.tianle.me/image/20210612/7.jpg">
+<meta property="og:updated_time" content="2021-06-13T02:50:13.706Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="论文笔记-HGT Heterogeneous graph transformer">
+<meta name="twitter:description" content="核心思想：利用异构图的元关系来参数化异构相互注意力、消息传递和传播步骤的权重矩阵，从而获取不同类型节点的表示。">
+<meta name="twitter:image" content="https://img.blog.tianle.me/image/20210612/1.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tianle.me/2021/06/12/hgt-reading/"/>
+
+
+
+
+
+  <title> 论文笔记-HGT Heterogeneous graph transformer | Niu Code </title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-71583311-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Niu Code</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">南山小马</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://tianle.me/2021/06/12/hgt-reading/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tianle Zhang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/title.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Niu Code">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                论文笔记-HGT Heterogeneous graph transformer
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-06-12T09:59:53+08:00">
+                2021-06-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/研究/" itemprop="url" rel="index">
+                    <span itemprop="name">研究</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/06/12/hgt-reading/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2021/06/12/hgt-reading/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>&#x6838;&#x5FC3;&#x601D;&#x60F3;&#xFF1A;&#x5229;&#x7528;&#x5F02;&#x6784;&#x56FE;&#x7684;&#x5143;&#x5173;&#x7CFB;&#x6765;&#x53C2;&#x6570;&#x5316;&#x5F02;&#x6784;&#x76F8;&#x4E92;&#x6CE8;&#x610F;&#x529B;&#x3001;&#x6D88;&#x606F;&#x4F20;&#x9012;&#x548C;&#x4F20;&#x64AD;&#x6B65;&#x9AA4;&#x7684;&#x6743;&#x91CD;&#x77E9;&#x9635;&#xFF0C;&#x4ECE;&#x800C;&#x83B7;&#x53D6;&#x4E0D;&#x540C;&#x7C7B;&#x578B;&#x8282;&#x70B9;&#x7684;&#x8868;&#x793A;&#x3002;</p>
+<a id="more"></a>
+<p>Hu Z, Dong Y, Wang K, et al. Heterogeneous graph transformer[C]//Proceedings of The Web Conference 2020. 2020: 2704-2710.</p>
+<h1 id="&#x65B9;&#x6CD5;&#x4ECB;&#x7ECD;">&#x65B9;&#x6CD5;&#x4ECB;&#x7ECD; <a href="#&#x65B9;&#x6CD5;&#x4ECB;&#x7ECD;" class="header-anchor"> </a></h1>
+<h2 id="&#x7F51;&#x7EDC;&#x805A;&#x5408;&#x7B97;&#x5B50;">&#x7F51;&#x7EDC;&#x805A;&#x5408;&#x7B97;&#x5B50; <a href="#&#x7F51;&#x7EDC;&#x805A;&#x5408;&#x7B97;&#x5B50;" class="header-anchor"> </a></h2>
+<h3 id="&#x603B;&#x4F53;&#x7ED3;&#x6784;">&#x603B;&#x4F53;&#x7ED3;&#x6784; <a href="#&#x603B;&#x4F53;&#x7ED3;&#x6784;" class="header-anchor"> </a></h3>
+<p>&#x8F93;&#x5165;&#x4E00;&#x4E2A;&#x5F02;&#x6784;&#x7F51;&#x7EDC;&#xFF0C;HGT&#x5229;&#x7528;&#x6240;&#x6709;&#x8282;&#x70B9;&#x5BF9;&#xFF0C;(&#x6E90;&#x8282;&#x70B9; s&#xFF0C;&#x5173;&#x7CFB;&#x7C7B;&#x578B; e&#xFF0C;&#x76EE;&#x6807;&#x8282;&#x70B9; t )&#xFF0C;&#x5176;&#x76EE;&#x6807;&#x662F;&#x6C47;&#x805A;&#x76EE;&#x6807;&#x8282;&#x70B9;t&#x7684;&#x5404;&#x4E2A;&#x6E90;&#x8282;&#x70B9;s&#x7684;&#x4E0A;&#x4E0B;&#x6587;&#x8868;&#x793A;&#x4FE1;&#x606F;&#xFF0C;&#x8BA1;&#x7B97;&#x51FA;t&#x7684;&#x8868;&#x793A;&#x3002;&#x5206;&#x4E3A;3&#x4E2A;&#x90E8;&#x5206;&#xFF1A;Heterogeneous Mutual Attention&#xFF0C;Heterogeneous Message Passing &#xFF0C; Target-Specific Aggregation
+<img src="https://img.blog.tianle.me/image/20210612/1.jpg" alt=""></p>
+<ul>
+<li><strong>Attention</strong>&#xFF1A; &#x8BA1;&#x7B97;&#x6BCF;&#x4E00;&#x4E2A;&#x6E90;&#x8282;&#x70B9;s&#x76F8;&#x5BF9;&#x4E8E;&#x76EE;&#x6807;&#x8282;&#x70B9;t&#x7684;&#x91CD;&#x8981;&#x6027;</li>
+<li><strong>Message</strong>&#xFF1A;&#x62BD;&#x53D6;&#x6E90;&#x8282;&#x70B9;s&#x7684;&#x4FE1;&#x606F;</li>
+<li>**Aggregate&#xFF1A;**&#x805A;&#x5408;&#x76EE;&#x6807;&#x8282;&#x70B9;&#x6BCF;&#x4E00;&#x4E2A;&#x6E90;&#x8282;&#x70B9;&#x7684;&#x4FE1;&#x606F;</li>
+</ul>
+<h3 id="&#x6B65;&#x9AA4;&#x4E00;heterogeneous-mutual-attention">&#x6B65;&#x9AA4;&#x4E00;&#xFF1A;Heterogeneous Mutual Attention <a href="#&#x6B65;&#x9AA4;&#x4E00;heterogeneous-mutual-attention" class="header-anchor"> </a></h3>
+<ul>
+<li>&#x9996;&#x5148;&#xFF0C;&#x8BA1;&#x7B97;&#x76EE;&#x6807;&#x8282;&#x70B9;t &#x548C; &#x6E90;&#x8282;&#x70B9;s &#x7684; mutual attention&#x3002;</li>
+</ul>
+<p><img src="https://img.blog.tianle.me/image/20210612/2.jpg" alt=""></p>
+<ul>
+<li>&#x4E0E; Transformer &#x6838;&#x5FC3;&#x533A;&#x522B;&#x662F;&#xFF0C;Transformer&#x5BF9;&#x6240;&#x6709;&#x7684;word&#x90FD;&#x7528;&#x4E86;&#x540C;&#x4E00;&#x4E2A; projections &#xFF0C;&#x800C;HGT&#x5BF9;&#x6BCF;&#x4E00;&#x79CD;&#x8FB9;&#x7C7B;&#x578B;&#xFF08;meta relation&#xFF09;&#x90FD;&#x4F7F;&#x7528;&#x4E86;&#x4E0D;&#x540C;&#x7684; projection weights.</li>
+</ul>
+<h3 id="&#x6B65;&#x9AA4;&#x4E8C;heterogeneous-message-passing">&#x6B65;&#x9AA4;&#x4E8C;&#xFF1A;Heterogeneous Message Passing <a href="#&#x6B65;&#x9AA4;&#x4E8C;heterogeneous-message-passing" class="header-anchor"> </a></h3>
+<ul>
+<li>&#x5C06;&#x4FE1;&#x606F;&#x4ECE;&#x6E90;&#x8282;&#x70B9;&#x4F20;&#x9012;&#x5230;&#x76EE;&#x6807;&#x8282;&#x70B9;&#xFF0C;&#x540C;&#x65F6;&#x5728;&#x6D88;&#x606F;&#x4F20;&#x9012;&#x8FC7;&#x7A0B;&#x4E2D;&#x52A0;&#x5165;&#x8FB9;&#x7684;&#x5143;&#x5173;&#x7CFB;&#xFF0C;&#x4EE5;&#x5904;&#x7406;&#x4E0D;&#x540C;&#x7C7B;&#x578B;&#x7684;&#x8282;&#x70B9;&#x548C;&#x8FB9;&#x7684;&#x5206;&#x5E03;&#x5DEE;&#x5F02;&#x3002;</li>
+</ul>
+<p><img src="https://img.blog.tianle.me/image/20210612/3.jpg" alt=""></p>
+<h3 id="&#x6B65;&#x9AA4;&#x4E09;target-specific-aggregation">&#x6B65;&#x9AA4;&#x4E09;&#xFF1A;Target-Specific Aggregation <a href="#&#x6B65;&#x9AA4;&#x4E09;target-specific-aggregation" class="header-anchor"> </a></h3>
+<ul>
+<li>&#x8FD9;&#x4E00;&#x8FC7;&#x7A0B;&#x5C06;&#x4EE5;&#x4E0A;&#x7684;&#x5F02;&#x6784;&#x76F8;&#x4E92;&#x6CE8;&#x610F;&#x529B;Attention&#x548C;&#x5F02;&#x6784;&#x4FE1;&#x606F;Message&#x8FDB;&#x884C;Product&#x518D;Add&#xFF0C;&#x4ECE;&#x672C;&#x8D28;&#x6765;&#x770B;&#xFF0C;&#x8FD9;&#x4E2A;&#x64CD;&#x4F5C;&#x7684;&#x76EE;&#x7684;&#x662F;&#x5C06;&#x5F02;&#x6784;&#x6CE8;&#x610F;&#x529B;&#x548C;&#x6D88;&#x606F;&#x4ECE;&#x6E90;&#x8282;&#x70B9;&#x805A;&#x5408;&#x5230;&#x76EE;&#x6807;&#x8282;&#x70B9;&#x3002;</li>
+</ul>
+<p><img src="https://img.blog.tianle.me/image/20210612/4.jpg" alt=""></p>
+<ul>
+<li>&#x7136;&#x540E;&#x4E0A;&#x9762;&#x5F97;&#x5230;&#x7684;&#x7ED3;&#x679C;&#x7ECF;&#x8FC7;&#x4E00;&#x4E2A;&#x6FC0;&#x6D3B;&#x5C42;&#xFF0C;&#x518D;&#x505A;&#x7EBF;&#x6027;&#x53D8;&#x6362;&#x5E76;&#x505A;&#x4E00;&#x4E2A;&#x6B8B;&#x5DEE;&#x8FDE;&#x63A5;&#xFF1A;</li>
+</ul>
+<p><img src="https://img.blog.tianle.me/image/20210612/5.jpg" alt=""></p>
+<h2 id="mini-bach&#x5B50;&#x56FE;&#x91C7;&#x6837;-hgsampling">mini-bach&#x5B50;&#x56FE;&#x91C7;&#x6837; HGSampling <a href="#mini-bach&#x5B50;&#x56FE;&#x91C7;&#x6837;-hgsampling" class="header-anchor"> </a></h2>
+<p>&#x4E3A;&#x4E86;&#x9002;&#x5E94;&#x5927;&#x89C4;&#x6A21;&#x7F51;&#x7EDC;&#xFF0C;&#x5FC5;&#x987B;&#x8981;&#x5BF9;&#x7F51;&#x7EDC;&#x8FDB;&#x884C;&#x91C7;&#x6837;&#x3002;&#x5982;&#x679C;&#x4E0D;&#x91C7;&#x6837;&#x7684;&#x8BDD;&#xFF0C;&#x5C31;&#x9700;&#x8981;&#x628A;&#x6574;&#x4E2A;&#x56FE;&#x585E;&#x5230;GPU&#x91CC;&#x9762;&#x53BB;&#x8BA1;&#x7B97;&#xFF0C;&#x56E0;&#x6B64;&#x5927;&#x89C4;&#x6A21;&#x7F51;&#x7EDC;&#x662F;&#x4E0D;&#x9002;&#x7528;&#x7684;&#x3002;&#x672C;&#x4EBA;&#x5C1D;&#x8BD5;&#x4F7F;&#x7528;&#x4E86;DGL&#x6846;&#x67B6;&#x7684;HGT&#x65B9;&#x6CD5;&#xFF0C;&#x5728;1080Ti&#x7684;GPU&#x4E0A;&#xFF0C;&#x4E0D;&#x4F7F;&#x7528;&#x56FE;&#x91C7;&#x6837;&#xFF0C;&#x4EC5;&#x80FD;&#x591F;&#x652F;&#x6301;&#x4E07;&#x7EA7;&#x522B;&#x7684;&#x8282;&#x70B9;&#x548C;&#x51E0;&#x5341;&#x4E07;&#x6761;&#x8FB9;&#x7684;&#x7F51;&#x7EDC;&#x89C4;&#x6A21;&#xFF0C;&#x518D;&#x5F80;&#x5927;&#xFF0C;&#x663E;&#x5B58;&#x5C31;&#x4E0D;&#x591F;&#x7528;&#x4E86;&#x3002;</p>
+<p>&#x6B64;&#x8BBA;&#x6587;&#x63D0;&#x51FA;&#x4E00;&#x79CD;&#x9002;&#x7528;&#x4E8E;&#x5F02;&#x6784;&#x56FE;&#x7684;&#x5B50;&#x56FE;&#x91C7;&#x6837;&#x65B9;&#x6CD5;HGSampling&#xFF0C;&#x8BE5;&#x65B9;&#x6CD5;&#xFF0C;1&#x3001;&#x4FDD;&#x8BC1;&#x6BCF;&#x4E00;&#x79CD;&#x7C7B;&#x578B;&#x7684;&#x8282;&#x70B9;&#x548C;&#x8FB9;&#x90FD;&#x6709;&#x76F8;&#x4F3C;&#x7684;&#x6570;&#x91CF;&#xFF0C;2&#x3001;&#x4FDD;&#x8BC1;&#x91C7;&#x6837;&#x540E;&#x7684;&#x5B50;&#x56FE;&#x662F;&#x7A20;&#x5BC6;&#x7684;&#xFF0C;&#x4ECE;&#x800C;&#x8FBE;&#x5230;&#x6700;&#x5C0F;&#x5316;&#x7684;&#x4FE1;&#x606F;&#x635F;&#x5931;&#x548C;&#x51CF;&#x5C11;&#x91C7;&#x6837;&#x5E26;&#x6765;&#x7684;&#x504F;&#x5DEE;&#x3002;</p>
+<p>&#x7B97;&#x6CD5;1&#x5C55;&#x793A;&#x4E86;&#x91C7;&#x6837;&#x7684;&#x4E3B;&#x8FC7;&#x7A0B;&#xFF0C;&#x5176;&#x4E3B;&#x8981;&#x601D;&#x60F3;&#x662F;&#x6BCF;&#x4E2A;&#x8282;&#x70B9;&#x7C7B;&#x578B;&#x3C4;&#x4FDD;&#x7559;&#x4E00;&#x4E2A;&#x5355;&#x72EC;&#x7684;&#x8282;&#x70B9;Budget B[&#x3C4;]&#xFF0C;&#x4F7F;&#x7528;&#x91CD;&#x8981;&#x6027;&#x91C7;&#x6837;&#x7B56;&#x7565;&#x5BF9;&#x6BCF;&#x79CD;&#x7C7B;&#x578B;&#x91C7;&#x6837;&#x76F8;&#x540C;&#x6570;&#x91CF;&#x7684;&#x8282;&#x70B9;&#x3002;&#x5F53;&#x67D0;&#x4E00;&#x8282;&#x70B9;t&#x5DF2;&#x7ECF;&#x88AB;&#x91C7;&#x6837;&#xFF0C;&#x6211;&#x4EEC;&#x5C06;&#x5B83;&#x7684;&#x6240;&#x6709;&#x90BB;&#x5C45;&#x52A0;&#x5165;&#x9884;&#x5907;&#x91C7;&#x6837;&#x96C6;&#x5408;&#x4E2D;&#xFF08;&#x7B97;&#x6CD5;2&#xFF09;&#xFF0C;&#x4F7F;&#x7528;&#x5F52;&#x4E00;&#x5316;&#x7684;&#x5EA6;&#x6570;&#x53BB;&#x8BA1;&#x7B97;&#x91C7;&#x6837;&#x6982;&#x7387;&#xFF0C;&#x7C7B;&#x4F3C;&#x4E8E;&#x968F;&#x673A;&#x6E38;&#x8D70;&#x3002;</p>
+<p><img src="https://img.blog.tianle.me/image/20210612/6.jpg" alt="">
+<img src="https://img.blog.tianle.me/image/20210612/7.jpg" alt=""></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/网络/" rel="tag"># 网络</a>
+          
+            <a href="/tags/网络表示学习/" rel="tag"># 网络表示学习</a>
+          
+            <a href="/tags/Transformer/" rel="tag"># Transformer</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/09/05/flask-python-web/" rel="next" title="flask_python web框架">
+                <i class="fa fa-chevron-left"></i> flask_python web框架
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/img/title.gif"
+               alt="Tianle Zhang" />
+          <p class="site-author-name" itemprop="name">Tianle Zhang</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">64</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">114</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhangtianle" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/tianlezh" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="https://creativecommons.org/licenses/by-sa/4.0/" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://coderchat.cn/" title="南山" target="_blank">南山</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.cnblogs.com/rongfangliu/" title="柳如风" target="_blank">柳如风</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://baoyuzhang.github.io/" title="浅茉" target="_blank">浅茉</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.iots.vip/" title="Alliot" target="_blank">Alliot</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://printempw.github.io/" title="PRIN BLOG" target="_blank">PRIN BLOG</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#方法介绍"><span class="nav-number">1.</span> <span class="nav-text">方法介绍  </span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#网络聚合算子"><span class="nav-number">1.1.</span> <span class="nav-text">网络聚合算子  </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#总体结构"><span class="nav-number">1.1.1.</span> <span class="nav-text">总体结构  </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#步骤一heterogeneous-mutual-attention"><span class="nav-number">1.1.2.</span> <span class="nav-text">步骤一：Heterogeneous Mutual Attention  </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#步骤二heterogeneous-message-passing"><span class="nav-number">1.1.3.</span> <span class="nav-text">步骤二：Heterogeneous Message Passing  </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#步骤三target-specific-aggregation"><span class="nav-number">1.1.4.</span> <span class="nav-text">步骤三：Target-Specific Aggregation  </span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mini-bach子图采样-hgsampling"><span class="nav-number">1.2.</span> <span class="nav-text">mini-bach子图采样 HGSampling  </span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tianle Zhang</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+<div>
+  <a class="theme-link" href="https://beian.miit.gov.cn" target="_blank">
+    陕ICP备16015673号-1
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://tianle.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://tianle.me/2021/06/12/hgt-reading/';
+          this.page.identifier = '2021/06/12/hgt-reading/';
+          this.page.title = '论文笔记-HGT Heterogeneous graph transformer';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://tianle.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+</body>
+</html>

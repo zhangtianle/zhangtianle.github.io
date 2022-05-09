@@ -1,0 +1,562 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Niu Code</title>
+  
+  <subtitle>南山小马</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="https://tianle.me/"/>
+  <updated>2022-05-09T12:04:49.765Z</updated>
+  <id>https://tianle.me/</id>
+  
+  <author>
+    <name>Tianle Zhang</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>论文笔记-HGT Heterogeneous graph transformer</title>
+    <link href="https://tianle.me/2021/06/12/hgt-reading/"/>
+    <id>https://tianle.me/2021/06/12/hgt-reading/</id>
+    <published>2021-06-12T01:59:53.000Z</published>
+    <updated>2022-05-09T12:04:49.765Z</updated>
+    
+    <content type="html"><![CDATA[<p>核心思想：利用异构图的元关系来参数化异构相互注意力、消息传递和传播步骤的权重矩阵，从而获取不同类型节点的表示。</p><a id="more"></a><p>Hu Z, Dong Y, Wang K, et al. Heterogeneous graph transformer[C]//Proceedings of The Web Conference 2020. 2020: 2704-2710.</p><h1><span id="方法介绍">方法介绍</span><a href="#方法介绍" class="header-anchor"> </a></h1><h2><span id="网络聚合算子">网络聚合算子</span><a href="#网络聚合算子" class="header-anchor"> </a></h2><h3><span id="总体结构">总体结构</span><a href="#总体结构" class="header-anchor"> </a></h3><p>输入一个异构网络，HGT利用所有节点对，(源节点 s，关系类型 e，目标节点 t )，其目标是汇聚目标节点t的各个源节点s的上下文表示信息，计算出t的表示。分为3个部分：Heterogeneous Mutual Attention，Heterogeneous Message Passing ， Target-Specific Aggregation<img src="https://img.blog.tianle.me/image/20210612/1.jpg" alt></p><ul><li><strong>Attention</strong>： 计算每一个源节点s相对于目标节点t的重要性</li><li><strong>Message</strong>：抽取源节点s的信息</li><li><strong>Aggregate</strong>：聚合目标节点每一个源节点的信息</li></ul><h3><span id="步骤一heterogeneous-mutual-attention">步骤一：Heterogeneous Mutual Attention</span><a href="#步骤一heterogeneous-mutual-attention" class="header-anchor"> </a></h3><ul><li>首先，计算目标节点t 和 源节点s 的 mutual attention。</li></ul><p><img src="https://img.blog.tianle.me/image/20210612/2.jpg" alt></p><ul><li>与 Transformer 核心区别是，Transformer对所有的word都用了同一个 projections ，而HGT对每一种边类型（meta relation）都使用了不同的 projection weights.</li></ul><h3><span id="步骤二heterogeneous-message-passing">步骤二：Heterogeneous Message Passing</span><a href="#步骤二heterogeneous-message-passing" class="header-anchor"> </a></h3><ul><li>将信息从源节点传递到目标节点，同时在消息传递过程中加入边的元关系，以处理不同类型的节点和边的分布差异。</li></ul><p><img src="https://img.blog.tianle.me/image/20210612/3.jpg" alt></p><h3><span id="步骤三target-specific-aggregation">步骤三：Target-Specific Aggregation</span><a href="#步骤三target-specific-aggregation" class="header-anchor"> </a></h3><ul><li>这一过程将以上的异构相互注意力Attention和异构信息Message进行Product再Add，从本质来看，这个操作的目的是将异构注意力和消息从源节点聚合到目标节点。</li></ul><p><img src="https://img.blog.tianle.me/image/20210612/4.jpg" alt></p><ul><li>然后上面得到的结果经过一个激活层，再做线性变换并做一个残差连接：</li></ul><p><img src="https://img.blog.tianle.me/image/20210612/5.jpg" alt></p><h2><span id="mini-bach子图采样-hgsampling">mini-bach子图采样 HGSampling</span><a href="#mini-bach子图采样-hgsampling" class="header-anchor"> </a></h2><p>为了适应大规模网络，必须要对网络进行采样。如果不采样的话，就需要把整个图塞到GPU里面去计算，因此大规模网络是不适用的。本人尝试使用了DGL框架的HGT方法，在1080Ti的GPU上，不使用图采样，仅能够支持万级别的节点和几十万条边的网络规模，再往大，显存就不够用了。</p><p>此论文提出一种适用于异构图的子图采样方法HGSampling，该方法，1、保证每一种类型的节点和边都有相似的数量，2、保证采样后的子图是稠密的，从而达到最小化的信息损失和减少采样带来的偏差。</p><p>算法1展示了采样的主过程，其主要思想是每个节点类型τ保留一个单独的节点Budget B[τ]，使用重要性采样策略对每种类型采样相同数量的节点。当某一节点t已经被采样，我们将它的所有邻居加入预备采样集合中（算法2），使用归一化的度数去计算采样概率，类似于随机游走。</p><p><img src="https://img.blog.tianle.me/image/20210612/6.jpg" alt><img src="https://img.blog.tianle.me/image/20210612/7.jpg" alt></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;核心思想：利用异构图的元关系来参数化异构相互注意力、消息传递和传播步骤的权重矩阵，从而获取不同类型节点的表示。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="研究" scheme="https://tianle.me/categories/%E7%A0%94%E7%A9%B6/"/>
+    
+    
+      <category term="网络" scheme="https://tianle.me/tags/%E7%BD%91%E7%BB%9C/"/>
+    
+      <category term="网络表示学习" scheme="https://tianle.me/tags/%E7%BD%91%E7%BB%9C%E8%A1%A8%E7%A4%BA%E5%AD%A6%E4%B9%A0/"/>
+    
+      <category term="Transformer" scheme="https://tianle.me/tags/Transformer/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>flask_python web框架</title>
+    <link href="https://tianle.me/2020/09/05/flask-python-web/"/>
+    <id>https://tianle.me/2020/09/05/flask-python-web/</id>
+    <published>2020-09-05T04:48:31.000Z</published>
+    <updated>2022-05-09T12:04:49.765Z</updated>
+    
+    <content type="html"><![CDATA[<p>自从好久没写Java web之后，脑子只有一个印象，对于搭建一个简单站点，使用现成的SSM框架，应该很快就能搞定，但是殊不知，其中的环境配置、包依赖、数据库等配置如果不熟悉会非常麻烦。折腾了我n个小时，还没搞定。随后放弃。由于目前多用Python开发，转念一想，要不试试Python。事实证明，我的决策是正确的，从接触学习，到完成开发，总共耗时也不到3小时。</p><a id="more"></a><p>未完待续。。。。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;自从好久没写Java web之后，脑子只有一个印象，对于搭建一个简单站点，使用现成的SSM框架，应该很快就能搞定，但是殊不知，其中的环境配置、包依赖、数据库等配置如果不熟悉会非常麻烦。折腾了我n个小时，还没搞定。随后放弃。由于目前多用Python开发，转念一想，要不试试Python。事实证明，我的决策是正确的，从接触学习，到完成开发，总共耗时也不到3小时。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="应用开发" scheme="https://tianle.me/categories/%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/"/>
+    
+    
+      <category term="python" scheme="https://tianle.me/tags/python/"/>
+    
+      <category term="web" scheme="https://tianle.me/tags/web/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>GitHub福利HNS空投白嫖5000K</title>
+    <link href="https://tianle.me/2020/03/14/hns-airdrop/"/>
+    <id>https://tianle.me/2020/03/14/hns-airdrop/</id>
+    <published>2020-03-14T13:43:43.000Z</published>
+    <updated>2022-05-09T12:04:49.765Z</updated>
+    
+    <content type="html"><![CDATA[<p>对于白嫖这件事，我一直都深表怀疑，况且还是价值几千的生意。但这一次突破了我的认知，也让我进入了币圈这个坑。</p><a id="more"></a><h2><span id="起因">起因</span><a href="#起因" class="header-anchor"> </a></h2><p>几天前在和同事吃饭的路上，猛然得知可以通过github白嫖比特币，回到工位上赶紧百度看看是怎么回事，原来这个在一个月前就已经有了，得到币后分享了其他几个同学，他们也都已经知道，看来我的消息太闭塞。话不多说，开始正题吧。</p><h2><span id="条件">条件</span><a href="#条件" class="header-anchor"> </a></h2><p>先放官方链接：  <a href="https://www.namebase.io/airdrop" target="_blank" rel="noopener">Handshake Airdrop</a>  ~</p><p>1、Github 账号在 2019-02-04 的时候超过 15 个粉丝<br>2、Github 在 2019-02-04 之前上传过 SSH 或者 PGP keys，并且私钥还能找到<br>如果满足这两个条件，那么恭喜你5000k+大洋在向你招手</p><p>另外你的电脑上需要有 Node.js &gt;= 8.0.0 环境 <a href="https://nodejs.org/en/" target="_blank" rel="noopener">https://nodejs.org/en/</a></p><p>空投认证领币需要身份认证（我在网上找了一张驾驶证照片通过了，要不要用自己的自行判断哈）。提币卖钱需要实名认证、身份证号码及银行卡，两者要保持一致（比特币交易网站要求）</p><p>综上，涉及隐私的有 github ssh密钥 以及 个人实名信息，才能获得最终白花花的银子。如果没问题那么往下走。</p><p>准备就绪后开工吧~</p><h2><span id="申请">申请</span><a href="#申请" class="header-anchor"> </a></h2><p>1、下载项目</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git clone https://github.com/handshake-org/hs-airdrop.git</span><br></pre></td></tr></table></figure><p>2、安装依赖</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cd hs-airdrop &amp;&amp; npm install</span><br></pre></td></tr></table></figure><p>3、找到你的github密钥 和 生成钱包地址</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./bin/hs-airdrop &lt;path to key&gt; &lt;address&gt; &lt;fee&gt;</span><br></pre></td></tr></table></figure><p><code>&lt;path to key&gt;</code> 密钥地址，<code>&lt;address&gt;</code> 钱包地址，<code>&lt;fee&gt;</code>矿工费率，网站推荐设置 0.010</p><p>钱包地址点击页面 <a href="https://www.namebase.io/airdrop" target="_blank" rel="noopener">https://www.namebase.io/airdrop</a> ，中的<br><img src="/img/20200314/1.png" alt="钱包地址"></p><p>4、大工告成<br>如果顺利的话会生成一大堆文字，不用管里面是什么，拉到底部，找到这个关键词<strong>Base64</strong>，把下面的内容复制到网页的框框中，点击submit。</p><p><img src="/img/20200314/2.png" alt="复制内容"></p><p>PS：如果验证通过，这一步会下载内容，受限于国内网速，大家可以先下载好。放在自己的项目个人文件夹中，（linux环境下 <code>~/.hs-tree-data</code>目录）</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/handshake-org/hs-tree-data.git</span><br></pre></td></tr></table></figure><p>PPS：如果很不幸看到这句话，那么说明你不在名单中，没法提币，再想想你的密钥吧。<img src="/img/20200314/err.png" alt="err"></p><p>5、等待成功后，页面显示<br><img src="/img/20200314/3.png" alt="成功"></p><p>约20小时之后 <a href="https://www.namebase.io/dashboard" target="_blank" rel="noopener">dashboard</a> 网站下面信息会变成这样，同时也会收到邮件。<br><img src="/img/20200314/5.png" alt="成功"></p><p>6、选择换成比特币<br>如图，把HNS卖成比特币。（你可以等到汇率比较好的时候卖，能换到更多比特币）这是有风险的，比如我，正赶上经济危机、石油、股票、币圈 全部暴跌。。。。<img src="/img/20200314/6.png" alt="卖币"><br>钱包地址可以填比特币交易所的充币地址，我用的是 OKEx ，还有很多其他的，比如 火币、币安 ，这个大家自己考虑哈。</p><p>交易所收到币后，在法币交易模块，把比特币卖出。具体参考交易网站的说明，会需要实名认证。</p><p>收钱、放币。流程结束。</p><h2><span id="最后">最后</span><a href="#最后" class="header-anchor"> </a></h2><p>好好写代码，机会是给又准备的人~~</p><p>经济危机。。。。我只提了一半的币、剩下的一半当纪念吧，或者等汇率好转的时候再卖。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;对于白嫖这件事，我一直都深表怀疑，况且还是价值几千的生意。但这一次突破了我的认知，也让我进入了币圈这个坑。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="应用开发" scheme="https://tianle.me/categories/%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/"/>
+    
+    
+      <category term="GitHub" scheme="https://tianle.me/tags/GitHub/"/>
+    
+      <category term="福利" scheme="https://tianle.me/tags/%E7%A6%8F%E5%88%A9/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>深度学习学习笔记</title>
+    <link href="https://tianle.me/2020/01/28/dlnote/"/>
+    <id>https://tianle.me/2020/01/28/dlnote/</id>
+    <published>2020-01-28T09:40:41.000Z</published>
+    <updated>2022-05-09T12:04:49.764Z</updated>
+    
+    <content type="html"><![CDATA[<h2><span id="基础知识">基础知识</span><a href="#基础知识" class="header-anchor"> </a></h2><p><strong>模型容量</strong> VC维度量二元分类器的容量。VC维定义为该分类器能够分类的训练样本的最大数目。统计学习理论中最重要的结论阐述了训练误差和泛化误差之间差异的上界随着模型容量增长而增长，但随着训练样本增多而下降。</p><p>机器学习研究的目标不是找一个通用学习算法或是绝对最好的学习算法，而是理解什么样的分布与人工智能获取经验的“真实世界”相关，以及什么样的学习算法在我们关注的数据生成分布上效果最好。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2&gt;&lt;span id=&quot;基础知识&quot;&gt;基础知识&lt;/span&gt;&lt;a href=&quot;#基础知识&quot; class=&quot;header-anchor&quot;&gt; &lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;模型容量&lt;/strong&gt; VC维度量二元分类器的容量。VC维定义为该分类器能够分类的训练样本的最
+      
+    
+    </summary>
+    
+      <category term="算法" scheme="https://tianle.me/categories/%E7%AE%97%E6%B3%95/"/>
+    
+    
+      <category term="深度学习" scheme="https://tianle.me/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
+    
+      <category term="笔记" scheme="https://tianle.me/tags/%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>这不是我的2019总结</title>
+    <link href="https://tianle.me/2020/01/01/my2019/"/>
+    <id>https://tianle.me/2020/01/01/my2019/</id>
+    <published>2020-01-01T10:49:41.000Z</published>
+    <updated>2022-05-09T12:04:49.765Z</updated>
+    
+    <content type="html"><![CDATA[<p>自从开始写博客以后，在每年的这个时候都会回顾一下上一个整年的情况，记录自己的所思所想。<br>首要要批评一下自己，不管什么原因，这一年写的文章真的是太少了。<br>这一年，我毕业了，从此正式的步入社会大门。</p><a id="more"></a><h2><span id="工作">工作</span><a href="#工作" class="header-anchor"> </a></h2><p>毕业后，工作突然变成了生活中的大部分，一下子把许多时间都给挤掉了。也许是因为上班的时间太长了吧，正式入职后我比之前实习的时候更懒了，莫名的缺少了一种奋斗的力量，有时候就是不想干活，然后不知不觉的就开始摸鱼了。</p><p>拥抱变化果然是阿里的文化，从实习时候的天猫技术，变成了淘系技术，到现在营销平台直接没了，而我们合并到了淘系的算法中。环境在变，我们自己当然也要跟着变，同时也要有不变的地方。什么是不变的地方呢，简单的说是自己心中的梦想，这个不能变，自己所坚持的，如果这个一旦变了，很有可能会变得随波逐流了。关于拥抱变化，你要认识到它为什么变，他深层次的原因，做到“知其然知其所以然”。</p><p>要换主管了，在临走之前，和主管交流了一波：</p><p>作为一位技术人，尽快地确定自己想要的技术方向，并持续深究下去，在未来的一两年内最好不要发生变化。当决定技术方向的时候，和主管讨论，同时自己要想清楚原因，为什么要决定走这个方向。在学习中，做到宽度与深度并存，投入比例约3、7开。换一个方向，做出转变是非常痛苦的，看准了就不要再随意调整。既来之则安之，不要考虑太多的其他信息，做好自己手上的事，当达到一定境界的时候，再考虑其他，也有可能到了那个境界的时候，之前的问题也应刃而解了，否则可能会给自己带来不必要的迷茫。</p><p>另外，问问题要找对人，不要问他没经历过的事情。</p><h2><span id="学习">学习</span><a href="#学习" class="header-anchor"> </a></h2><p>学习不能停啊，从本科以后，很难再进行系统性的学习了，一是时间不够（也可能只是一个假象）。19年的学习量比18年更少了，一直想好好学学深度学习，但很遗憾。在年底的时候突发奇想，学习强化学习，顺便将强化学习应用到各个业务中。</p><h2><span id="玩">玩</span><a href="#玩" class="header-anchor"> </a></h2><p>这一年，依旧去了很多地方，应该是我历年之最了吧。云南（昆明、丽江、大理、香格里拉、泸沽湖），湖南（长沙、张家界、凤凰），大西北小环线，甘南，山西（平遥、壶口瀑布）。</p><p>在新的一年中期待去更多的地方。年假用起来~</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;自从开始写博客以后，在每年的这个时候都会回顾一下上一个整年的情况，记录自己的所思所想。&lt;br&gt;
+首要要批评一下自己，不管什么原因，这一年写的文章真的是太少了。&lt;br&gt;
+这一年，我毕业了，从此正式的步入社会大门。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="生活记录" scheme="https://tianle.me/categories/%E7%94%9F%E6%B4%BB%E8%AE%B0%E5%BD%95/"/>
+    
+    
+      <category term="随想" scheme="https://tianle.me/tags/%E9%9A%8F%E6%83%B3/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ODPS Hive UDF UDAF UDTF 编写</title>
+    <link href="https://tianle.me/2019/08/30/odpsudf/"/>
+    <id>https://tianle.me/2019/08/30/odpsudf/</id>
+    <published>2019-08-30T15:01:35.000Z</published>
+    <updated>2020-01-02T08:47:22.679Z</updated>
+    
+    <content type="html"><![CDATA[<p>之前一直以为udf是一个很高深很复杂的东西，但是经过实际编写后，发现它其实很简单。掌握这几个的特性，对写sql、抽样本、提特征会提升不少效率。</p><p>UDF为输入几个字段，返回一个值，比如<code>trim</code>，<code>length</code>等函数；UDAF为聚合函数，如<code>min</code>，<code>max</code>，而UDTF则是拆成多行的函数，例如<code>explode</code>函数。</p><a id="more"></a><h2><span id="udf">UDF</span><a href="#udf" class="header-anchor"> </a></h2><p>下面是阿里云官方文档提供的udf示例</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> odps.udf <span class="keyword">import</span> annotate</span><br><span class="line"><span class="meta">@annotate("bigint,bigint-&gt;bigint")</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyPlus</span><span class="params">(object)</span>:</span></span><br><span class="line">   <span class="function"><span class="keyword">def</span> <span class="title">evaluate</span><span class="params">(self, arg0, arg1)</span>:</span></span><br><span class="line">       <span class="keyword">if</span> <span class="literal">None</span> <span class="keyword">in</span> (arg0, arg1):</span><br><span class="line">           <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">       <span class="keyword">return</span> arg0 + arg1</span><br></pre></td></tr></table></figure><p>这里的<code>evaluate</code>函数可以传入多个参数（字段），返回一列。输入和输出参数的类型通过注解配置。</p><h2><span id="udaf">UDAF</span><a href="#udaf" class="header-anchor"> </a></h2><p>UDAF为聚合函数，配合<code>group by</code>使用<br>下面展示的是求平均值函数</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@annotate('double-&gt;double')</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Average</span><span class="params">(BaseUDAF)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">new_buffer</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> [<span class="number">0</span>, <span class="number">0</span>]</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">iterate</span><span class="params">(self, buffer, number)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> number <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            buffer[<span class="number">0</span>] += number</span><br><span class="line">            buffer[<span class="number">1</span>] += <span class="number">1</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">merge</span><span class="params">(self, buffer, pbuffer)</span>:</span></span><br><span class="line">        buffer[<span class="number">0</span>] += pbuffer[<span class="number">0</span>]</span><br><span class="line">        buffer[<span class="number">1</span>] += pbuffer[<span class="number">1</span>]</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">terminate</span><span class="params">(self, buffer)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> buffer[<span class="number">1</span>] == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0.0</span></span><br><span class="line">        <span class="keyword">return</span> buffer[<span class="number">0</span>] / buffer[<span class="number">1</span>]</span><br></pre></td></tr></table></figure><p><code>BaseUDAF.new_buffer()</code>：实现此方法返回聚合函数的中间值的<code>buffer</code>。<code>buffer</code>必须是<code>marshallableObject</code>（例如LIST、DICT），并且<code>buffer</code>的大小不应该随数据量递增。在极限情况下，<code>buffer Marshal</code>过后的大小不应该超过2MB。</p><p><code>BaseUDAF.iterate(buffer[, args, ...])</code>：实现此方法将<code>args</code>聚合到中间值<code>buffer</code>中。</p><p><code>BaseUDAF.merge(buffer, pbuffer)</code>：实现此方法将两个中间值<code>buffer</code>聚合到一起，即将<code>pbuffer</code>合并到<code>buffer</code>中。</p><p><code>BaseUDAF.terminate(buffer)</code>：实现此方法将中间值<code>buffer</code>转换为MaxCompute SQL的基本类型。</p><h2><span id="udtf">UDTF</span><a href="#udtf" class="header-anchor"> </a></h2><p>UDTF是用来拆成多行用的，常常和<code>LATERAL VIEW</code>一起用。<code>explode</code>就是常见的<code>UDTF</code></p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> pageid, adid <span class="keyword">FROM</span> pageAds <span class="keyword">LATERAL</span> <span class="keyword">VIEW</span> <span class="keyword">explode</span>(adid_list) adTable <span class="keyword">AS</span> adid;</span><br></pre></td></tr></table></figure><p>样例代码：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#coding:utf-8</span></span><br><span class="line"><span class="comment"># explode.py</span></span><br><span class="line"><span class="keyword">from</span> odps.udf <span class="keyword">import</span> annotate</span><br><span class="line"><span class="keyword">from</span> odps.udf <span class="keyword">import</span> BaseUDTF</span><br><span class="line"><span class="meta">@annotate('string -&gt; string')</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Explode</span><span class="params">(BaseUDTF)</span>:</span></span><br><span class="line">   <span class="string">"""将string按逗号分隔输出成多条记录。</span></span><br><span class="line"><span class="string">   """</span></span><br><span class="line">   <span class="function"><span class="keyword">def</span> <span class="title">process</span><span class="params">(self, arg)</span>:</span></span><br><span class="line">       props = arg.split(<span class="string">','</span>)</span><br><span class="line">       <span class="keyword">for</span> p <span class="keyword">in</span> props:</span><br><span class="line">           self.forward(p)</span><br></pre></td></tr></table></figure><p>其中，每一条记录都会对应调用一次<code>process</code>，而每调用一次<code>self.forward()</code>就会生成一行记录。</p><h2><span id="感悟">感悟</span><a href="#感悟" class="header-anchor"> </a></h2><p>啊，最近写UDF真是写上瘾了，UDF大大扩展了SQL能力，写好一个UDF，可以减少很多复杂的SQL语句，同时还可以使代码变的更加易读。</p><h2><span id="参考资料">参考资料</span><a href="#参考资料" class="header-anchor"> </a></h2><p><a href="https://help.aliyun.com/document_detail/73359.html" target="_blank" rel="noopener">阿里云Python UDF文档</a></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;之前一直以为udf是一个很高深很复杂的东西，但是经过实际编写后，发现它其实很简单。掌握这几个的特性，对写sql、抽样本、提特征会提升不少效率。&lt;/p&gt;
+&lt;p&gt;UDF为输入几个字段，返回一个值，比如&lt;code&gt;trim&lt;/code&gt;，&lt;code&gt;length&lt;/code&gt;等函数；UDAF为聚合函数，如&lt;code&gt;min&lt;/code&gt;，&lt;code&gt;max&lt;/code&gt;，而UDTF则是拆成多行的函数，例如&lt;code&gt;explode&lt;/code&gt;函数。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="应用开发" scheme="https://tianle.me/categories/%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/"/>
+    
+    
+      <category term="hive" scheme="https://tianle.me/tags/hive/"/>
+    
+      <category term="odps" scheme="https://tianle.me/tags/odps/"/>
+    
+      <category term="sql" scheme="https://tianle.me/tags/sql/"/>
+    
+      <category term="udf" scheme="https://tianle.me/tags/udf/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>西电latex模板问题（踩坑历程）</title>
+    <link href="https://tianle.me/2019/05/23/xidian-latex/"/>
+    <id>https://tianle.me/2019/05/23/xidian-latex/</id>
+    <published>2019-05-23T05:29:04.000Z</published>
+    <updated>2020-01-02T08:47:22.683Z</updated>
+    
+    <content type="html"><![CDATA[<p>众所周知，Latex编译工具可以让我们专注于写作本身，而不用在排版与格式上花费过多的时间。出于此考虑，在本次毕设中我采用了校研究生院提供的Latex模板进行毕设写作，其中遇到了不少坑，现记录如下。</p><a id="more"></a><h3><span id="前期准备">前期准备</span><a href="#前期准备" class="header-anchor"> </a></h3><p>学校官方模板可以在研究生院中下载，包含格式要求和word、latex模板（<a href="https://gr.xidian.edu.cn/info/1047/5086.htm" target="_blank" rel="noopener">专硕材料</a>、<a href="https://gr.xidian.edu.cn/info/1047/5087.htm" target="_blank" rel="noopener">学硕材料</a>）。</p><p>下载Ctex编译</p><h3><span id="踩坑历程">踩坑历程</span><a href="#踩坑历程" class="header-anchor"> </a></h3><h4><span id="subfigure冲突">subfigure冲突</span><a href="#subfigure冲突" class="header-anchor"> </a></h4><p>文中采用subfigure宏包进行多个子图合并时，会出现冲突，导致无法编译。解决方法为使用其他宏包替代subfigure，或者修改模板。<br>XDUthesis.cls文件第57行修改为</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\RequirePackage[titles,subfigure]&#123;tocloft&#125;</span><br></pre></td></tr></table></figure><h4><span id="中文复制乱码">中文复制乱码</span><a href="#中文复制乱码" class="header-anchor"> </a></h4><p>盲审提交pdf版时，系统解析会出现乱码。可能是字符集的问题。解决办法是添加宏包ccmap<br>templet.tex文件</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\usepackage&#123;ccmap&#125;</span><br></pre></td></tr></table></figure><h4><span id="符号及缩略语符号对齐">符号及缩略语符号对齐</span><a href="#符号及缩略语符号对齐" class="header-anchor"> </a></h4><p>使用\makebox替代原来的\hspace进行快速对齐</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">% \item 缩略语\hspace&#123;6em&#125;英文全称\hspace&#123;6em&#125;中文对照</span><br><span class="line">\item \makebox[8em][l]&#123;缩略语&#125; \makebox[14em][l]&#123;英文全称&#125; \makebox[14em][l]&#123;中文对照&#125;</span><br></pre></td></tr></table></figure><h4><span id="参考文献引用上标">参考文献引用上标</span><a href="#参考文献引用上标" class="header-anchor"> </a></h4><p>模板中的引用没有上标。<br>templet.tex文件<br>在<code>\begin{document}</code>之前添加如下语句</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\newcommand&#123;\upcite&#125;[1]&#123;\textsuperscript&#123;\textsuperscript&#123;\cite&#123;#1&#125;&#125;&#125;&#125;</span><br></pre></td></tr></table></figure><h4><span id="三级标题加粗与缩进">三级标题加粗与缩进</span><a href="#三级标题加粗与缩进" class="header-anchor"> </a></h4><p>XDUthesis.cls文件第251行subsection部分修改为<br>format中添加\XDU@bold</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">format=&#123;\raggedright\XDU@bold\XDU@font@st\XDU@font@zihao&#123;4&#125;&#125;,</span><br></pre></td></tr></table></figure><p>indent从2em改为1.74636175em，或者改成24pt</p><p>完成修改后，如下所示。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">%% subsection</span><br><span class="line">\CTEXsetup[name=&#123;,&#125;,</span><br><span class="line">           number=&#123;\thesubsection&#125;,</span><br><span class="line">           format=&#123;\raggedright\XDU@bold\XDU@font@st\XDU@font@zihao&#123;4&#125;&#125;,</span><br><span class="line">           nameformat=&#123;&#125;,</span><br><span class="line">           numberformat=&#123;&#125;,</span><br><span class="line">           aftername=&#123;\quad&#125;,</span><br><span class="line">           titleformat=&#123;&#125;,</span><br><span class="line">           beforeskip=&#123;12pt plus 0pt minus 0pt&#125;,</span><br><span class="line">           afterskip=&#123;6pt&#125;,</span><br><span class="line">           indent=&#123;24pt&#125;]&#123;subsection&#125;</span><br></pre></td></tr></table></figure><h4><span id="插图与表格索引间空格">插图与表格索引间空格</span><a href="#插图与表格索引间空格" class="header-anchor"> </a></h4><p>在\begin{document}前加上以下命令：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">\newcommand*&#123;\noaddvspace&#125;&#123;\renewcommand*&#123;\addvspace&#125;[1]&#123;&#125;&#125;</span><br><span class="line">\addtocontents&#123;lof&#125;&#123;\protect\noaddvspace&#125;</span><br><span class="line">\addtocontents&#123;lot&#125;&#123;\protect\noaddvspace&#125;</span><br></pre></td></tr></table></figure><h3><span id="大工告成">大工告成</span><a href="#大工告成" class="header-anchor"> </a></h3><p>附上完成修改后的西电模板配置文件<code>XDUthesis.cls</code>，大家可以直接下载替换。<br><a href="http://free.tianle.me/image/20190523/XDUthesis.cls" target="_blank" rel="noopener">点我下载XDUthesis.cls</a></p><h3><span id="参考">参考</span><a href="#参考" class="header-anchor"> </a></h3><p><a href="https://blog.csdn.net/qq_26023575/article/details/79458115" target="_blank" rel="noopener">西电硕士论文latex使用说明</a></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;众所周知，Latex编译工具可以让我们专注于写作本身，而不用在排版与格式上花费过多的时间。出于此考虑，在本次毕设中我采用了校研究生院提供的Latex模板进行毕设写作，其中遇到了不少坑，现记录如下。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="其他" scheme="https://tianle.me/categories/%E5%85%B6%E4%BB%96/"/>
+    
+    
+      <category term="西电" scheme="https://tianle.me/tags/%E8%A5%BF%E7%94%B5/"/>
+    
+      <category term="latex" scheme="https://tianle.me/tags/latex/"/>
+    
+      <category term="模板" scheme="https://tianle.me/tags/%E6%A8%A1%E6%9D%BF/"/>
+    
+      <category term="问题" scheme="https://tianle.me/tags/%E9%97%AE%E9%A2%98/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>聚类算法中的数据预处理</title>
+    <link href="https://tianle.me/2019/05/14/prepare-data-clustering/"/>
+    <id>https://tianle.me/2019/05/14/prepare-data-clustering/</id>
+    <published>2019-05-14T02:13:54.000Z</published>
+    <updated>2020-01-02T08:47:22.680Z</updated>
+    
+    <content type="html"><![CDATA[<p>在一般的机器学习任务中，已经有很多的数据预处理方法。本文要介绍的数据预处理方法是针对聚类算法。</p><p>在聚类中，通常将样本的所有特征数据组合成一个数值，然后计算两个样本之间的相似性。组合数据要求不同的特征具有相同的量纲。本文将讨论如何规范化、转换和创建分位数（normalizing, transforming, and creating quantiles），并讨论为什么分位数是转换任何数据分布的最佳默认选择。有了默认选项，就可以在不检查数据分布的情况下转换数据。</p><blockquote><p>本文主要内容翻译自<a href="https://developers.google.cn/machine-learning/clustering/prepare-data" target="_blank" rel="noopener">谷歌机器学习教程Clustering in Machine Learning-PrepareData</a></p></blockquote><a id="more"></a><h2><span id="规范化数据-normalizing-data">规范化数据 Normalizing Data</span><a href="#规范化数据-normalizing-data" class="header-anchor"> </a></h2><p>通过规范化数据，可以将多种特征转换为相同的量纲。特别是，规范化（normalizing）非常适合处理最常见的数据分布，即高斯分布。与分位数相比，规范化对数据量的要求更低。通过计算z-score对数据进行规范化，如下所示：</p>$$\begin{array}{*{20}{c}}  {x' = (x - \mu )/\sigma } \\   {\mu  = {\text{mean}}} \\   {\sigma  = {\text{standard deviation}}} \end{array}$$ <p>让我们看看数据在标准化前后相似性变化的例子。在图1中发现红色与蓝色更相似，而不是黄色。这是因为，x轴和y轴上他们数据特征的量纲不同。因此，直接观察到的相似性可能是未经缩放的。使用z-score进行规范化后，所有特征具有相同的尺度。这时你会发现红色实际上更像黄色。因此，在对数据进行规范化之后，可以更准确地计算相似性。</p><p><img src="//img.tianle.me/image/20190514/NormalizeData.png" alt><br>图1:规范化前后的特征数据比较。</p><p>综上所述，当数据有如下之一情况时，推荐使用规范化：</p><ol><li>数据服从高斯分布</li><li>缺少足够的数据来创建分位数</li></ol><h2><span id="log转换">Log转换</span><a href="#log转换" class="header-anchor"> </a></h2><p>当数据分布表现为长尾分布时，如图所示，红点看起来与黄点更加相似。<img src="//img.tianle.me/image/20190514/LeftSkew.png" alt><br>图2：幂率分布</p><p>我们对图2幂率分布的数据应用log转换，让数据分布变得更加平滑。结果如图3所示，红色目前与蓝色更相似。</p><p><img src="//img.tianle.me/image/20190514/NormalDistribution.png" alt><br>图3：变化后的正态分布</p><h2><span id="分位数">分位数</span><a href="#分位数" class="header-anchor"> </a></h2><p>规范化和log转换依赖于特定的数据分布。如果数据不符合高斯分布或幂律分布怎么办，是否有适用于任何分布的数据预处理方法。</p><p>尝试对如下分布进行预处理<br><img src="//img.tianle.me/image/20190514/Preprocess.png" alt><br>图4：无法归类的数据分布</p><p>直观地说，如果两个样本之间只有少数几个样本，那么无论它们的值如何，这两个样本是相似的。相反，如果这两个样本之间有很多个其他样本，那么这两个样本就不那么相似了。因此，两个样本之间的相似性随着样本间的样本数量的增加而减少。</p><p>如果对数据进行规范化（normalizing）只会复制数据分布，因为规范化是一个线性变换。应用log转换也不能反映相似性的原理，如图5所示。<img src="//img.tianle.me/image/20190514/LogTransform.png" alt><br>图5：对数据分布进行log转换</p><p>将数据划分为不同的区间，每个区间包含相同数量的样本。这些区间的边界称为分位数。</p><p>执行以下步骤将数据转换为分位数:</p><ol><li>确定间隔的数量。</li><li>定义区间，使每个区间具有相同数量的样本。</li><li>用样本所在区间的索引替代原先的样本值。</li><li>将索引值缩放到[0,1]，使索引与其他特征的数据范围相同。</li></ol><p><img src="//img.tianle.me/image/20190514/Quantize.png" alt><br>图6：使用分位数转换后的数据分布</p><p>将数据转换为分位数后，两个样本之间的相似性与这两个样本之间的样本数量成反比。在数学上，x是数据集中的任意一个样本：</p>$$sim(A,B) \approx 1 - |{\text{prob}}[x > A] - {\text{prob}}[x > B]|$$ $$sim(A,B) \approx 1 - |{\text{quantile}}(A) - {\text{quantile}}(B)|$$ <p>分位数是转换数据的最佳默认选择。然而，要建立可靠的底层数据分布的分位数指标，需要大量数据支撑。以经验来说，要建立$n$个分位数指标，至少需要$10n$个样本。如果没有足够的数据，请仍旧使用标准化（normalization）。</p><p>注意：对于如下数据分布，应当使用分位数处理，因为它不属于幂率分布，也不属于某个标准的数据分布形式<br><img src="//img.tianle.me/image/20190514/Distribution_Processing_B.png" alt></p><h2><span id="参考">参考</span><a href="#参考" class="header-anchor"> </a></h2><p>本文主要内容翻译自<a href="https://developers.google.cn/machine-learning/clustering/prepare-data" target="_blank" rel="noopener">谷歌机器学习教程Clustering in Machine Learning-PrepareData</a></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在一般的机器学习任务中，已经有很多的数据预处理方法。本文要介绍的数据预处理方法是针对聚类算法。&lt;/p&gt;
+&lt;p&gt;在聚类中，通常将样本的所有特征数据组合成一个数值，然后计算两个样本之间的相似性。组合数据要求不同的特征具有相同的量纲。本文将讨论如何规范化、转换和创建分位数（normalizing, transforming, and creating quantiles），并讨论为什么分位数是转换任何数据分布的最佳默认选择。有了默认选项，就可以在不检查数据分布的情况下转换数据。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;本文主要内容翻译自&lt;a href=&quot;https://developers.google.cn/machine-learning/clustering/prepare-data&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;谷歌机器学习教程Clustering in Machine Learning-PrepareData&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+    
+    </summary>
+    
+      <category term="算法" scheme="https://tianle.me/categories/%E7%AE%97%E6%B3%95/"/>
+    
+    
+      <category term="聚类" scheme="https://tianle.me/tags/%E8%81%9A%E7%B1%BB/"/>
+    
+      <category term="机器学习" scheme="https://tianle.me/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+    
+      <category term="数据挖掘" scheme="https://tianle.me/tags/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/"/>
+    
+      <category term="数据预处理" scheme="https://tianle.me/tags/%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86/"/>
+    
+      <category term="归一化" scheme="https://tianle.me/tags/%E5%BD%92%E4%B8%80%E5%8C%96/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>使用wget下载jdk</title>
+    <link href="https://tianle.me/2019/05/12/donwload-jdk/"/>
+    <id>https://tianle.me/2019/05/12/donwload-jdk/</id>
+    <published>2019-05-12T11:43:15.000Z</published>
+    <updated>2020-01-02T08:47:22.675Z</updated>
+    
+    <content type="html"><![CDATA[<p>服务器需要安装oracle jdk，但是目前找到的下载网站只有oracle的官网，下载的时候需要先点击接受协议，然后才能下载。</p><a id="more"></a><p><img src="//img.tianle.me/image/20190512/1.png" alt></p><p>我们尝试直接复制下载链接，然后使用 <code>wget url</code> 发现服务器报错无法开始下载。</p><p><img src="//img.tianle.me/image/20190512/3.png" alt></p><h3><span id="解决方法">解决方法</span><a href="#解决方法" class="header-anchor"> </a></h3><p>接受协议后，打开浏览器的调试窗口（<code>F12</code>），选择网络tab，点击要下载的jdk类型，观察浏览器调试窗口显示的信息，复制如下图所示的<code>url</code>作为<code>wget</code>命令的地址进行下载。</p><p><img src="//img.tianle.me/image/20190512/2.png" alt></p><h3><span id="参考资料">参考资料</span><a href="#参考资料" class="header-anchor"> </a></h3><p><a href="https://blog.51cto.com/kingstar/1750513" target="_blank" rel="noopener">解决 Linux 终端 wget 命令下载jdk的问题,jdk在linux下的配置问题</a></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;服务器需要安装oracle jdk，但是目前找到的下载网站只有oracle的官网，下载的时候需要先点击接受协议，然后才能下载。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="应用开发" scheme="https://tianle.me/categories/%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/"/>
+    
+    
+      <category term="wget" scheme="https://tianle.me/tags/wget/"/>
+    
+      <category term="jdk" scheme="https://tianle.me/tags/jdk/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Hive小技巧及优化</title>
+    <link href="https://tianle.me/2019/02/12/HiveAcrobatics/"/>
+    <id>https://tianle.me/2019/02/12/HiveAcrobatics/</id>
+    <published>2019-02-12T04:40:20.000Z</published>
+    <updated>2020-01-02T08:47:22.672Z</updated>
+    
+    <content type="html"><![CDATA[<p>总结一下平时遇到的SQL问题，以及对应的解决办法。</p><a id="more"></a><h2><span id="排除某几列查询">排除某几列查询</span><a href="#排除某几列查询" class="header-anchor"> </a></h2><p>查询除了ds 和 hr 之外的所有列</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="string">`(ds|hr)?+.+`</span> <span class="keyword">FROM</span> sales</span><br></pre></td></tr></table></figure><blockquote><p><a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+Select#LanguageManualSelect-REGEXColumnSpecification" target="_blank" rel="noopener">https://cwiki.apache.org/confluence/display/Hive/LanguageManual+Select#LanguageManualSelect-REGEXColumnSpecification</a></p></blockquote><h2><span id="修改表生命周期odps">修改表生命周期(ODPS)</span><a href="#修改表生命周期odps" class="header-anchor"> </a></h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> table_name <span class="keyword">SET</span> lifecycle <span class="keyword">days</span>;</span><br></pre></td></tr></table></figure><h2><span id="正则匹配">正则匹配</span><a href="#正则匹配" class="header-anchor"> </a></h2><p>匹配除“*n*”之外的任何单个字符。要匹配包括“*n*”在内的任何字符，请使用像“(.|\n)”的模式。</p><h2><span id="解析执行过程">解析执行过程</span><a href="#解析执行过程" class="header-anchor"> </a></h2><pre><code class="language-sql">explain  </code></pre><h2><span id="效率优化">效率优化</span><a href="#效率优化" class="header-anchor"> </a></h2><h3><span id="数据倾斜">数据倾斜</span><a href="#数据倾斜" class="header-anchor"> </a></h3><p><code>count(distinct )</code> 效率低下，数据倾斜，改用 <code>group by</code> 优化</p><h2><span id="遇到的坑">遇到的坑</span><a href="#遇到的坑" class="header-anchor"> </a></h2><h3><span id="查询空值">查询空值</span><a href="#查询空值" class="header-anchor"> </a></h3><p>例 字段 <code>A</code> 有三种取值 <code>Y</code>, <code>N</code>, <code>null</code>（空值）<br>我想取<code>N</code> 与 <code>null</code> ，如果查询条件为 <code>&lt;&gt; ‘Y’</code> ，是查不出<code>null</code>的<br>应该这么写 <code>A &lt;&gt; ‘Y’ or A is null</code></p><h2><span id="其他">其他</span><a href="#其他" class="header-anchor"> </a></h2><h3><span id="快速编辑">快速编辑</span><a href="#快速编辑" class="header-anchor"> </a></h3><p>vscode中<br>选择多行<br>option + shift + 鼠标左键</p><p>编辑每行的末尾或者开头<br>使用正则表达式进行替换 开头 ^ ，末尾 $</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;总结一下平时遇到的SQL问题，以及对应的解决办法。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="应用开发" scheme="https://tianle.me/categories/%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/"/>
+    
+    
+      <category term="SQL" scheme="https://tianle.me/tags/SQL/"/>
+    
+      <category term="开发" scheme="https://tianle.me/tags/%E5%BC%80%E5%8F%91/"/>
+    
+      <category term="Hive" scheme="https://tianle.me/tags/Hive/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>阿里实习感悟</title>
+    <link href="https://tianle.me/2019/02/12/tmallReview/"/>
+    <id>https://tianle.me/2019/02/12/tmallReview/</id>
+    <published>2019-02-12T04:23:01.000Z</published>
+    <updated>2020-01-02T08:47:22.682Z</updated>
+    
+    <content type="html"><![CDATA[<p>刚在上一家公司实习完，休息一个多月左右，呼哧呼哧的又溜出去实习了。<br>为什么只休息了一个多月呢，一是想体验天猫双十一，二是感受氛围帮助自己决策校招offer。前者是主要原因，后者是主要目的。</p><a id="more"></a><p>阿里是我心目中的公司，也一直想进BAT去体验它的技术氛围。此次实习虽然只有三个月，但是在这里依旧收获满满，让即将毕业的我对今后工作有一个初步的认知。在此也真心感谢一起工作的同事以及主管、HR，谢谢你们！</p><p><img src="//img.tianle.me/image/20190212/1.jpg" alt="实习照片1"><br>入职第一天</p><h2><span id="对自己的要求">对自己的要求</span><a href="#对自己的要求" class="header-anchor"> </a></h2><p>在阿里，不同级别的要求是不一样的。P5要求是能独立完成上面交给你的任务，把这个点给做好；P6除了完成任务外，还要基于你的任务形成一个解决方案，做成一条线；P7则在P6的要求之上，考虑这个系统的架构，各个算法、功能怎么解决，搭建出一个完整框架，做成一个面；那么P8则是要对自己的所在领域有深刻的理解。当然从P7开始也要有团队管理的能力。自己做的工作好不好，对照上面的标准，想要晋升，请自我检验，看看有没有达到要求。</p><h2><span id="全局观">全局观</span><a href="#全局观" class="header-anchor"> </a></h2><p>在工作中，仅仅了解自己做的那方面是远远不够的，要有一个全局观，首先要知道自己这个组是做什么的，这个团队、这个部门是做什么的，再大一点，这个公司、这个集团。从微观到宏观，对整个大环境至少需要有个感知。在大公司中你可能是个拧螺丝的，这个比喻一点也没错，如果只知道完成手头工作， <s>那么恭喜你，</s> 你真的是一颗螺丝钉，你应当了解你做的东西在哪一部分用，对于现有系统有何作用或者改进。因此，你应该更加了解你做的东西的前因后果。</p><p><img src="//img.tianle.me/image/20190212/2.jpg" alt="实习照片2"><br>天猫双十一</p><h2><span id="体系化">体系化</span><a href="#体系化" class="header-anchor"> </a></h2><p>目前你做的可能只是其中一小块，但是从点到线到面，如何从纵向从横向拓宽你的工作是一个需要思考的问题。这个算法在这个场景下可以用了，但是能不能稍加改进在另一个类似的场景中也可以应用呢？举个例子，最开始的算法可能是为某个商家设计的，当又新来了一个类似的需求后，能不能拓展到多个商家，再往上拓展，能不能在IP上应用，在行业上应用，多个IP，多个行业，甚至整个大盘呢。其次，他们间的关系是什么样的。</p><p>当然，这里说的体系化是有个前提的，如果这个需求时临时性的，遇到过一次后，后面不可能再遇到，那么就事论事，把这个需求搞定即可，没必要做成一个庞大复杂完善的功能。</p><p><img src="//img.tianle.me/image/20190212/3.jpg" alt="实习照片3"><br>天猫双十一</p><h2><span id="多思考">多思考</span><a href="#多思考" class="header-anchor"> </a></h2><p>因此在工作中要多加思考，不能埋头苦干。给你一个需求时，一定要了解背景和目标。有时候可能连业务方自己也不知道想要什么，因此我们要理清楚需求的深层目的，遇到不懂，不清楚的多和业务方交流。</p><p>老大交给你任务时，不要他说怎么做，你就怎么做，得要有自己的理解。还有哇，要理清楚你任务的前后关系，项目的背景、目标，不清楚就问。</p><p><img src="//img.tianle.me/image/20190212/4.jpg" alt="实习照片4"><br>天猫双十一</p><h2><span id="多学习">多学习</span><a href="#多学习" class="header-anchor"> </a></h2><p>互联网行业、信息科技的发展是迅猛的，有可能现在很火的东西过几年就不火了，技术换代。只要我们的title上还有工程师这几个字，无论到了那个级别，都不能丢掉技术。</p><p>无论在之前的网易还是现在的阿里，给我的感觉是，大家都一直在努力学习，从未停下。在我们组，主要还是通过业务来驱动技术的发展，遇到一个业务时，在内网ATA、外网、论文等各种渠道找有没有相似的解法，考虑如何应用到项目中。除此之外，每天、每周抽出时间学习新知识也是必不可以少的，时刻跟进行业的最新动态。</p><p>我印象比较深的是组里的一个女孩子，她是从运营转过来的，而我们这边数据和算法比较多，不是很熟悉。为了能尽快上手，首先自己看书，看文章研究，看到同事有空的，就过去请教，既可以问他做过的东西，也可以问现在遇到的问题。</p><p>最可怕的是，比你厉害的人，还比你努力。在阿里，真的是这样。我主管特别的忙，白天开会，晚上还要写代码，做PPT，同时还得补充新知识，下班走的也比我们晚。不只是业务、工作上的，其他技能也是杠杠的，社科类的知识讲起来一套一套，从微观到宏观，从经济学谈到博弈论、哲学、系统论，把我听的愣愣的。</p><p><img src="//img.tianle.me/image/20190212/5.jpg" alt="实习照片5"><br>天猫双十一</p><h2><span id="多问">多问</span><a href="#多问" class="header-anchor"> </a></h2><p>在实习生百技中，大佬和我们说：新人入职最怕的就是没有问题，有很多问题可能不是你的原因，而是由于本身内部系统造成的，外面也查不到。所以不要害怕自己的问题有多蠢，大胆地问，可以问师兄、同事以及主管。特别是师兄，他专门是给你解答问题的，这是他的职责，要是他不答，那么就是他失职了。</p><p>不要怕打扰到对方，总之多问。</p><p><img src="//img.tianle.me/image/20190212/6.jpg" alt="实习照片6"><br>双十一快递爆仓</p><h2><span id="多总结">多总结</span><a href="#多总结" class="header-anchor"> </a></h2><p>阿里让我特别佩服的一点是这里的技术沉淀。不说每年的大促双十一结束后，都会有各种新鲜的技术沉淀下来，在每个组中，如果有好的技术或者想法，都会总结出来，供后人参考。</p><p><img src="//img.tianle.me/image/20190212/7.jpg" alt="实习照片7"><br>雪景</p><h2><span id="关于汇报">关于汇报</span><a href="#关于汇报" class="header-anchor"> </a></h2><p>在实习期间，有幸经历了一次述职汇报，看了看组内成员都做了什么，了解了述职应该怎么汇报，虽然我没有讲，但是也有一个切身体会。</p><p>整体逻辑：总分总、结构清晰</p><p>别人组做过的，差不多的，先去调研，找到差异点，要有自己的特色（如果做不过别人的，还是不要做了。。。）</p><p>简要清楚的讲明白背景（因为别人没做过，不知道是什么样子的）、难点，有哪些现有的方法，你怎么解决的，效果</p><p>讲效果的时候，要体现出是你的原因导致的效果提升</p><p>不要讲太细节的东西、突出你的创新</p><p><img src="//img.tianle.me/image/20190212/8.jpg" alt="实习照片8"><br>雪景</p><h2><span id="结语">结语</span><a href="#结语" class="header-anchor"> </a></h2><p>先写到这吧，希望今年正式入职后能够，快乐工作，认真生活~</p><p><img src="//img.tianle.me/image/20190212/9.jpg" alt="实习照片9"><br>晚上下班</p><p><img src="//img.tianle.me/image/20190212/10.jpg" alt="实习照片10"><br>消防演习</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;刚在上一家公司实习完，休息一个多月左右，呼哧呼哧的又溜出去实习了。&lt;br&gt;
+为什么只休息了一个多月呢，一是想体验天猫双十一，二是感受氛围帮助自己决策校招offer。前者是主要原因，后者是主要目的。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="生活记录" scheme="https://tianle.me/categories/%E7%94%9F%E6%B4%BB%E8%AE%B0%E5%BD%95/"/>
+    
+    
+      <category term="感悟" scheme="https://tianle.me/tags/%E6%84%9F%E6%82%9F/"/>
+    
+      <category term="小结" scheme="https://tianle.me/tags/%E5%B0%8F%E7%BB%93/"/>
+    
+      <category term="实习" scheme="https://tianle.me/tags/%E5%AE%9E%E4%B9%A0/"/>
+    
+      <category term="阿里" scheme="https://tianle.me/tags/%E9%98%BF%E9%87%8C/"/>
+    
+      <category term="天猫" scheme="https://tianle.me/tags/%E5%A4%A9%E7%8C%AB/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>技·算未来内部算法大赛总结</title>
+    <link href="https://tianle.me/2019/01/11/algorithm-competition-review/"/>
+    <id>https://tianle.me/2019/01/11/algorithm-competition-review/</id>
+    <published>2019-01-11T14:06:26.000Z</published>
+    <updated>2020-01-02T08:47:22.675Z</updated>
+    
+    <content type="html"><![CDATA[<p>这一次算法总结，我要讲的不是关于比赛算法上的，而是赛前、赛中 以及 赛后的一些感受。</p><a id="more"></a><h2><span id="开篇">开篇</span><a href="#开篇" class="header-anchor"> </a></h2><p>来阿里实习，恰好赶上了一年一度的技算未来算法大赛，我们团队一商量就报了名。由于这次比赛组队的规则是每队至多有一名算法，至少一名工程，因此我作为外援的身份的参加。<br>本次大赛的题目是预测2018年双十一每个sku的销量，给了2016年到2018年9月30号的数据，分别为商品维表，包括sku_id，item_id，类目，店铺等信息；商品每日销量，收藏量等信息。</p><h2><span id="开工">开工</span><a href="#开工" class="header-anchor"> </a></h2><p>在刚开始的时候，平时日常业务多，因此团队热情并不是很高。我和另外一位同学参加过天池比赛，自然而然地开始负责整个比赛的流程了。<br>一起工作奋斗的日子很开心，平时要上班，比赛也只能抽空做。讨论了一下，发现时间很紧，我们把元旦的假期也拿来做比赛了，元旦期间我们还开了场视频会议，把要做的特征列了一下。随后，在接下来的周末，特别是第一次提交测评的前一天晚上，我们又狠狠地奋战了一番。</p><h2><span id="初赛测评">初赛测评</span><a href="#初赛测评" class="header-anchor"> </a></h2><p>匆匆忙忙的刚上了第一次测评，出来的结果大吃一惊，一共30多个队提交，结果我们排到了20，测评分数也是一塌糊涂。突然有种让我怀疑人生的感觉。当旁边的同事问到我们多少名的时候，我们都不好意思回答。。。。回头赶紧找原因。<br>噫，由于自己的蜜汁自信，时间赶，又加上自己的懒惰，只是简单的做了交叉验证，来不及调参，也没有加上与线上一致的评测指标，还有是第一次提交也不知道对手的情况，导致了这么惨的分数。<br>紧接着在当天晚上的第二次提交时，我加上了上述指标，进一步调参后，线上效果得到提升，但是排名还是没有变化，总的提交人数变多了，终于没有处于倒数的状态。有趣的是，在我们这个算法大团队中，共有三个队参加，没想到我们在团队中的成绩竟然是最好的，这又给了我们极大的信心，也告诉我们不能轻敌。</p><h2><span id="决赛">决赛</span><a href="#决赛" class="header-anchor"> </a></h2><p>……<br>时间隔的比较久，有些细节已经忘了，只记得在提交决赛测评结果的前一天晚上，我们还在讨论新特征，提新特征。修改了部分逻辑，考虑到第二天的资源可能会比较紧张，这一天晚上，大家都没有怎么休息，下班回家已经是一两点了，回去之后，又是轮流起床接力干活。<br>决赛现场进行，我们团队是最整齐的，集体穿上了双十一战袍。决赛当天，集群资源真的是紧张，按照计划的策略，在服务器上跑特征工程，简单训练模型，选取TOP特征，下载数据到本地再进行调参训练。<br>问题来了，当我们下载了结果时，竟然发现样本数与提交样本不一致，然后又马上到截止时间了。快速检查一下，发现出现了大量重复数据，时间紧，拍脑袋，重复的数据求平均！<br>匆匆忙忙交了结果，没想到最后测评竟然是负分！！</p><h2><span id="总结">总结</span><a href="#总结" class="header-anchor"> </a></h2><p>在这次比赛中出现了这么严重的错误，回过头来分析。<br>敬畏线上、敬畏代码，对写的每一行代码负责。在提交、发布时做好充分的线下测试，对中间的关键环节进行验证，比如数据的行数、列数，做过的操作、运算，看看是否和想象中的一致，有没有bad case。千万不能因为时间赶，而放弃了测试环节，这是最危险的，本来时间就紧，中间匆匆忙忙，出错的概率会大很多，所以一定要做好检查，如果实在来不及，可以考虑是不是和业务方交流一下，数据还没出来，能否往后延一点呢。<br>做好工时预估，给自己留足够的时间，正常完成时间是多少，当集群资源紧张时会不会造成延误。<br>复制黏贴代码的时候一定要小心，一不留神，不是哪里复制错了，就是复制的东西忘记改了，小心再小心。<br>当发现错误的时候，不能随便提交，一定要先做仔细检查。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;这一次算法总结，我要讲的不是关于比赛算法上的，而是赛前、赛中 以及 赛后的一些感受。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="生活记录" scheme="https://tianle.me/categories/%E7%94%9F%E6%B4%BB%E8%AE%B0%E5%BD%95/"/>
+    
+    
+      <category term="算法" scheme="https://tianle.me/tags/%E7%AE%97%E6%B3%95/"/>
+    
+      <category term="随想" scheme="https://tianle.me/tags/%E9%9A%8F%E6%83%B3/"/>
+    
+      <category term="感悟" scheme="https://tianle.me/tags/%E6%84%9F%E6%82%9F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>我的2018</title>
+    <link href="https://tianle.me/2019/01/01/my2018/"/>
+    <id>https://tianle.me/2019/01/01/my2018/</id>
+    <published>2019-01-01T04:24:13.000Z</published>
+    <updated>2020-01-02T08:47:22.678Z</updated>
+    
+    <content type="html"><![CDATA[<p>先给自己打个分，7.5吧，总体过得还可以，算是完成了主要的目标。去年发生几件重要的事：第一次去互联网大厂实习，并拿到了满意的offer，秋招之路算是顺路。第二件，感情上则不是那么的顺利了。至于2019年，这可能是我最后的学生生活了（如果以后不读博的话），上半年最重要的是顺利毕业，其次，有时间多去外面玩一玩，毕竟工作后没有这么多的时间了。下半年，好好上班，平稳步入职场吧，另外生活与工作两者必不可少，提高效率少加班。</p><a id="more"></a><h2><span id="学习第一">学习第一</span><a href="#学习第一" class="header-anchor"> </a></h2><p>这一年学习最多，成长最快的应当属于前半年找实习的那会儿，那时候的目标非常明确，我要找一个好实习，基本上是天天刷题，看书，看博客，打比赛。嗯，有个明确的目标很重要。做项目，打比赛是我这段时间提高最快的方法，也就是说在项目中发现问题、解决问题。还有哇，要多多总结，在总结的时候相当于把知识又重新复习了一遍。在这里还要特别感谢我的老师，还有师兄，以及一起学习打比赛的兄弟<a href="https://github.com/altmanWang" target="_blank" rel="noopener">Altman</a>，一起奋斗的感觉真棒！最后收获的offer也不少，春招实习有：百度、网易、蘑菇街、携程、宇视科技、GE，秋季校招：阿里、网易、科大讯飞、华为。<br>论文还是头大啊，那篇小论文已经被拒n次了，难受。</p><h2><span id="实习">实习</span><a href="#实习" class="header-anchor"> </a></h2><p>第一个收到满意offer的是百度，在此之前我一度怀疑自己，今年的算法火爆程度超过去年，怕是暑假实习没有着落。我还清楚的记得收offer的那天，我正在听阿里虾米的校园交流会，先是手机上收到百度的offer邮件，不过一分钟，hr的电话来了，那都是超过激动这个词来形容自己了，偷偷地溜出会议室跑去接offer call。offer的确认时间很短，在师兄的建议下，接受了offer，然后心里有了个底，接下来是不断的和hr往后拖入职时间，同时在催阿里的面试进度。有了这个offer后，信心大增，面试起来底气也足了。再后来就是网易的offer，本来让我去杭州面试，我是拒绝的，但是恰好有实验室的小伙伴一起，我们就商量了一下去杭州面试了，结局就是顺利收到offer。而我一直期待的阿里，则是在五轮面试下以失败告终，我想可能的原因是我投的部门算法岗不多，而我又不想做开发吧。话说，我找今年的实习，有不少公司都让我转开发，当我去了网易的实习的时候，我还在考虑是不是要转，有点知难而退的感觉。</p><h3><span id="网易人工智能">网易人工智能</span><a href="#网易人工智能" class="header-anchor"> </a></h3><p>在最后，我选择了网易，原因是今后大概率留在杭州，而百度大搜在北京，可能有种天生的习性不想去北京，想回家附近的原因吧。在offer选择的时候，也是纠结了好久，咨询了不少师兄师姐以及老师。<br>在网易的时间，认识了一大波可爱的同事，还有一位同部门一起实习的妹子，正是他们才让我的实习时光变的丰富多彩。<br>话说原本是想和我的一面面试官一起做游戏相关的算法，没想到鬼使神差的开始做考拉，同时也是这个原因，让我在校招面试天猫的时候一路顺风，在面试过程中几乎全程问考拉项目，基础题，算法题，编程题都是匆匆带过。两个部门的业务真的是太像了。<br>考拉的加班比较多，可能电商或者互联网行业都是这样吧，我负责的是考拉黑卡会员拉新业务，具体的已经总结，在这里不展开讲了。要说的是这里的同事，以及我的主管，大家都特别好，对我也特别照顾。我实习结束的时候，带我的老大还特地请了两顿饭，后来回杭州办离职的时候，老大又特意召集了一波人吃了一顿，再后来，我入职阿里，回网易看看的时候，老大拉上了之前的小伙伴，又吃了一段。考拉那边也是，当我离职的时候，真的可以说是依依不舍，我们都是同行，希望后面有机会再一起共事吧。</p><h3><span id="阿里天猫技术">阿里天猫技术</span><a href="#阿里天猫技术" class="header-anchor"> </a></h3><p>多亏了超哥的鼎力推荐，让我顺利拿到天猫offer，梦想中的阿里。进入天猫第一个感觉就是平台大，不去不知道，一去吓一跳。真的是什么都有，而且我最崇拜的就是这里的技术积累了，之前一直听说BAT的技术积累，现在才是真正的切身体会，在内网里面，可以说要什么文档有什么文档，要什么工具有什么工具，你遇到过的问题，基本上在你之前都有人遇到了。在ATA（内网技术站）上，你可以搜到各种各样的文章，有技术讲解、论文，而更多的是和阿里本身业务相关的各种工程，算法介绍。有了它，给你今后的业务提供了不少帮助。<br>这里的压力感觉要比网易大了不少，网易老大重视你，这里遍地都是大佬，人也多，感觉自己也就是个平均水平，受到的关照自然少了。所以接下来要继续努力呀！哦，对了，遇到问题要多问，不要怕不好意思！不要怕打扰别人！没有问题才可怕！多问！多问！有问题就问！不要捂着不说！还要多思考！</p><h2><span id="情感">情感</span><a href="#情感" class="header-anchor"> </a></h2><p>哎，写这个篇章很难受。<br>写在其他地方，略过吧。。。。。。</p><h2><span id="玩">玩</span><a href="#玩" class="header-anchor"> </a></h2><p>上半年在找实习，下半年在实习，都没有好好玩。去的城市倒不少，杭州、上海、武汉、石家庄、成都，但都是在实习的间隙中玩了几天。一直在奔波，希望在2019年，最后的学生时代，写完论文后，多出去玩玩吧。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;先给自己打个分，7.5吧，总体过得还可以，算是完成了主要的目标。去年发生几件重要的事：第一次去互联网大厂实习，并拿到了满意的offer，秋招之路算是顺路。第二件，感情上则不是那么的顺利了。至于2019年，这可能是我最后的学生生活了（如果以后不读博的话），上半年最重要的是顺利毕业，其次，有时间多去外面玩一玩，毕竟工作后没有这么多的时间了。下半年，好好上班，平稳步入职场吧，另外生活与工作两者必不可少，提高效率少加班。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="生活记录" scheme="https://tianle.me/categories/%E7%94%9F%E6%B4%BB%E8%AE%B0%E5%BD%95/"/>
+    
+    
+      <category term="随想" scheme="https://tianle.me/tags/%E9%9A%8F%E6%83%B3/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>猪场实习小结</title>
+    <link href="https://tianle.me/2018/11/23/internshipSummary/"/>
+    <id>https://tianle.me/2018/11/23/internshipSummary/</id>
+    <published>2018-11-22T16:25:15.000Z</published>
+    <updated>2020-01-02T08:47:22.677Z</updated>
+    
+    <content type="html"><![CDATA[<p>5月23号，来到网易报道，到现在差不多一个多月了。</p><a id="more"></a><ol><li><p>不要自己一个人埋头苦干，有问题就问，不要怕对方忙（当然也要看好时机），有时候你自己要搞好久，问一下，说不定别人一两句话的事情，或者几个操作就搞定了</p></li><li><p>多和你的师兄、老大讨论讨论，让他们了解你的想法，可以直接走过去和他们聊</p></li><li><p>工作的时候一定要保持积极向上的态度，而且一定要主动</p></li><li><p>老大给你安排的任务一定要做，如果你觉得坑，要给其他人说明白为什么这东西坑，然后寻求解决方案</p></li><li><p>数据分析的工作通常比较累、很花时间，而且做了很多的分析不一定会有结果，这是一个相对仔细的活，需要不段的切分维度去看，去对比，一步一步的精细化的分析，然后才能慢慢的得到一个结果</p></li><li><p>细致的理解业务逻辑，对特征提取、模型等都有非常重要的帮助</p></li><li><p>有时候复杂模型的效果不一定会比简单的规则差，但是当我们运用规则的时候，一定要对业务有着相当深入的理解</p></li><li><p>在初期的时候可以使用规则或者简单的模型做一个base line，然后再细致优化，一版一版不断迭代</p></li><li><p>勤做笔记，把一些常用的东西记下来</p></li><li><p>做的时候多积累技术、看看别人是怎么写的，学着点</p></li><li><p>线上的资源非常宝贵，最好不要轻易的将没有进行线下验证的结果直接放到线上做AB test，先做好线下的验证</p></li></ol><p>1、积极主动的工作态度<br>2、多思考、善于提问<br>3、效率、时间紧迫感<br>2、总结、技术积累</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;5月23号，来到网易报道，到现在差不多一个多月了。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="生活记录" scheme="https://tianle.me/categories/%E7%94%9F%E6%B4%BB%E8%AE%B0%E5%BD%95/"/>
+    
+    
+      <category term="感悟" scheme="https://tianle.me/tags/%E6%84%9F%E6%82%9F/"/>
+    
+      <category term="小结" scheme="https://tianle.me/tags/%E5%B0%8F%E7%BB%93/"/>
+    
+      <category term="实习" scheme="https://tianle.me/tags/%E5%AE%9E%E4%B9%A0/"/>
+    
+      <category term="网易" scheme="https://tianle.me/tags/%E7%BD%91%E6%98%93/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>机器学习算法春招实习面试</title>
+    <link href="https://tianle.me/2018/09/01/interviewSharing/"/>
+    <id>https://tianle.me/2018/09/01/interviewSharing/</id>
+    <published>2018-09-01T14:56:32.000Z</published>
+    <updated>2020-01-02T08:47:22.677Z</updated>
+    
+    <content type="html"><![CDATA[<p>记录春招实习面试</p><a id="more"></a><h4><span id="426-微软-算法-一面-二面">4.26 微软 算法 一面 二面</span><a href="#426-微软-算法-一面-二面" class="header-anchor"> </a></h4><p>隔离外网ip怎么做<br>基本上全是手写代码<br>判断某个ip是否属于这个子网<br>多个已经排好序的链表，找到其前k个最大的值<br>两数之和为某值，leetcode原题<br>快排<br>年龄排序，时间复杂度为o(n)<br>从多个服务器中，找到前k个最大值</p><h4><span id="425-阿里-hr面">4.25 阿里 hr面</span><a href="#425-阿里-hr面" class="header-anchor"> </a></h4><p>你想做算法还是工程，你是怎么看待的<br>我说我还是想做算法，但是给我做工程也可以，毕竟算法要落地实现的<br>讲一个对你影响最大的项目吧<br>你有没有帮助过别人<br>什么时候能来实习<br>我和你的部门老大再沟通沟通</p><h4><span id="424-京东-算法-二面-挂">4.24 京东 算法 二面 挂</span><a href="#424-京东-算法-二面-挂" class="header-anchor"> </a></h4><p>你对京东有什么看法，为什么要投京东<br>问项目<br>xgb的原理</p><h4><span id="423-网易-offer-沟通">4.23 网易 offer 沟通</span><a href="#423-网易-offer-沟通" class="header-anchor"> </a></h4><p>给你发offer你还要考虑一下，还是马上确认<br>什么时候能来<br>讲了一下待遇<br>有问题再联系</p><h4><span id="420-京东-算法-一面">4.20 京东 算法 一面</span><a href="#420-京东-算法-一面" class="header-anchor"> </a></h4><p>自我介绍完，先两道编程题，由于电话面试，讲思路即可<br>求二叉树，每个节点下面包含其子节点的数目<br>投骰子，每投一次根据其点数往前走k格，如点数2，往前走2格，求在在第n格的概率是多少<br>说一下条件概率<br>投影矩阵<br>了解深度学习吗，讲一下cnn<br>样本不平衡怎么办<br>梯度消失怎么回事<br>怎么防止过拟合<br>随便讲一个机器学习算法<br>讲一个你熟悉的项目<br>有没有什么想问我的<br>你是哪个部门的，能不能简单介绍一下<br>实习可以留下来吗<br>我的表现如何</p><h4><span id="418-蘑菇街-算法-hr面-三面">4.18 蘑菇街 算法 hr面 三面</span><a href="#418-蘑菇街-算法-hr面-三面" class="header-anchor"> </a></h4><p>评价一下你之前的面试表现<br>老师或者你周围的人是如何评价你的<br>评价一下你自己<br>你觉得你在哪些地方可以改进<br>你的求职标准有哪些<br>你是如何看待大公司和小公司的<br>你对职业方向有什么规划<br>你面试了哪些公司，有哪些offer<br>有没有什么想问我的<br>问：我问实习转正流程是怎么样的，能不能转正<br>问：实习的住房能解决吗</p><h4><span id="417-阿里零售通-算法-四面">4.17 阿里零售通 算法 四面</span><a href="#417-阿里零售通-算法-四面" class="header-anchor"> </a></h4><p>没有自我介绍<br>先问我怎么看待算法与工程相结合的，你讲讲你的理解，比如对于分类问题，你分别从算法角度和工程角度讲讲<br>他说你的理解就是给算法打下手啊，那这样还有人愿意做吗？<br>没有讲项目，直接开始问Java<br>你知道LinkedHashMap 和 HashMap吗，他们有什么区别<br>LinkedHashMap可以做冷热分离吗？如何可以怎么做？<br>说一说你的优势<br>Spring MVC的安全问题<br>知不知道Spring Security<br>CSRF攻击<br>数据库索引<br>lock synchronized 区别<br>堆和栈的区别，里面都存了什么东西<br>程序计数器是什么，做什么用的<br>垃圾回收有哪些算法<br>在浏览器中输入http://www.taobao.com会发生什么动作<br>tcp  、ip 是哪一层的<br>用过哪些数据库<br>分布式数据库用过没有<br>负载均衡<br>说一说volatile，在jvm中是怎么样的<br>你未来的职业规划是怎么样的</p><h4><span id="416-蘑菇街-算法-二面">4.16 蘑菇街 算法 二面</span><a href="#416-蘑菇街-算法-二面" class="header-anchor"> </a></h4><p>自我介绍<br>讲论文<br>讲比赛<br>问的特别细</p><p>有什么要问她的<br>你们做什么的<br>对于新人有没有培训或者交流</p><h4><span id="415-腾讯-基础研究-算法-一面">4.15 腾讯 基础研究 算法 一面</span><a href="#415-腾讯-基础研究-算法-一面" class="header-anchor"> </a></h4><p>自我介绍<br>讲你的三个优点<br>讲你的一个缺点<br>介绍一个你的项目<br>评价指标是什么<br>你是怎么调参的，哪些参数比较重要<br>你常用的机器学习算法有哪些<br>面试官在草稿纸上画了一个图，其实就是 多目标优化问题里面的 非支配解，把所有的非支配解求出来</p><p>机器学习里面的偏差和方差有什么区别<br>L1和L2有什么区别<br>为什么L1能得到稀疏解</p><h4><span id="413-网易-hr面">4.13 网易 hr面</span><a href="#413-网易-hr面" class="header-anchor"> </a></h4><p>讲一讲你的比赛<br>你的比赛有几个人参加，你是负责哪一块的，分工<br>这么做会不会效率比较低呢<br>时间怎么规划的<br>针对这个比赛，你有没有做过计划<br>有拿到其他公司的offer吗<br>你以后想在哪里工作<br>说说你了解的最新的技术<br>讲一次和老师发生过冲突的事<br>你觉得这件事情你有没有错<br>简历上都是你成功的事，讲一次你失败的事</p><h4><span id="413-网易-算法-二面">4.13 网易 算法 二面</span><a href="#413-网易-算法-二面" class="header-anchor"> </a></h4><p>没有自我介绍<br>说项目（但是比较少）<br>面试官：你了解过时序问题吗，怎么处理<br>面试官：时间序列问题和其他问题有什么区别<br>面试官：给你一道题，你讲下思路，或者最好写一下代码<br>一组时序的数据集，如<br>1.10 A<br>1.10 B<br>1.10 C<br>1.11 A<br>1.11 B<br>。。。。<br>第一列为时间，第二列为key 表示这条数据的类别，其余列为特征<br>时间窗口为3，你怎么把它进行划分，把这些数据拼接在一起。给你5分钟的时间</p><h4><span id="413-网易-算法-一面">4.13 网易 算法 一面</span><a href="#413-网易-算法-一面" class="header-anchor"> </a></h4><p>自我介绍<br>说项目<br>几个人做的，你负责那一部分<br>模型融合<br>lgb和xgb有什么区别<br>xgb没有用直方图加速吗</p><h4><span id="412-蘑菇街-算法-一面">4.12 蘑菇街 算法 一面</span><a href="#412-蘑菇街-算法-一面" class="header-anchor"> </a></h4><p>自我介绍<br>先做一道编程题：两个数组的交集<br>nums1 = [1 ,2, 2, 1]  nums2 = [2, 2] 返回 [2] 结果去重</p><h4><span id="409-阿里零售通-算法-三面">4.09 阿里零售通 算法 三面</span><a href="#409-阿里零售通-算法-三面" class="header-anchor"> </a></h4><p>自我介绍<br>挑一个最能表现你自己的项目讲讲吧<br>你Java怎么样<br>有没有接过项目<br>你对我们部门有什么了解吗，有没有下过我们的app</p><h4><span id="408-阿里零售通-算法-二面">4.08 阿里零售通 算法 二面</span><a href="#408-阿里零售通-算法-二面" class="header-anchor"> </a></h4><p>编程题<br>你觉得你的研究方向，在我们部门有什么应用呢？</p><h4><span id="330-阿里零售通-算法-一面">3.30 阿里零售通 算法 一面</span><a href="#330-阿里零售通-算法-一面" class="header-anchor"> </a></h4><p>自我介绍<br>讲一讲你研究方向，做了什么，论文，突出创新点，你的工作<br>PageRank<br>天池比赛<br>GBDT  和 XGB 比较<br>怎么调参的<br>你知道我们做什么的吗，之前是否有了解</p><h4><span id="326-百度算法-二面-get-offer">3.26 百度算法 二面 get offer</span><a href="#326-百度算法-二面-get-offer" class="header-anchor"> </a></h4><p>了解了一下基本情况，哪个学校，现在是硕士，做的什么东西，研究方向是啥，问我本科是学什么的，上过哪些计算机的课。<br>论文<br>数据哪里来的<br>深度学习和机器学习有什么区别，应用场景有哪些，什么地方用深度学习，什么地方用机器学习，为什么这些场景深度学习的效果比较好。<br>你得到的特征怎么用<br>贪心算法，基于网络性质的算法，启发式算法，问这些算法有什么区别，为什么在这个场景下贪心算法比较好，贪心算法在哪些地方不好<br>python，dict和list 有什么区别<br>list是怎么实现的<br>list的get是怎么实现的<br>python 底层的list是用什么语言写的。<br>场景题，数字键盘上有各个字母，按下一个数字键如 9673，打出单词word，不用考虑很大的单词量，设计一个算法？</p><h4><span id="322-百度算法面试-一面-实习-通过">3.22 百度算法面试 一面 实习 通过</span><a href="#322-百度算法面试-一面-实习-通过" class="header-anchor"> </a></h4><p>一面主要是基础知识，分为Java 基础知识、数据结构算法、编程题<br>自我介绍<br>讲了一堆项目和论文，但是本轮面试主要是基础知识，基本上没问，面试官问我简历上哪个比较突出讲一讲，我说了论文，结果他不感兴趣，直接开始问Java。<br>redis<br>String是否为java的基本数据类型<br>基本数据类型有哪些<br>面向对象怎么理解，多态、继承、封装， 怎么理解继承<br>抽象类 和 接口 有什么区别<br>Spring有什么特性<br>最后3道编程题<br>判断链表有没有环<br>两链表的公共节点<br>无序数组第k个数是多少</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;记录春招实习面试&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="生活记录" scheme="https://tianle.me/categories/%E7%94%9F%E6%B4%BB%E8%AE%B0%E5%BD%95/"/>
+    
+    
+      <category term="算法" scheme="https://tianle.me/tags/%E7%AE%97%E6%B3%95/"/>
+    
+      <category term="机器学习" scheme="https://tianle.me/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+    
+      <category term="网易" scheme="https://tianle.me/tags/%E7%BD%91%E6%98%93/"/>
+    
+      <category term="面试" scheme="https://tianle.me/tags/%E9%9D%A2%E8%AF%95/"/>
+    
+      <category term="百度" scheme="https://tianle.me/tags/%E7%99%BE%E5%BA%A6/"/>
+    
+      <category term="阿里" scheme="https://tianle.me/tags/%E9%98%BF%E9%87%8C/"/>
+    
+      <category term="腾讯" scheme="https://tianle.me/tags/%E8%85%BE%E8%AE%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>网易实习总结</title>
+    <link href="https://tianle.me/2018/08/31/neteaseSummarize/"/>
+    <id>https://tianle.me/2018/08/31/neteaseSummarize/</id>
+    <published>2018-08-31T09:16:42.000Z</published>
+    <updated>2022-05-09T12:04:49.765Z</updated>
+    
+    <content type="html"><![CDATA[<p>飞机晚点一个半小时，趁这个时间总结总结吧。</p><p>今天从公司离职，没想到老大竟然亲自送我，受到这么高的规格待遇，真是受宠若惊啊。</p><p>这次实习可谓是收获满满，一个是技术、二是业务，还有认识了一位可爱的妹子。</p><a id="more"></a><p>说到数据智能，这里要特别感谢带我入门的JN师兄和我的队友QX，从第一个京东金融的信贷需求预测开始，到最后的阿里妈妈广告点击，让我学到了最基本的数据类问题的通用套路。而现在的网易AI实习、考拉会员拉新项目，则让我学到了真实业务上的操作方式。</p><p>实际项目相对于比赛，我认为主要的区别有以下几点：</p><ol><li>实施方式多样，真实业务的最终目标可能很明确，但是达成这个目标的方式会有很多种，而且他们的效果也不尽相同，所以具体的实施方案就需要自己去想去尝试；</li><li>训练样本构造复杂，一般的数据竞赛都会提供比较”干净“的数据集，做少量的处理就可以直接用来训练，但是真实业务的训练样本需要自己构造，可以说对于电商来说，想要什么数据就有什么数据，而且不同的构造方式对最终的结果会有非常大的差异，怎么去构造一个训练集使得更贴近目标、更符合真实业务的数据分布，是需要不断地去推敲；</li><li>特征抽取复杂，除了抽数据之外，提特征也是一个相当重要的工作，首先数据仓库里面有各种类型的数据，得要自己不断去理解，知道自己想要什么，有什么，还得根据具体的业务，自己去构造特征，而且在构造特征的时候，还要看看它有哪些数据，它的数据是从哪里来的，怎么来的；</li><li>线上测试谨慎，线上的资源非常宝贵，把算法模型放到线上测的时候一定要在线下做好充分的准备，而且要考虑各种风险因素，比如用户的体验等等。不像比赛线下测一测有提高，就扔到线上提交。</li></ol><p>至于模型上的，由于我参与的较少，这里就不多说了。</p><p>技术</p><p>这段实习体验下来，接触最多的应该是数据ETL的工作，而在算法模型上的时间非常非常少。此外还了解了不少数据仓库的概念，比如说是什么东西，它的架构，怎么来的，怎么用等等。考拉这边有一个相对完善的数据仓库，从最底端的ODS层，到上面的ADI接口层，里面有各种维度丰富的数据，我们在做数据分析或者算法模型的时候，可以直接拿来调用</p><p>业务</p><p>算法怎么做，样本怎么选，特征怎么构造，选什么模型等等都需要和业务相结合。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;飞机晚点一个半小时，趁这个时间总结总结吧。&lt;/p&gt;
+&lt;p&gt;今天从公司离职，没想到老大竟然亲自送我，受到这么高的规格待遇，真是受宠若惊啊。&lt;/p&gt;
+&lt;p&gt;这次实习可谓是收获满满，一个是技术、二是业务，还有认识了一位可爱的妹子。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="生活记录" scheme="https://tianle.me/categories/%E7%94%9F%E6%B4%BB%E8%AE%B0%E5%BD%95/"/>
+    
+    
+      <category term="实习" scheme="https://tianle.me/tags/%E5%AE%9E%E4%B9%A0/"/>
+    
+      <category term="网易" scheme="https://tianle.me/tags/%E7%BD%91%E6%98%93/"/>
+    
+      <category term="总结" scheme="https://tianle.me/tags/%E6%80%BB%E7%BB%93/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>基于Spring Boot的登录demo</title>
+    <link href="https://tianle.me/2018/05/02/springbootlogin/"/>
+    <id>https://tianle.me/2018/05/02/springbootlogin/</id>
+    <published>2018-05-02T08:21:19.000Z</published>
+    <updated>2020-01-02T08:47:22.682Z</updated>
+    
+    <content type="html"><![CDATA[<p>本项目基于Spring Boot框架，搭建了一个简单的登录微服务。<br>Spring Boot相对于传统的SSM(Spring MVC + Mybatis + Spring)框架用起来更加简单，不需要进行复杂的配置，方便灵活。</p><a id="more"></a><p>Spring Boot让我们的Spring应用变的更轻量化。比如：你可以仅仅依靠一个Java类来运行一个Spring应用。你也可以打包你的应用为jar并通过使用java -jar来运行你的Spring Web应用。</p><p>使用Spring Boot可以很方便的建立微服务。</p><h3><span id="效果图">效果图</span><a href="#效果图" class="header-anchor"> </a></h3><p><a href="http://tianle.me:8080">项目测试地址</a>：<a href="http://tianle.me:8080">http://tianle.me:8080</a></p><p>项目代码：<a href="https://github.com/zhangtianle/SpringBoot-Based-Login" target="_blank" rel="noopener">github</a></p><p><img src="//img.tianle.me/image/20180502/1.png" alt="效果图"></p><h3><span id="应用技术">应用技术</span><a href="#应用技术" class="header-anchor"> </a></h3><p>Spring Boot + bootstrap + thymeleaf</p><h3><span id="项目搭建">项目搭建</span><a href="#项目搭建" class="header-anchor"> </a></h3><p>使用Intellij中的Spring Initializr来快速构建Spring Boot</p><p>菜单栏中选择File=&gt;New=&gt;Project…</p><p>一直点下一步</p><p><img src="//img.tianle.me/image/20180502/p1.png" alt="p1"><br><img src="//img.tianle.me/image/20180502/p2.png" alt="p2"><br><img src="//img.tianle.me/image/20180502/p3.png" alt="p3"><br><img src="//img.tianle.me/image/20180502/p4.png" alt="p4"></p><p>最后点击Finish</p><p>联网自动从网站上下载Spring Boot的模板，稍作等待框架就搭好啦。</p><h4><span id="项目目录结构">项目目录结构</span><a href="#项目目录结构" class="header-anchor"> </a></h4><p>上面步骤中的项目名字和这个截图有点不一样(login)<br>src/main/java/ 为代码文件<br>src/main/resources/ 为资源文件</p><p>为了保证项目资源结构的清晰，我们把 src/main/java/ 再进一步进行划分：<br>bean 目录存放的是要用到的实体类<br>controller 目录存放的是控制层类</p><p>src/main/resources/template/ 为静态页面的模板文件，这里用了thymeleaf模板渲染引擎框架（据说Spring Boot推荐）<br>src/main/resources/application.properties 为Spring Boot的配置文件<br><img src="//img.tianle.me/image/20180502/p5.png" alt="p5"></p><h4><span id="maven配置">maven配置</span><a href="#maven配置" class="header-anchor"> </a></h4><p>我们做的是Java web项目，在其默认生成的maven配置文件中添加web和thymeleaf依赖。<br>pom.xml</p><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-thymeleaf<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure><h4><span id="applicationproperties配置">application.properties配置</span><a href="#applicationproperties配置" class="header-anchor"> </a></h4><p>这里我们配置 thymeleaf模板渲染引擎</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"># Enable template caching.</span><br><span class="line">spring.thymeleaf.cache=true</span><br><span class="line"># Check that the templates location exists.</span><br><span class="line">spring.thymeleaf.check-template-location=true</span><br><span class="line"># Content-Type value.</span><br><span class="line">spring.thymeleaf.servlet.content-type=text/html</span><br><span class="line"># Enable MVC Thymeleaf view resolution.</span><br><span class="line">spring.thymeleaf.enabled=true</span><br><span class="line"># Template encoding.</span><br><span class="line">spring.thymeleaf.encoding=UTF-8</span><br><span class="line"># Comma-separated list of view names that should be excluded from resolution.</span><br><span class="line">spring.thymeleaf.excluded-view-names=</span><br><span class="line"># Template mode to be applied to templates. See also StandardTemplateModeHandlers.</span><br><span class="line">spring.thymeleaf.mode=HTML</span><br><span class="line"># Prefix that gets prepended to view names when building a URL.</span><br><span class="line">spring.thymeleaf.prefix=classpath:/templates/</span><br><span class="line"># Suffix that gets appended to view names when building a URL.</span><br><span class="line">spring.thymeleaf.suffix=.html</span><br></pre></td></tr></table></figure><p>其余的Spring Boot属性配置文件参考(本项目没有配置，使用的默认)：<br><a href="http://blog.didispace.com/springbootproperties/" target="_blank" rel="noopener">Spring Boot属性配置文件详解</a></p><h4><span id="bean">Bean</span><a href="#bean" class="header-anchor"> </a></h4><p>本项目为用户登录，只考虑用户这一个角色，包含用户名和密码。</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> me.tianle.login.bean;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> String password;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">User</span><span class="params">(String name, String password)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">        <span class="keyword">this</span>.password = password;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getPassword</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> password;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setPassword</span><span class="params">(String password)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.password = password;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h4><span id="controller">Controller</span><a href="#controller" class="header-anchor"> </a></h4><p>web项目的控制器写在这里，处理页面的请求，前后台交互</p><p>@Controller：修饰class，用来创建处理http请求的对象<br>@RestController：Spring4之后加入的注解，原来在@Controller中返回json需要@ResponseBody来配合，如果直接用@RestController替代@Controller就不需要再配置@ResponseBody，默认返回json格式。<br>@RequestMapping：配置url映射</p><p>目前版本没有添加数据库，能否登录判断逻辑直接写死在代码中。</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> me.tianle.login.controller;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> me.tianle.login.bean.User;</span><br><span class="line"><span class="keyword">import</span> org.springframework.ui.ModelMap;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.*;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.servlet.ModelAndView;</span><br><span class="line"></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LoginController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping</span>(<span class="string">"/"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ModelAndView <span class="title">index</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ModelAndView(<span class="string">"index"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping</span>(value = <span class="string">"/login"</span>, method = RequestMethod.POST)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">login</span><span class="params">(@ModelAttribute User user)</span> </span>&#123;</span><br><span class="line">        String name = user.getName();</span><br><span class="line">        String password = user.getPassword();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (name.equals(<span class="string">"qinya"</span>) &amp;&amp; password.equals(<span class="string">"tianle"</span>)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">"Success"</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">"Failed"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h4><span id="项目打包运行">项目打包运行</span><a href="#项目打包运行" class="header-anchor"> </a></h4><p>使用maven进行打包。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn install</span><br></pre></td></tr></table></figure><p>Spring Boot里面嵌入了Tomcat，直接运行</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar xxx.jar</span><br></pre></td></tr></table></figure><p><img src="//img.tianle.me/image/20180502/p6.png" alt="p6"><br>浏览器输入: <a href="http://localhost:8080" target="_blank" rel="noopener">http://localhost:8080</a><br>账号：qinya<br>密码：tianle</p><h3><span id="参考来源">参考来源</span><a href="#参考来源" class="header-anchor"> </a></h3><p><a href="http://blog.didispace.com/Spring-Boot%E5%9F%BA%E7%A1%80%E6%95%99%E7%A8%8B/" target="_blank" rel="noopener">Spring Boot基础教程</a><br><a href="http://www.htmleaf.com/css3/ui-design/201610114094.html" target="_blank" rel="noopener">基于Bootstrap的简洁登录界面设计效果</a><br><a href="https://spring.io/guides/gs/spring-boot/" target="_blank" rel="noopener">Building an Application with Spring Boot</a></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;本项目基于Spring Boot框架，搭建了一个简单的登录微服务。&lt;br&gt;
+Spring Boot相对于传统的SSM(Spring MVC + Mybatis + Spring)框架用起来更加简单，不需要进行复杂的配置，方便灵活。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="应用开发" scheme="https://tianle.me/categories/%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/"/>
+    
+    
+      <category term="java" scheme="https://tianle.me/tags/java/"/>
+    
+      <category term="spring" scheme="https://tianle.me/tags/spring/"/>
+    
+      <category term="spring boot" scheme="https://tianle.me/tags/spring-boot/"/>
+    
+      <category term="demo" scheme="https://tianle.me/tags/demo/"/>
+    
+      <category term="login" scheme="https://tianle.me/tags/login/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Java中十进制转二进制转换函数</title>
+    <link href="https://tianle.me/2018/04/17/int-to-bit/"/>
+    <id>https://tianle.me/2018/04/17/int-to-bit/</id>
+    <published>2018-04-17T03:32:36.000Z</published>
+    <updated>2020-01-02T08:47:22.677Z</updated>
+    
+    <content type="html"><![CDATA[<p>原文转自：<a href="http://blog.chinaunix.net/uid-10018502-id-2972048.html" target="_blank" rel="noopener">java中十进制转二进制转换函数</a></p><a id="more"></a><p>十进制转成十六进制：<br>Integer.toHexString(int i)<br>十进制转成八进制<br>Integer.toOctalString(int i)<br>十进制转成二进制<br>Integer.toBinaryString(int i)<br>十六进制转成十进制<br>Integer.valueOf(“FFFF”,16).toString()<br>八进制转成十进制<br>Integer.valueOf(“876”,8).toString()<br>二进制转十进制<br>Integer.valueOf(“0101”,2).toString()</p><p>有什么方法可以直接将2,8,16进制直接转换为10进制的吗?<br>java.lang.Integer类<br>parseInt(String s, int radix)<br>使用第二个参数指定的基数，将字符串参数解析为有符号的整数。<br>examples from jdk:<br>parseInt(“0”, 10) returns 0<br>parseInt(“473”, 10) returns 473<br>parseInt(&quot;-0&quot;, 10) returns 0<br>parseInt(&quot;-FF&quot;, 16) returns -255<br>parseInt(“1100110”, 2) returns 102<br>parseInt(“2147483647”, 10) returns 2147483647<br>parseInt(&quot;-2147483648&quot;, 10) returns -2147483648<br>parseInt(“2147483648”, 10) throws a NumberFormatException<br>parseInt(“99”, throws a NumberFormatException<br>parseInt(“Kona”, 10) throws a NumberFormatException<br>parseInt(“Kona”, 27) returns 411787</p><p>进制转换如何写（二，八，十六）不用算法<br>Integer.toBinaryString<br>Integer.toOctalString<br>Integer.toHexString</p><blockquote><p>例一</p></blockquote><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span></span>&#123;</span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> i=<span class="number">100</span>;</span><br><span class="line">    String binStr=Integer.toBinaryString(i);</span><br><span class="line">    String otcStr=Integer.toOctalString(i);</span><br><span class="line">    String hexStr=Integer.toHexString(i);</span><br><span class="line">    System.out.println(binStr);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><blockquote><p>例二</p></blockquote><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestStringFormat</span> </span>&#123;</span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (args.length == <span class="number">0</span>) &#123;</span><br><span class="line">       System.out.println(<span class="string">"usage: java TestStringFormat "</span>);</span><br><span class="line">       System.exit(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Integer factor = Integer.valueOf(args[<span class="number">0</span>]);</span><br><span class="line"></span><br><span class="line">    String s;</span><br><span class="line"></span><br><span class="line">    s = String.format(<span class="string">"%d"</span>, factor);</span><br><span class="line">    System.out.println(s);</span><br><span class="line">    s = String.format(<span class="string">"%x"</span>, factor);</span><br><span class="line">    System.out.println(s);</span><br><span class="line">    s = String.format(<span class="string">"%o"</span>, factor);</span><br><span class="line">    System.out.println(s);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><blockquote><p>其他方法：</p></blockquote><p>Integer.toHexString(你的10进制数);<br>例如<br>String temp = Integer.toHexString(75);<br>输出temp就为 4b</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//输入一个10进制数字并把它转换成16进制</span></span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">toHex</span></span>&#123;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[]args)</span></span>&#123;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> input;<span class="comment">//存放输入数据</span></span><br><span class="line"><span class="comment">//创建输入字符串的实例</span></span><br><span class="line">BufferedReader strin=<span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">System.out.println(<span class="string">"请输入一个的整数："</span>);</span><br><span class="line">String x=<span class="keyword">null</span>;</span><br><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">x=strin.readLine();</span><br><span class="line">&#125;<span class="keyword">catch</span>(IOException ex)&#123;</span><br><span class="line">ex.printStackTrace();</span><br><span class="line">&#125;</span><br><span class="line">input=Integer.parseInt(x);</span><br><span class="line">System.out.println (<span class="string">"你输入的数字是："</span>+input);<span class="comment">//输出从键盘接收到的数字</span></span><br><span class="line"></span><br><span class="line">System.out.println (<span class="string">"它的16进制是："</span>+Integer.toHexString(input));<span class="comment">//用toHexString把10进制转换成16进制</span></span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;原文转自：&lt;a href=&quot;http://blog.chinaunix.net/uid-10018502-id-2972048.html&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;java中十进制转二进制转换函数&lt;/a&gt;&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="应用开发" scheme="https://tianle.me/categories/%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/"/>
+    
+    
+      <category term="java" scheme="https://tianle.me/tags/java/"/>
+    
+      <category term="进制转换" scheme="https://tianle.me/tags/%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Java垃圾收集器与内存分配策略</title>
+    <link href="https://tianle.me/2018/04/17/java-gc/"/>
+    <id>https://tianle.me/2018/04/17/java-gc/</id>
+    <published>2018-04-17T01:46:58.000Z</published>
+    <updated>2020-01-02T08:47:22.677Z</updated>
+    
+    <content type="html"><![CDATA[<p>本文是对《深入理解Java虚拟机》，第三章 垃圾收集器与内存分配策略 的总结。</p><a id="more"></a><h2><span id="对象死了吗">对象死了吗？</span><a href="#对象死了吗" class="header-anchor"> </a></h2><h3><span id="引用计数法">引用计数法</span><a href="#引用计数法" class="header-anchor"> </a></h3><p>给对象添加一个引用计数器，每当有一个地方引用它时，计数器加一，引用失效时，计数器减一，任何时刻计数器为0的对象就是不可能再被使用的。实现简单，判定效率高，但是很难解决对象间循环引用的问题</p><h3><span id="可达性分析法">可达性分析法</span><a href="#可达性分析法" class="header-anchor"> </a></h3><p>通过一系列的称为“GC Roots”的对象作为起始点，从这些节点开始向下搜索，搜索所走过的路径称为引用链（Reference Chain），当一个对象到GC Roots没有任何引用链相连（用图论的话来说，就是从GC Roots到这个对象不可达）时，则证明此对象是不可用的。</p><h3><span id="引用">引用</span><a href="#引用" class="header-anchor"> </a></h3><p>强引用 new，软引用 SoftReference， 弱引用 WeakReference，虚引用 PhantomReference</p><p>如果宣告对象死亡，至少要经历两次标记过程：如果对象在进行可达性分析后发现没有与GC Root相连接的引用链，那它将会第一次标记并且进行一次筛选，筛选的条件是此对象是否有必要执行finalize()方法。 如果这个对象被判定为有必要执行finalize()方法，那么这个对象会放置在一个叫做F-Queue的队列之中，并在稍后由一个虚拟机自动创建的、低优先级的Finalizer线程去执行它。</p><h3><span id="回收方法区">回收方法区</span><a href="#回收方法区" class="header-anchor"> </a></h3><blockquote><p>满足以下3个条件：<br>1.该类所有的实例都已经被回收，也就是Java堆中不存在该类的任何实例。<br>2.加载该类的ClassLoader已经被回收。<br>3.该类对应的java.lang.Class对象没有在任何地方被引用，无法在任何地方通过反射访问该类的方法。</p></blockquote><h2><span id="垃圾收集算法">垃圾收集算法</span><a href="#垃圾收集算法" class="header-anchor"> </a></h2><p>复制算法<br>标记-整理算法<br>标记-清除算法</p><p>根据对象存活周期的不同将内存划分为几块。一般是把Java堆分为新生代和老年代<br>新生代：每次垃圾收集时有大批对象死亡，少量存活， 选用 复制算法<br>老年代：对象存活率高、没有额外空间对它进行分配担保，使用  标记-整理 或者 标记-清理</p><h2><span id="垃圾收集器">垃圾收集器</span><a href="#垃圾收集器" class="header-anchor"> </a></h2><p>垃圾收集器是内存回收的具体实现。<br>到目前为止没有一个万能的收集器，所以选择的是对具体应用最合适的收集器。</p><h3><span id="serial收集器">Serial收集器</span><a href="#serial收集器" class="header-anchor"> </a></h3><p>单线程<br>在进行垃圾收集时，必须暂停其他所有的工作线程，直到它收集结束</p><h3><span id="parnew收集器">ParNew收集器</span><a href="#parnew收集器" class="header-anchor"> </a></h3><p>Serial收集器的多线程版本</p><h3><span id="cms收集器">CMS收集器</span><a href="#cms收集器" class="header-anchor"> </a></h3><p>最短回收停顿时间<br>并发收集、低停顿<br>标记-清除<br>步骤：初始标记、并发标记、重新标记、并发清除</p><h3><span id="g1收集器">G1收集器</span><a href="#g1收集器" class="header-anchor"> </a></h3><p>特点：并行与并发、分代收集、空间整合（不会产生内存空间碎片）、可预测的停顿<br>步骤：初始标记、并发标记、最终标记、筛选回收</p><blockquote><p>注：<br>并行（Parallel）：指多条垃圾收集线程并行工作，但此时用户线程仍然处于等待状态<br>并发（Concurrent）：指用户线程与垃圾收集线程同时执行（但不一定是并行的，可能会交替进行），用户程序在继续运行，而垃圾收集程序运行于另一个CPU上</p></blockquote><h2><span id="内存分配与回收策略">内存分配与回收策略</span><a href="#内存分配与回收策略" class="header-anchor"> </a></h2><h3><span id="对象优先在eden分配">对象优先在Eden分配</span><a href="#对象优先在eden分配" class="header-anchor"> </a></h3><h3><span id="大对象直接进入老年代">大对象直接进入老年代</span><a href="#大对象直接进入老年代" class="header-anchor"> </a></h3><h3><span id="长期存活的对象将进入老年代">长期存活的对象将进入老年代</span><a href="#长期存活的对象将进入老年代" class="header-anchor"> </a></h3><p>如果对象在Eden出生并经过第一次Minor GC后仍然存活，并且能被Survivor容纳，将被移动到Survivor空间中，并且对象年龄设为1,。对象在Survivor区中每“熬过”一次Minor GC，年龄就增加1岁，当它的年龄增加到一定程度（默认为15岁），就将会被晋升到老年代中。</p><h3><span id="动态对象年龄判定">动态对象年龄判定</span><a href="#动态对象年龄判定" class="header-anchor"> </a></h3><p>如果在Survivor空间中相同年龄所有对象大小的总和大于Survivor空间的一半，年龄大于或等于该年龄的对象就可以直接进入老年代</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;本文是对《深入理解Java虚拟机》，第三章 垃圾收集器与内存分配策略 的总结。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="应用开发" scheme="https://tianle.me/categories/%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/"/>
+    
+    
+      <category term="java" scheme="https://tianle.me/tags/java/"/>
+    
+      <category term="虚拟机" scheme="https://tianle.me/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>动态规划</title>
+    <link href="https://tianle.me/2018/03/28/dynamic-programming/"/>
+    <id>https://tianle.me/2018/03/28/dynamic-programming/</id>
+    <published>2018-03-28T06:49:43.000Z</published>
+    <updated>2020-01-02T08:47:22.676Z</updated>
+    
+    <content type="html"><![CDATA[<p>动态规划是一种算法设计技术，是一种使多阶段决策过程最优的通用方法。</p><a id="more"></a><p>如果问题是由<strong>交叠</strong>的子问题构成的，我们就可以用动态规划技术来解决它。一般来说这样的子问题出现在对给定问题求解的递推关系中，这个递推关系中包含了相同类型的更小问题的解。<br>动态规划法建议，与其对交叠的子问题一次又一次地求解，还不如对每个较小的子问题只求解一次并把结果记录在表中，这样就可以从表中得出原始问题的解。<br>动态规划背后的基本思想非常简单。大致上，若要解一个给定问题，我们需要解其不同部分（即子问题），再合并子问题的解以得出原问题的解。</p><h2><span id="币值最大化问题">币值最大化问题</span><a href="#币值最大化问题" class="header-anchor"> </a></h2><p>问题：给定一排n个硬币，其面值均为整数c1, c2, …, cn, 这些整数并不一定两两不同。问如何选择硬币，使得在其原始位置互不相邻的条件下，所选硬币的总金额最大。</p><p>令：F(n)为最大可选金额，该题可分为两种情况，包括最后一枚硬币和不包括最后一枚硬币。第一种情况：可选硬币的最大金额为${c_n} + F\left( {n - 2} \right)$，即最后一枚硬币的面值加上之前的$n-2$枚硬币的可选最大金额。第二种情况，可选的最大金额为$F\left( {n - 1} \right)$，因此得到递推方程：</p>$$F\left( n \right) = \max \left\{ {{c_n} + F\left( {n - 2} \right),F\left( {n - 1} \right)} \right\},n > 1$$$$F\left( 0 \right) = 0,F\left( 1 \right) = {c_1}$$<p>算法：</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">maxCoinValue</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 输入的值</span></span><br><span class="line">    <span class="keyword">int</span>[] coins = <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;<span class="number">5</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">10</span>, <span class="number">6</span>, <span class="number">2</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span>[] f = <span class="keyword">new</span> <span class="keyword">int</span>[coins.length];</span><br><span class="line">    f[<span class="number">0</span>] = coins[<span class="number">0</span>];</span><br><span class="line">    f[<span class="number">1</span>] = Math.max(coins[<span class="number">0</span>], coins[<span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">2</span>; i &lt; coins.length; i++) &#123;</span><br><span class="line">        f[i] = Math.max(f[i - <span class="number">2</span>] + coins[i], f[i]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    System.out.println(f[f.length - <span class="number">1</span>]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2><span id="找零问题">找零问题</span><a href="#找零问题" class="header-anchor"> </a></h2><p>需找零金额为$n$，最少要用面值为${d_1} &lt; {d_2} &lt;  \cdots  &lt; {d_m}$的硬币？</p><p>设F(n)为总金额为n的数量最小的硬币数目，为方便起见定义F(n)=0. 获得n的途径只能是：在总金额为$n - {d_j}$的一堆硬币上加入一个面值为${d_j}$的硬币，并且$n \geqslant {d_j}$。因此，我们只需要考虑所有满足上述要求的${d_j}$并选择使得$F(n - {d_j}) + 1$最小的${d_j}$即可。于是可得递归公式：</p>$$\left\{ \begin{gathered}  F(n) = \mathop {\min }\limits_{j:n \geqslant {d_j}} \{ F(n - {d_j})\}  + 1,n > 0 \hfill \\  F(0) = 0 \hfill \\ \end{gathered}  \right.$$<p>算法：</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">changeMaking</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 输入数据</span></span><br><span class="line">    <span class="keyword">int</span>[] coins = <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;<span class="number">1</span>, <span class="number">3</span>, <span class="number">4</span>&#125;;</span><br><span class="line">    <span class="keyword">int</span> n = <span class="number">6</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// f(n) 为总金额为n的数量最小的硬币数目</span></span><br><span class="line">    <span class="keyword">int</span>[] f = <span class="keyword">new</span> <span class="keyword">int</span>[n + <span class="number">1</span>];</span><br><span class="line">    f[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">        <span class="keyword">int</span> min = Integer.MAX_VALUE;</span><br><span class="line">        <span class="keyword">int</span> j = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (j &lt; coins.length &amp;&amp; i &gt;= coins[j]) &#123;</span><br><span class="line">            min = Math.min(f[i - coins[j]], min);</span><br><span class="line">            j++;</span><br><span class="line">        &#125;</span><br><span class="line">        f[i] = min + <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println(f[n]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2><span id="硬币收集问题">硬币收集问题</span><a href="#硬币收集问题" class="header-anchor"> </a></h2><p>在n*m格木板中放有一些硬币，每格的硬币数目最多为一个，在木板左上方的一个机器人需要收集尽可能多的硬币并把它们带到右下方的单元格。每一步，机器人可以从当前的位置向右移动一格或向下移动一格。当机器人遇到一个有硬币的单元格时，就会将这枚硬币收集起来。设计一个算法找出机器人能找到的最大硬币数并给出相应的路径。<br><img src="//img.tianle.me/image/20180328/1.png" alt="硬币收集问题1"><br><img src="//img.tianle.me/image/20180328/2.png" alt="硬币收集问题2"></p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">robotCoinCollection</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 输入数据</span></span><br><span class="line">    <span class="keyword">int</span>[][] coins = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">5</span>][<span class="number">6</span>];</span><br><span class="line">    coins[<span class="number">0</span>][<span class="number">4</span>] = <span class="number">1</span>;</span><br><span class="line">    coins[<span class="number">1</span>][<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line">    coins[<span class="number">1</span>][<span class="number">3</span>] = <span class="number">1</span>;</span><br><span class="line">    coins[<span class="number">2</span>][<span class="number">3</span>] = <span class="number">1</span>;</span><br><span class="line">    coins[<span class="number">2</span>][<span class="number">5</span>] = <span class="number">1</span>;</span><br><span class="line">    coins[<span class="number">3</span>][<span class="number">2</span>] = <span class="number">1</span>;</span><br><span class="line">    coins[<span class="number">3</span>][<span class="number">5</span>] = <span class="number">1</span>;</span><br><span class="line">    coins[<span class="number">4</span>][<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">    coins[<span class="number">4</span>][<span class="number">4</span>] = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// f(i,j) 为机器人截止到 i, j 单元格能够收集到的最大硬币数</span></span><br><span class="line">    <span class="keyword">int</span>[][] f = <span class="keyword">new</span> <span class="keyword">int</span>[coins.length][coins[<span class="number">0</span>].length];</span><br><span class="line">    f[<span class="number">0</span>][<span class="number">0</span>] = coins[<span class="number">0</span>][<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; coins[<span class="number">0</span>].length; i++) &#123;</span><br><span class="line">        f[<span class="number">0</span>][i] = f[<span class="number">0</span>][i - <span class="number">1</span>] + coins[<span class="number">0</span>][i];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; coins.length; i++) &#123;</span><br><span class="line">        f[i][<span class="number">0</span>] = f[i - <span class="number">1</span>][<span class="number">0</span>] + coins[i][<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt; coins[<span class="number">0</span>].length; j++) &#123;</span><br><span class="line">            f[i][j] = Math.max(f[i - <span class="number">1</span>][j], f[i][j - <span class="number">1</span>]) + coins[i][j];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    System.out.println(f[coins.length - <span class="number">1</span>][coins[<span class="number">0</span>].length - <span class="number">1</span>]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;动态规划是一种算法设计技术，是一种使多阶段决策过程最优的通用方法。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="算法" scheme="https://tianle.me/categories/%E7%AE%97%E6%B3%95/"/>
+    
+    
+      <category term="算法" scheme="https://tianle.me/tags/%E7%AE%97%E6%B3%95/"/>
+    
+      <category term="动态规划" scheme="https://tianle.me/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/"/>
+    
+      <category term="刷题" scheme="https://tianle.me/tags/%E5%88%B7%E9%A2%98/"/>
+    
+      <category term="硬币问题" scheme="https://tianle.me/tags/%E7%A1%AC%E5%B8%81%E9%97%AE%E9%A2%98/"/>
+    
+  </entry>
+  
+</feed>

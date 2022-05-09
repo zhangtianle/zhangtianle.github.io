@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/default_avatar.jpg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/default_avatar.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/default_avatar.jpg">
+  <link rel="mask-icon" href="/default_avatar.jpg" color="#222">
+  <meta name="google-site-verification" content="S7CcF76Y3WPq3DKyOvsZGmSEALaSes364lNi0PMvhh4">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"tianle.me","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="粒子群优化(Particle Swarm Optimization, PSO)，又称微粒算法，是计算智能领域，除了蚁群算法、鱼群算法之外的一种群体智能的优化算法。">
+<meta name="keywords" content="计算智能,目标优化,算法,PSO,粒子群">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【计算智能】目标优化智能算法之粒子群算法">
+<meta property="og:url" content="https://tianle.me/2016/05/29/pso algorithm/index.html">
+<meta property="og:site_name" content="Niu Code">
+<meta property="og:description" content="粒子群优化(Particle Swarm Optimization, PSO)，又称微粒算法，是计算智能领域，除了蚁群算法、鱼群算法之外的一种群体智能的优化算法。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://tianle.me/img/20160529/PSO.gif">
+<meta property="og:updated_time" content="2020-01-02T08:47:22.680Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【计算智能】目标优化智能算法之粒子群算法">
+<meta name="twitter:description" content="粒子群优化(Particle Swarm Optimization, PSO)，又称微粒算法，是计算智能领域，除了蚁群算法、鱼群算法之外的一种群体智能的优化算法。">
+<meta name="twitter:image" content="https://tianle.me/img/20160529/PSO.gif">
+
+<link rel="canonical" href="https://tianle.me/2016/05/29/pso algorithm/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>【计算智能】目标优化智能算法之粒子群算法 | Niu Code</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-71583311-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-71583311-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Niu Code</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">南山小马</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/zhangtianle" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://tianle.me/2016/05/29/pso algorithm/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Tianle Zhang">
+      <meta itemprop="description" content="Talk is cheap, Show me the code">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Niu Code">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          【计算智能】目标优化智能算法之粒子群算法
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-05-29 14:59:55" itemprop="dateCreated datePublished" datetime="2016-05-29T14:59:55+08:00">2016-05-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-02 16:47:22" itemprop="dateModified" datetime="2020-01-02T16:47:22+08:00">2020-01-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/算法/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2016/05/29/pso algorithm/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/05/29/pso algorithm/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>粒子群优化(Particle Swarm Optimization, PSO)，又称微粒算法，是计算智能领域，除了蚁群算法、鱼群算法之外的一种群体智能的优化算法。</p>
+<a id="more"></a>
+<h3><span id="历史背景">历史背景</span><a href="#历史背景" class="header-anchor"> </a></h3>
+<p>该算法最早是由J. Kennedy和R. C. Eberhart等于1995年开发的一种演化计算技术。PSO算法源于对鸟类捕食行为的研究，鸟类捕食时，找到食物最简单有效的策略就是搜寻当前距离食物最近的鸟的周围区域。PSO算法是从这种生物种群行为特征中得到启发并用于求解优化问题的，算法中每个粒子都代表问题的一个潜在解，每个粒子对应一个由适应度函数决定的适应度值。粒子的速度决定了粒子的移动方向和距离，速度随自身及其他粒子的移动经验进行动态调整，从而实现个体在可解空间中的寻优。通过加入近邻的速度匹配、并考虑多维搜索和根据距离的加速、形成了PSO的最初版本。之后引入了惯性权重w来更好的控制开发(exploitation)和探索(exploration)，形成了标准版本。为了提高粒子群算的性能和实用性，中山大学、（英国）格拉斯哥大学等又开发了自适应(Adaptive PSO)版本和离散(discrete)版本。</p>
+<h3><span id="常见应用">常见应用</span><a href="#常见应用" class="header-anchor"> </a></h3>
+<p>在本文的开篇已经提到，粒子群算法是属于智能算法中的目标优化算法，因此，只要与优化问题相关都可以采用粒子群算法。而问题又可以分为连续和离散的，因此粒子群算法也就有连续版本和离散版本。标准粒子群算法是连续的，若要求解的问题是离散的，那么我们就需要根据问题的实际情况，对标准粒子群算法进行修改，以适应离散的情况。<br>
+可以参考这篇粒子群算法的综述<a href="http://blog.sciencenet.cn/home.php?mod=attachment&amp;id=12083" target="_blank" rel="noopener">《粒子群优化算法综述》戴朝华</a></p>
+<blockquote>
+<p>典型理论问题包括：组合优化、约束优化、多目标优化、动态系统优化等。实际工业应用有：电力系统、滤波器设计、自动控制、数据聚类、模式识别与图像处理、化工、机械、通信、机器人、经济、生物信息、医学、任务分配、TSP等等。</p>
+</blockquote>
+<h3><span id="主要思想">主要思想</span><a href="#主要思想" class="header-anchor"> </a></h3>
+<p>PSO算法首先在可行解空间中初始化一群粒子，每个粒子都代表极值优化问题的一个潜在最优解，用位置、速度和适应度值三项指标表示该粒子特征，适应度值由适应度函数计算得到，其值的好坏表示粒子的优劣。粒子在解空间中运动，通过跟踪个体极值pBest和群体极值gBest更新个体位置。个体极值pBest是指个体所经历位置中计算得到的适应度值最优位置，群体极值gBest是指种群中的所有粒子搜索到的适应度最优位置。粒子每更新一次位置，就计算一次适应度值，并且通过比较新粒子的适应度值和个体极值、群体极值的适应度值更新个体极值pBest和群体极值gBest位置。<br>
+由于粒子群算法是源于鸟类的捕食行为，那么我们可以想象这么一个场景,以便对粒子群算法有个形象的了解:<br>
+<strong>在一片广阔的土地上（解空间），有一群鸟（粒子）在觅食，而远程有一片玉米地（目标函数），每一只鸟在飞行（搜索）的过程中，它都记下它吃过最好吃的位置（个体极值），同时它又和其他伙伴交流哪里有好吃的（群体极值），根据这些条件判断，它判断下一时刻应该飞往哪里（循环迭代）。</strong></p>
+<h3><span id="算法步骤">算法步骤</span><a href="#算法步骤" class="header-anchor"> </a></h3>
+<p><img src="/img/20160529/PSO.gif" alt="流程图"></p>
+<ol>
+<li>粒子和速度初始化<br>
+如果为了简单起见，可以采用随机的方式进行初始化。但是为了加快算法效率，可以根据问题实际来进行初始化操作。<br>
+假设在一个D维的搜索空间中，由n个粒子组成的种群 $X=({X_2},{X_2},{X_3},\cdots,{X_n})$ 其中第i个粒子表示为一个D为的空间向量 ${X_i}={({x_{i1}},{x_{i2}},\cdots,{x_{id}})^T}$ 代表第i个粒子在D维搜索空间中的位置，亦代表问题的一个潜在解。</li>
+<li>粒子适应度计算<br>
+根据目标函数即可计算出每个粒子位置X<sub>i</sub>对应的适应度值。第i个粒子的速度为 ${V_i} = {({V_{i1}},{V_{i2}}, \cdots ,{V_{id}})^T}$ 其个体极值为 ${P_i} = {({P_{i1}},{P_{i2}}, \cdots ,{P_{id}})^T}$ 种群的群体极值为 ${P_g} = {({P_{g1}},{P_{g2}}, \cdots ,{P_{gd}})^T}$</li>
+<li>速度更新和位置更新<br>
+在每次迭代过程中，粒子通过个体极值和群体极值更新自身的速度和位置，即
+$$V_{id}^{k + 1} = \omega V_{id}^k + {c_1}{r_1}(P_{id}^k - X_{id}^k) + {c_2}{r_2}(P_{gd}^k - X_{id}^k)$$
+$$X_{id}^{k + 1} = X_{id}^k + {V_{k + 1{\kern 1pt} {\kern 1pt} {\kern 1pt} id}}$$
+其中，ω为惯性权重；d=1,2,…,D;  i=1,2,…,n;  k为当前迭代次数；V<sub>id</sub>为粒子的速度；c<sub>1</sub>和c<sub>2</sub>是非负的常数，称为加速度因子；r<sub>1</sub>和r<sub>2</sub>是分布于[0,1]区间的随机数。为防止粒子的盲目搜索，一遍建议将其位置和速度限制在一定的区间[X<sub>min</sub>,X<sub>max</sub>]、[V<sub>min</sub>,V<sub>max</sub>]</li>
+</ol>
+<h3><span id="参数设定">参数设定</span><a href="#参数设定" class="header-anchor"> </a></h3>
+<ol>
+<li>速度更新参数c<sub>1</sub>和c<sub>2</sub>
+一般设置为1.49445</li>
+<li>惯性权重<br>
+惯性权重表示为粒子本身的飞行速度。顾名思义ω实际反映了粒子过去的运动状态对当前行为的影响，就像是我们物理中提到的惯性。如果ω &lt;&lt; 1，从前的运动状态很少能影响当前的行为，粒子的速度会很快的改变；相反，ω较大，虽然会有很大的搜索空间，但是粒子很难改变其运动方向，很难向较优位置收敛，由于算法速度的因素，在实际运用中很少这样设置。也就是说，较高的ω设置促进全局搜索，较低的ω设置促进快速的局部搜索。<br>
+Shi.Y提出了线性递减惯性权重（linear decreasing inertia weight,LDIW），并分析指出一个较大的惯性权值有利于全局搜索，而一个较小的惯性权值则更利于局部搜索。为了更好地平衡算法的全局搜索与局部搜索能力。<br>
+$$\omega (k) = {\omega _{end}} + ({\omega _{start}} - {\omega _{end}})({T_{\max }} - k)/{T_{\max }}$$
+其中，ω<sub>start</sub>为初始惯性权重，ω<sub>end</sub>为迭代到最大次数时的惯性权重；k为当前迭代次数；T<sub>max</sub>为最大迭代次数。一般来说，惯性权值ω<sub>start</sub>=0.9，ω<sub>end</sub>=0.4时算法性能最好。这样，随着迭代的进行，惯性权重有0.9线性递减至0.4，迭代初期较大的惯性权重使算法保持了较强的全局搜索能力，而迭代后期较小的惯性权重有利于算法进行更精确的局部搜索。</li>
+</ol>
+<h3><span id="matlab参考代码">MATLAB参考代码</span><a href="#matlab参考代码" class="header-anchor"> </a></h3>
+<p>来源《MATLAB智能算法30个案例分析》第十三章，粒子群算法的寻优算法<br>
+主函数</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">%% 清空环境</span></span><br><span class="line">clc</span><br><span class="line">clear</span><br><span class="line"></span><br><span class="line"><span class="comment">%% 参数初始化</span></span><br><span class="line"><span class="comment">%粒子群算法中的两个参数</span></span><br><span class="line">c1 = <span class="number">1.49445</span>;</span><br><span class="line">c2 = <span class="number">1.49445</span>;</span><br><span class="line"></span><br><span class="line">maxgen=<span class="number">300</span>;    <span class="comment">%进化次数  </span></span><br><span class="line">sizepop=<span class="number">20</span>;   <span class="comment">%种群规模</span></span><br><span class="line">Vmax=<span class="number">0.5</span>;</span><br><span class="line">Vmin=<span class="number">-0.5</span>;</span><br><span class="line">popmax=<span class="number">2</span>;</span><br><span class="line">popmin=<span class="number">-2</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> k=<span class="number">1</span>:<span class="number">100</span></span><br><span class="line">    <span class="comment">%% 产生初始粒子和速度</span></span><br><span class="line">    k</span><br><span class="line">    <span class="keyword">for</span> <span class="built_in">i</span>=<span class="number">1</span>:sizepop</span><br><span class="line">        <span class="comment">%随机产生一个种群</span></span><br><span class="line">        pop(<span class="built_in">i</span>,:)=<span class="number">2</span>*rands(<span class="number">1</span>,<span class="number">2</span>);    <span class="comment">%初始种群</span></span><br><span class="line">        V(<span class="built_in">i</span>,:)=<span class="number">0.5</span>*rands(<span class="number">1</span>,<span class="number">2</span>);  <span class="comment">%初始化速度</span></span><br><span class="line">        <span class="comment">%计算适应度</span></span><br><span class="line">        fitness(<span class="built_in">i</span>)=fun(pop(<span class="built_in">i</span>,:));   <span class="comment">%染色体的适应度</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">%% 个体极值和群体极值</span></span><br><span class="line">    [bestfitness bestindex]=<span class="built_in">max</span>(fitness);</span><br><span class="line">    zbest=pop(bestindex,:);   <span class="comment">%全局最佳</span></span><br><span class="line">    gbest=pop;    <span class="comment">%个体最佳</span></span><br><span class="line">    fitnessgbest=fitness;   <span class="comment">%个体最佳适应度值</span></span><br><span class="line">    fitnesszbest=bestfitness;   <span class="comment">%全局最佳适应度值</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">%% 迭代寻优</span></span><br><span class="line">    <span class="keyword">for</span> <span class="built_in">i</span>=<span class="number">1</span>:maxgen</span><br><span class="line">    </span><br><span class="line">        <span class="keyword">for</span> <span class="built_in">j</span>=<span class="number">1</span>:sizepop</span><br><span class="line">        </span><br><span class="line">            <span class="comment">%速度更新</span></span><br><span class="line">            V(<span class="built_in">j</span>,:) = V(<span class="built_in">j</span>,:) + c1*<span class="built_in">rand</span>*(gbest(<span class="built_in">j</span>,:) - pop(<span class="built_in">j</span>,:)) + c2*<span class="built_in">rand</span>*(zbest - pop(<span class="built_in">j</span>,:));</span><br><span class="line">            V(<span class="built_in">j</span>,<span class="built_in">find</span>(V(<span class="built_in">j</span>,:)&gt;Vmax))=Vmax;</span><br><span class="line">            V(<span class="built_in">j</span>,<span class="built_in">find</span>(V(<span class="built_in">j</span>,:)&lt;Vmin))=Vmin;</span><br><span class="line"></span><br><span class="line">            <span class="comment">%种群更新</span></span><br><span class="line">            pop(<span class="built_in">j</span>,:)=pop(<span class="built_in">j</span>,:)+V(<span class="built_in">j</span>,:);</span><br><span class="line">            pop(<span class="built_in">j</span>,<span class="built_in">find</span>(pop(<span class="built_in">j</span>,:)&gt;popmax))=popmax;</span><br><span class="line">            pop(<span class="built_in">j</span>,<span class="built_in">find</span>(pop(<span class="built_in">j</span>,:)&lt;popmin))=popmin;</span><br><span class="line">        </span><br><span class="line">            <span class="comment">%适应度值</span></span><br><span class="line">            fitness(<span class="built_in">j</span>)=fun(pop(<span class="built_in">j</span>,:)); </span><br><span class="line"></span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> <span class="built_in">j</span>=<span class="number">1</span>:sizepop</span><br><span class="line"></span><br><span class="line">            <span class="comment">%个体最优更新</span></span><br><span class="line">            <span class="keyword">if</span> fitness(<span class="built_in">j</span>) &gt; fitnessgbest(<span class="built_in">j</span>)</span><br><span class="line">                gbest(<span class="built_in">j</span>,:) = pop(<span class="built_in">j</span>,:);</span><br><span class="line">                fitnessgbest(<span class="built_in">j</span>) = fitness(<span class="built_in">j</span>);</span><br><span class="line">            <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">            <span class="comment">%群体最优更新</span></span><br><span class="line">            <span class="keyword">if</span> fitness(<span class="built_in">j</span>) &gt; fitnesszbest</span><br><span class="line">                zbest = pop(<span class="built_in">j</span>,:);</span><br><span class="line">                fitnesszbest = fitness(<span class="built_in">j</span>);</span><br><span class="line">            <span class="keyword">end</span></span><br><span class="line">        <span class="keyword">end</span> </span><br><span class="line">        yy(<span class="built_in">i</span>)=fitnesszbest;    </span><br><span class="line"></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    s(k,:)=yy;</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="comment">%% 结果分析</span></span><br><span class="line"><span class="keyword">for</span> m=<span class="number">1</span>:<span class="number">300</span></span><br><span class="line">    s(<span class="number">101</span>,m)=sum( s(:,m) )/<span class="number">100</span>;</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="built_in">plot</span>(s(<span class="number">101</span>,:),<span class="string">'k'</span>)</span><br><span class="line">title(<span class="string">'最优个体适应度'</span>,<span class="string">'fontsize'</span>,<span class="number">12</span>);</span><br><span class="line">xlabel(<span class="string">'进化代数'</span>,<span class="string">'fontsize'</span>,<span class="number">12</span>);ylabel(<span class="string">'适应度'</span>,<span class="string">'fontsize'</span>,<span class="number">12</span>);</span><br></pre></td></tr></table></figure>
+<p>适应度函数</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">y</span> = <span class="title">fun</span><span class="params">(x)</span></span></span><br><span class="line"><span class="comment">%函数用于计算粒子适应度值</span></span><br><span class="line"><span class="comment">%x           input           输入粒子 </span></span><br><span class="line"><span class="comment">%y           output          粒子适应度值 </span></span><br><span class="line">y=<span class="built_in">sin</span>(<span class="built_in">sqrt</span>(x(<span class="number">1</span>).^<span class="number">2</span>+x(<span class="number">2</span>).^<span class="number">2</span>))./<span class="built_in">sqrt</span>(x(<span class="number">1</span>).^<span class="number">2</span>+x(<span class="number">2</span>).^<span class="number">2</span>)+<span class="built_in">exp</span>((<span class="built_in">cos</span>(<span class="number">2</span>*<span class="built_in">pi</span>*x(<span class="number">1</span>))+<span class="built_in">cos</span>(<span class="number">2</span>*<span class="built_in">pi</span>*x(<span class="number">2</span>)))/<span class="number">2</span>)<span class="number">-2.71289</span>;</span><br></pre></td></tr></table></figure>
+<h3><span id="参考资料">参考资料</span><a href="#参考资料" class="header-anchor"> </a></h3>
+<p>《MATLAB智能算法30个案例分析》<br>
+<a href="https://zh.wikipedia.org/wiki/%E7%B2%92%E5%AD%90%E7%BE%A4%E4%BC%98%E5%8C%96#cite_note-zhan10OLPSO-6" target="_blank" rel="noopener">粒子群优化维基百科</a><br>
+<a href="http://www.cnblogs.com/maybe2030/p/5043356.html" target="_blank" rel="noopener">[Algorithm] 群体智能优化算法之粒子群优化算法</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/计算智能/" rel="tag"># 计算智能</a>
+              <a href="/tags/目标优化/" rel="tag"># 目标优化</a>
+              <a href="/tags/算法/" rel="tag"># 算法</a>
+              <a href="/tags/PSO/" rel="tag"># PSO</a>
+              <a href="/tags/粒子群/" rel="tag"># 粒子群</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2016/05/25/LeetCode-ListNode-helper/" rel="prev" title="LeetCode ListNode helper">
+      <i class="fa fa-chevron-left"></i> LeetCode ListNode helper
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2016/05/30/Hexo-中-LaTeX不显示/" rel="next" title="Hexo 中 LaTeX不显示">
+      Hexo 中 LaTeX不显示 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">1.</span> <span class="nav-text">历史背景 </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">2.</span> <span class="nav-text">常见应用 </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">3.</span> <span class="nav-text">主要思想 </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">4.</span> <span class="nav-text">算法步骤 </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">5.</span> <span class="nav-text">参数设定 </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">6.</span> <span class="nav-text">MATLAB参考代码 </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">7.</span> <span class="nav-text">参考资料 </span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Tianle Zhang</p>
+  <div class="site-description" itemprop="description">Talk is cheap, Show me the code</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">64</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">114</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zhangtianle" title="GitHub → https://github.com/zhangtianle" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://weibo.com/tianlezh" title="Weibo → http://weibo.com/tianlezh" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://coderchat.cn/" title="http://coderchat.cn/" rel="noopener" target="_blank">南山</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/rongfangliu/" title="http://www.cnblogs.com/rongfangliu/" rel="noopener" target="_blank">柳如风</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://baoyuzhang.github.io/" title="https://baoyuzhang.github.io/" rel="noopener" target="_blank">浅茉</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.iots.vip/" title="https://www.iots.vip/" rel="noopener" target="_blank">Alliot</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://printempw.github.io/" title="https://printempw.github.io/" rel="noopener" target="_blank">PRIN BLOG</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn" rel="noopener" target="_blank">陕ICP备16015673号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tianle Zhang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://tianle.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://tianle.me/2016/05/29/pso algorithm/";
+    this.page.identifier = "2016/05/29/pso algorithm/";
+    this.page.title = "【计算智能】目标优化智能算法之粒子群算法";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://tianle.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>

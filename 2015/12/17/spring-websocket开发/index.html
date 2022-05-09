@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/default_avatar.jpg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/default_avatar.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/default_avatar.jpg">
+  <link rel="mask-icon" href="/default_avatar.jpg" color="#222">
+  <meta name="google-site-verification" content="S7CcF76Y3WPq3DKyOvsZGmSEALaSes364lNi0PMvhh4">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"tianle.me","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="零、总体介绍 项目背景 该项目是学校通信软件开发实训课程的一门作业，要求完成一个聊天系统，但要求有至少一个亮点，无论是功能上的还是技术上的。 我们小组比较擅长Java Web开发，因此决定在技术上做一个亮点，使用WebSocket">
+<meta name="keywords" content="java,mybatis,spring,websocket">
+<meta property="og:type" content="article">
+<meta property="og:title" content="spring websocket开发">
+<meta property="og:url" content="https://tianle.me/2015/12/17/spring-websocket开发/index.html">
+<meta property="og:site_name" content="Niu Code">
+<meta property="og:description" content="零、总体介绍 项目背景 该项目是学校通信软件开发实训课程的一门作业，要求完成一个聊天系统，但要求有至少一个亮点，无论是功能上的还是技术上的。 我们小组比较擅长Java Web开发，因此决定在技术上做一个亮点，使用WebSocket">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://img.tianle.me/image/20151217/spring.png">
+<meta property="og:image" content="https://img.tianle.me/image/20151217/register.png">
+<meta property="og:image" content="https://img.tianle.me/image/20151217/chat1.png">
+<meta property="og:image" content="https://img.tianle.me/image/20151217/login1.png">
+<meta property="og:image" content="https://img.tianle.me/image/20151217/chat2.png">
+<meta property="og:image" content="https://img.tianle.me/image/20151217/chat3.png">
+<meta property="og:updated_time" content="2020-01-02T08:47:22.682Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="spring websocket开发">
+<meta name="twitter:description" content="零、总体介绍 项目背景 该项目是学校通信软件开发实训课程的一门作业，要求完成一个聊天系统，但要求有至少一个亮点，无论是功能上的还是技术上的。 我们小组比较擅长Java Web开发，因此决定在技术上做一个亮点，使用WebSocket">
+<meta name="twitter:image" content="https://img.tianle.me/image/20151217/spring.png">
+
+<link rel="canonical" href="https://tianle.me/2015/12/17/spring-websocket开发/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>spring websocket开发 | Niu Code</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-71583311-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-71583311-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Niu Code</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">南山小马</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/zhangtianle" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://tianle.me/2015/12/17/spring-websocket开发/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Tianle Zhang">
+      <meta itemprop="description" content="Talk is cheap, Show me the code">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Niu Code">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          spring websocket开发
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2015-12-17 19:44:48" itemprop="dateCreated datePublished" datetime="2015-12-17T19:44:48+08:00">2015-12-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-02 16:47:22" itemprop="dateModified" datetime="2020-01-02T16:47:22+08:00">2020-01-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/应用开发/" itemprop="url" rel="index"><span itemprop="name">应用开发</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2015/12/17/spring-websocket开发/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/12/17/spring-websocket开发/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2><span id="零-总体介绍">零、总体介绍</span><a href="#零-总体介绍" class="header-anchor"> </a></h2>
+<h3><span id="项目背景">项目背景</span><a href="#项目背景" class="header-anchor"> </a></h3>
+<p>该项目是学校通信软件开发实训课程的一门作业，要求完成一个聊天系统，但要求有至少一个亮点，无论是功能上的还是技术上的。
+我们小组比较擅长Java Web开发，因此决定在技术上做一个亮点，使用WebSocket</p>
+<a id="more"></a>
+<h3><span id="文档说明">文档说明</span><a href="#文档说明" class="header-anchor"> </a></h3>
+<p>该文档按照如下顺序进行介绍</p>
+<ol>
+<li>技术背景
+介绍该项目要用到的一些背景知识</li>
+<li>项目目录结构
+该项目使用myeclipse的Java EE项目，大体上可分为前台与后台</li>
+<li>项目框架搭建
+介绍前台用到的技术，以及后台框架的搭建</li>
+<li>项目成果展示</li>
+<li>代码分享</li>
+</ol>
+<h2><span id="一-技术背景">一、技术背景</span><a href="#一-技术背景" class="header-anchor"> </a></h2>
+<h3><span id="1websocket">1.WebSocket</span><a href="#1websocket" class="header-anchor"> </a></h3>
+<p>WebSocket是HTML5开始提供的一种在单个 TCP 连接上进行全双工通讯的协议。WebSocket通讯协议于2011年被IETF定为标准RFC 6455，WebSocketAPI被W3C定为标准。
+在WebSocket API中，浏览器和服务器只需要做一个握手的动作，然后，浏览器和服务器之间就形成了一条快速通道。两者之间就直接可以数据互相传送。</p>
+<h3><span id="2spring">2.Spring</span><a href="#2spring" class="header-anchor"> </a></h3>
+<p>Spring是一个开源轻量级的框架，使用控制反转（IoC）和面向切面（AOP），它可以让开发变得简单、轻便、快速与更加灵活。</p>
+<h3><span id="3spring-websocket">3.Spring WebSocket</span><a href="#3spring-websocket" class="header-anchor"> </a></h3>
+<p>Spring从4.0开始加入了spring-websocket这个模块，并能够全面支持WebSocket，它与Java WebSocket API标准（JSR-356）保持一致，同时提供了额外的服务。</p>
+<h3><span id="4spring-mvc">4.Spring MVC</span><a href="#4spring-mvc" class="header-anchor"> </a></h3>
+<p>Spring MVC是一个model-view-controller（MVC）框架，能很好地将数据、业务与展现进行分离。Spring MVC的设计是围绕DispatcherServlet展开的，DispatcherServlet负责将请求派发到特定的handler。</p>
+<h3><span id="5mybatis">5.MyBatis</span><a href="#5mybatis" class="header-anchor"> </a></h3>
+<p>MyBatis 是支持定制化 SQL、存储过程以及高级映射的优秀的持久层框架。MyBatis 避免了几乎所有的 JDBC 代码和手动设置参数以及获取结果集。MyBatis 可以对配置和原生Map使用简单的 XML 或注解，将接口和 Java 的 POJOs(Plain Old Java Objects,普通的 Java对象)映射成数据库中的记录。</p>
+<p><strong>在本项目中，我们使用了以上几个框架进行搭建。</strong></p>
+<h2><span id="二-目录结构">二、目录结构</span><a href="#二-目录结构" class="header-anchor"> </a></h2>
+<ul>
+<li>
+<p>Com.tx.
+Config websocket配置文件
+Controller spring mvc 控制层
+DAO 数据库连接操作
+Handler websocket操作
+Model 数据实体
+Service 服务器处理
+Tool 工具类</p>
+</li>
+<li>
+<p>Webroot
+前台代码目录
+Js javascript代码
+Style css代码
+Test 前台测试代码</p>
+</li>
+<li>
+<p>WEN-INF 配置文件夹
+Jsp jsp文件夹
+Lib 项目所需的外部jar包
+As-servlet.xml spring mvc 配置文件
+Web.xml web项目配置文件</p>
+</li>
+</ul>
+<p><img src="//img.tianle.me/image/20151217/spring.png" alt="目录结构"></p>
+<h2><span id="三-实验步骤">三、实验步骤</span><a href="#三-实验步骤" class="header-anchor"> </a></h2>
+<h3><span id="web服务前端">web服务前端</span><a href="#web服务前端" class="header-anchor"> </a></h3>
+<h4><span id="1-socket相关代码结构">1、socket相关代码结构</span><a href="#1-socket相关代码结构" class="header-anchor"> </a></h4>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> socket = <span class="keyword">new</span> Socket(url);<span class="comment">//url必须为ws://开头的相关协议</span></span><br><span class="line">socket.onopen = <span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">	<span class="comment">//连接初始化代码</span></span><br><span class="line">&#125;;</span><br><span class="line">sokcet.onmessage = <span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> text = event.data;</span><br><span class="line">	<span class="comment">//处理接受到的消息</span></span><br><span class="line">&#125;;</span><br><span class="line">socket.onclose = <span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">	<span class="comment">//连接关闭时触发</span></span><br><span class="line">&#125;;</span><br><span class="line">socket.onerror = <span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">	<span class="comment">//连接过程中出错时触发</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4><span id="2本次实验所封装的一些函数的解析">2.本次实验所封装的一些函数的解析</span><a href="#2本次实验所封装的一些函数的解析" class="header-anchor"> </a></h4>
+<ol>
+<li>消息封装函数，用于生成能直接添加到html的dom节点的文档类型</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">messagePackage</span>(<span class="params">message</span>) </span>&#123;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     message&#123;</span></span><br><span class="line"><span class="comment">     userName : xx,</span></span><br><span class="line"><span class="comment">     timeSign : 22:12:44,</span></span><br><span class="line"><span class="comment">     content : abc</span></span><br><span class="line"><span class="comment">     &#125;</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">var</span> element_section = $(<span class="string">"&lt;section&gt;&lt;/section&gt;"</span>);</span><br><span class="line">    <span class="keyword">var</span> element_section_p1 = $(<span class="string">"&lt;p&gt;&lt;/p&gt;"</span>);</span><br><span class="line">    <span class="keyword">var</span> element_section_p1_user = $(<span class="string">"&lt;span&gt;&lt;/span&gt;"</span>);</span><br><span class="line">    <span class="keyword">var</span> element_section_p1_time = $(<span class="string">"&lt;time&gt;&lt;/time&gt;"</span>);</span><br><span class="line">    <span class="keyword">var</span> element_section_p2_content = $(<span class="string">"&lt;p&gt;&lt;/p&gt;"</span>);</span><br><span class="line">    element_section.addClass(<span class="string">"message"</span>);</span><br><span class="line">    element_section_p1.addClass(<span class="string">"header"</span>);</span><br><span class="line">    element_section_p2_content.addClass(<span class="string">"content"</span>);</span><br><span class="line">    element_section_p1_user.text(message.username);</span><br><span class="line">    element_section_p1_time.text(message.timeSign);</span><br><span class="line">    element_section_p2_content.text(message.content);</span><br><span class="line">    element_section_p1.append(element_section_p1_user);</span><br><span class="line">    element_section_p1.append(element_section_p1_time);</span><br><span class="line">    element_section.append(element_section_p1);</span><br><span class="line">    element_section.append(element_section_p2_content);</span><br><span class="line">    <span class="keyword">return</span> element_section;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>消息处理函数，用于处理onmessage中由服务器发送到客户端的消息，并规定了消息类型与相关的处理方式</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">jsonData : &#123;</span></span><br><span class="line"><span class="comment">    type:1(聊天信息)||2(用户列表更新信息),</span></span><br><span class="line"><span class="comment">    username(1,2):xx,</span></span><br><span class="line"><span class="comment">    timeSign(1):xx:xx:xx,</span></span><br><span class="line"><span class="comment">    content(1):xxxxxxxxxxxxx,</span></span><br><span class="line"><span class="comment">&#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">messageHandle</span>(<span class="params">event</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> jsonStr = event.data;</span><br><span class="line">    <span class="keyword">var</span> data = <span class="built_in">JSON</span>.parse(jsonStr);</span><br><span class="line">    <span class="keyword">var</span> $message = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">switch</span>(data.type) &#123;</span><br><span class="line">        <span class="comment">//更新聊天显示框</span></span><br><span class="line">        <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">if</span>(data.username == currentUser) <span class="keyword">return</span>;</span><br><span class="line">            $message = messagePackage(&#123;</span><br><span class="line">               username : data.username,</span><br><span class="line">                timeSign : data.timeSign,</span><br><span class="line">                content : data.content</span><br><span class="line">            &#125;);</span><br><span class="line">            $show.append($message);</span><br><span class="line">            <span class="comment">//让滚动条自动滚到底</span></span><br><span class="line">            $show.get(<span class="number">0</span>).scrollTop = $show.get(<span class="number">0</span>).scrollHeight;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="comment">//向已经在线的用户发送用户列表更新信息</span></span><br><span class="line">        <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">            <span class="keyword">var</span> $userName = $(<span class="string">"&lt;p&gt;&lt;/p&gt;"</span>);</span><br><span class="line">            $userName.text(data.username);</span><br><span class="line">            $(<span class="string">"#usersInfo"</span>).append($userName);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="comment">//将所有已经在线的用户信息发送给刚加入的用户</span></span><br><span class="line">        <span class="keyword">case</span> <span class="number">3</span>:</span><br><span class="line">            <span class="keyword">var</span> usernames = data.usernames;</span><br><span class="line">            <span class="keyword">var</span> $usersInfo = $(<span class="string">"#usersInfo"</span>);</span><br><span class="line">            $usersInfo.empty();</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">var</span> i= <span class="number">0</span>,len=usernames.length;i&lt;len;i++) &#123;</span><br><span class="line">                <span class="keyword">var</span> $userName = $(<span class="string">"&lt;p&gt;&lt;/p&gt;"</span>);</span><br><span class="line">                $userName.text(usernames[i]);</span><br><span class="line">                $usersInfo.append($userName);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="comment">//删除用户信息</span></span><br><span class="line">        <span class="keyword">case</span> <span class="number">4</span>:</span><br><span class="line">            <span class="keyword">var</span> $usersInfo = $(<span class="string">"#usersInfo"</span>);</span><br><span class="line">            $usersInfo.find(<span class="string">":contains("</span>+data.username+<span class="string">")"</span>).remove();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3><span id="spring-amp-spring-mvc配置">Spring &amp; Spring MVC配置</span><a href="#spring-amp-spring-mvc配置" class="header-anchor"> </a></h3>
+<h4><span id="1-webxml-配置">1、Web.xml 配置</span><a href="#1-webxml-配置" class="header-anchor"> </a></h4>
+<p>配置spring 过滤器 并设置UTF-8编码</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">filter</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>CharacterEncodingFilter<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">filter-class</span>&gt;</span>org.springframework.web.filter.CharacterEncodingFilter<span class="tag">&lt;/<span class="name">filter-class</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">init-param</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">param-name</span>&gt;</span>encoding<span class="tag">&lt;/<span class="name">param-name</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">param-value</span>&gt;</span>utf-8<span class="tag">&lt;/<span class="name">param-value</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">init-param</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">filter-mapping</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>CharacterEncodingFilter<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>/*<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter-mapping</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>配置servlet spring mvc拦截器 <a href="http://xn--siqq5jgsada4806c1sap30elfk.do" target="_blank" rel="noopener">设置匹配后缀名为.do</a></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">display-name</span>&gt;</span>as<span class="tag">&lt;/<span class="name">display-name</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">servlet</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>as<span class="tag">&lt;/<span class="name">servlet-name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">servlet-class</span>&gt;</span>org.springframework.web.servlet.DispatcherServlet<span class="tag">&lt;/<span class="name">servlet-class</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">load-on-startup</span>&gt;</span>1<span class="tag">&lt;/<span class="name">load-on-startup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">servlet</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">servlet-mapping</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>as<span class="tag">&lt;/<span class="name">servlet-name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>*.do<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">servlet-mapping</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h4><span id="2as-servletxml-配置spring-mvc">2.as-servlet.xml 配置Spring MVC</span><a href="#2as-servletxml-配置spring-mvc" class="header-anchor"> </a></h4>
+<p>使用Spring注解的方式</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mvc:annotation-driven</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">context:annotation-config</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">context:component-scan</span> <span class="attr">base-package</span>=<span class="string">"com.tx.*"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"handlerMapping"</span> <span class="attr">class</span>=<span class="string">"org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+<p>返回json模板</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">"org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"messageConverters"</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">list</span>&gt;</span></span><br><span class="line">        	<span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">"org.springframework.http.converter.json.MappingJacksonHttpMessageConverter"</span> /&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">list</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>设置spring mvc视图</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"viewResolver"</span>	<span class="attr">class</span>=<span class="string">"org.springframework.web.servlet.view.UrlBasedViewResolver"</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"viewClass"</span> <span class="attr">value</span>=<span class="string">"org.springframework.web.servlet.view.JstlView"</span> /&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"prefix"</span> <span class="attr">value</span>=<span class="string">"/WEB-INF/jsp/"</span> /&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"suffix"</span> <span class="attr">value</span>=<span class="string">".jsp"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h4><span id="3编写spring-mvc-controller">3.编写Spring MVC controller</span><a href="#3编写spring-mvc-controller" class="header-anchor"> </a></h4>
+<p>controller用于接收和发送前后台的请求与响应
+前后台定义用来传送的json字符串</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">聊天消息：</span><br><span class="line">&apos;&#123;&quot;type&quot;:1,&quot;username&quot;:&quot;xxxx&quot;,&quot;timeSign&quot;:&quot;15:21:02&quot;,&quot;content&quot;:&quot;消息内容&quot;&#125;&apos;</span><br><span class="line">用户列表更新消息（已加入）:</span><br><span class="line">&apos;&#123;&quot;type&quot;:2,&quot;username&quot;:&quot;xxxx&quot;&#125;&apos;</span><br><span class="line"></span><br><span class="line">用户列表全部消息（刚加入）：</span><br><span class="line">&apos;&#123;&quot;type&quot;:3,&quot;usernames&quot;:[&quot;a&quot;,&quot;b&quot;,&quot;c&quot;]&#125;&apos;</span><br><span class="line"></span><br><span class="line">用户列表某用户信息删除 :</span><br><span class="line">&#123;&quot;type&quot;:4,&quot;username&quot;:&quot;xx&quot;&#125;</span><br></pre></td></tr></table></figure>
+<p>本例以用户登录、注册为例，其余部分请参考页面最下方提供的源代码
+这里使用了Spring MVC注解来进行请求的处理</p>
+<blockquote>
+<h5><span id="例">例：</span><a href="#例" class="header-anchor"> </a></h5>
+<p><strong>@RequestMapping</strong>里面填写的是请求的地址
+<strong>return</strong> 根据返回值的不同进行页面跳转等操作，这里返回 <strong>login</strong> 表示跳转到 <strong>login.jsp</strong> 这个页面</p>
+</blockquote>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@RequestMapping(&quot;login.do&quot;)</span><br><span class="line">public String gtLogin() &#123;</span><br><span class="line">	return &quot;login&quot;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@RequestMapping</span>(<span class="string">"register.do"</span>)</span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">gtRegister</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="string">"register"</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@RequestMapping</span>(<span class="string">"login.do"</span>)</span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">gtLogin</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="string">"login"</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@RequestMapping</span>(<span class="string">"loginServer.do"</span>)</span><br><span class="line">	<span class="function"><span class="keyword">public</span> ModelAndView <span class="title">login</span><span class="params">(@RequestParam(<span class="string">"username"</span>)</span> String username,</span></span><br><span class="line"><span class="function">			@<span class="title">RequestParam</span><span class="params">(<span class="string">"password"</span>)</span> String password) </span>&#123;</span><br><span class="line"></span><br><span class="line">		ModelAndView modelAndView = <span class="keyword">new</span> ModelAndView();</span><br><span class="line">		StudentService ss = <span class="keyword">new</span> StudentService();</span><br><span class="line">		<span class="keyword">boolean</span> r = ss.login(username, password);</span><br><span class="line">		<span class="keyword">if</span> (r) &#123;</span><br><span class="line">			 modelAndView.addObject(<span class="string">"name"</span>, username);</span><br><span class="line">			 modelAndView.setViewName(<span class="string">"chat"</span>);</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			modelAndView.setViewName(<span class="string">"login"</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> modelAndView;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@RequestMapping</span>(value = <span class="string">"registerServer.do"</span>, method = RequestMethod.POST)</span><br><span class="line">	<span class="function"><span class="keyword">public</span> ModelAndView <span class="title">gtRegister</span><span class="params">(@RequestParam(<span class="string">"username"</span>)</span> String username,</span></span><br><span class="line"><span class="function">			@<span class="title">RequestParam</span><span class="params">(<span class="string">"password"</span>)</span> String password) </span>&#123;</span><br><span class="line">		StudentService ss = <span class="keyword">new</span> StudentService();</span><br><span class="line">		ModelAndView modelAndView = <span class="keyword">new</span> ModelAndView();  </span><br><span class="line">		<span class="keyword">boolean</span> r = ss.register(username, password);</span><br><span class="line">		<span class="keyword">if</span> (r) &#123;</span><br><span class="line">			 modelAndView.addObject(<span class="string">"name"</span>, username);  </span><br><span class="line">			 modelAndView.setViewName(<span class="string">"chat"</span>);  </span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			modelAndView.setViewName(<span class="string">"login"</span>);  </span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> modelAndView;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3><span id="mybatis配置">Mybatis配置</span><a href="#mybatis配置" class="header-anchor"> </a></h3>
+<blockquote>
+<p><strong>有关mybatis的具体使用说明可以参考 <em><a href="http://mybatis.org/mybatis-3/zh/" title="Title" target="_blank" rel="noopener">mybatis文档</a></em></strong></p>
+</blockquote>
+<h4><span id="1建立与数据库表对应的modelpojo类">1.建立与数据库表对应的model，POJO类</span><a href="#1建立与数据库表对应的modelpojo类" class="header-anchor"> </a></h4>
+<p>这里仅以Student.java类来说明:
+类名同数据库中的表名一致，变量名同同数据库中的字段名一致，并编写get()和set()方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.tx.model;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">int</span> id;</span><br><span class="line">	<span class="keyword">private</span> String name;</span><br><span class="line">	<span class="keyword">private</span> String password;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getId</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> id;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setId</span><span class="params">(<span class="keyword">int</span> id)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.id = id;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> name;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.name = name;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getPassword</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> password;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setPassword</span><span class="params">(String password)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.password = password;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4><span id="2mybatis-configxml设置">2.mybatis-config.xml设置</span><a href="#2mybatis-configxml设置" class="header-anchor"> </a></h4>
+<p>我们使用xml来对mybatis数据库进行配置，里面包括：</p>
+<ul>
+<li>driver： 数据库驱动程序</li>
+<li>url: 数据库连接地址及数据库名</li>
+<li>username：数据库连接用户名</li>
+<li>password：数据库连接密码</li>
+</ul>
+<ul>
+<li>xml映射文件</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8" ?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">configuration</span></span></span><br><span class="line"><span class="meta">  <span class="meta-keyword">PUBLIC</span> <span class="meta-string">"-//mybatis.org//DTD Config 3.0//EN"</span></span></span><br><span class="line"><span class="meta">  <span class="meta-string">"http://mybatis.org/dtd/mybatis-3-config.dtd"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">environments</span> <span class="attr">default</span>=<span class="string">"development"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">environment</span> <span class="attr">id</span>=<span class="string">"development"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">transactionManager</span> <span class="attr">type</span>=<span class="string">"JDBC"</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">dataSource</span> <span class="attr">type</span>=<span class="string">"POOLED"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"driver"</span> <span class="attr">value</span>=<span class="string">"com.mysql.jdbc.Driver"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"url"</span> <span class="attr">value</span>=<span class="string">"jdbc:mysql://localhost:3306/chat"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"username"</span> <span class="attr">value</span>=<span class="string">"root"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"password"</span> <span class="attr">value</span>=<span class="string">"password"</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">dataSource</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">environment</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">environments</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">mappers</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">mapper</span> <span class="attr">resource</span>=<span class="string">"com/tx/model/mapping.xml"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">mappers</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h4><span id="3mappingxml设置">3.mapping.xml设置</span><a href="#3mappingxml设置" class="header-anchor"> </a></h4>
+<p>mybatis的映射表，通过写sql语句来进行查询</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8" ?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">mapper</span> <span class="meta-keyword">PUBLIC</span> <span class="meta-string">"-//mybatis.org//DTD Mapper 3.0//EN"</span> </span></span><br><span class="line"><span class="meta"><span class="meta-string">"http://mybatis.org/dtd/mybatis-3-mapper.dtd"</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">"com.tx.model.Mapper"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- 通过username获得密码 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">"getpwd"</span> <span class="attr">parameterType</span>=<span class="string">"String"</span> <span class="attr">resultType</span>=<span class="string">"String"</span>&gt;</span></span><br><span class="line">      select stuPassword from student where stuName=#&#123;stuName&#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">insert</span> <span class="attr">id</span>=<span class="string">"register"</span> <span class="attr">parameterType</span>=<span class="string">"String"</span>&gt;</span></span><br><span class="line">    	insert into student (stuName, stuPassword) values (#&#123;stuName&#125;, #&#123;stuPassword&#125;) </span><br><span class="line">    <span class="tag">&lt;/<span class="name">insert</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3><span id="dao层代码">DAO层代码</span><a href="#dao层代码" class="header-anchor"> </a></h3>
+<p>mybatis的映射文件，方法名与xml中的id相同</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.tx.model;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.ibatis.annotations.Param;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Mapper</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getpwd</span><span class="params">(String stuName)</span></span>;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">register</span><span class="params">(@Param(<span class="string">"stuName"</span>)</span>String stuName, @<span class="title">Param</span><span class="params">(<span class="string">"stuPassword"</span>)</span>String stuPassword)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>DAO层，调用Mybatis的Mapper接口</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.tx.DAO;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.ibatis.session.SqlSession;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.tx.model.Mapper;</span><br><span class="line"><span class="keyword">import</span> com.tx.tools.Helper;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StudentDAO</span> </span>&#123;</span><br><span class="line">	SqlSession session = Helper.getSessionFactory().openSession();</span><br><span class="line">	Mapper mapper = session.getMapper(Mapper<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getpwd</span><span class="params">(String username)</span></span>&#123;</span><br><span class="line">		<span class="keyword">return</span> mapper.getpwd(username);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">register</span><span class="params">(String name, String password)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">int</span> result = <span class="number">0</span>;</span><br><span class="line">		SqlSession session = Helper.getSessionFactory().openSession();</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			Mapper mapper = session.getMapper(Mapper<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">			result = mapper.register(name, password);</span><br><span class="line">			session.commit();</span><br><span class="line">		&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">			session.close();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> result;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3><span id="service层代码">service层代码</span><a href="#service层代码" class="header-anchor"> </a></h3>
+<p>service层调用DAO层</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.tx.service;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.tx.DAO.StudentDAO;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StudentService</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	StudentDAO sdao = <span class="keyword">new</span> StudentDAO();</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">login</span><span class="params">(String name, String password)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">boolean</span> result = <span class="keyword">false</span>;</span><br><span class="line">		<span class="keyword">if</span> (password.equals(sdao.getpwd(name))) &#123;</span><br><span class="line">			result = <span class="keyword">true</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> result;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">register</span><span class="params">(String name, String password)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(sdao.register(name, password) == <span class="number">1</span>) &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3><span id="spring-websocket配置">Spring websocket配置</span><a href="#spring-websocket配置" class="header-anchor"> </a></h3>
+<h4><span id="1websocketconfigurer设置">1.WebSocketConfigurer设置</span><a href="#1websocketconfigurer设置" class="header-anchor"> </a></h4>
+<p>注册Spring WebSocket服务</p>
+<blockquote>
+<p>其中registerWebSocketHandlers方法：
+registry.addHandler(systemWebSocketHandler(),“xxx”);
+xxx填写准备使用的WebSocket服务器请求地址，本项目中以 <a href="http://webSocketServer.do" target="_blank" rel="noopener">webSocketServer.do</a> 为例</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.tx.config;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Bean;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Configuration;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.servlet.config.annotation.EnableWebMvc;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.socket.WebSocketHandler;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.socket.client.standard.WebSocketContainerFactoryBean;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.socket.config.annotation.EnableWebSocket;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.socket.config.annotation.WebSocketConfigurer;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.tx.handler.SystemWebSocketHandler;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableWebMvc</span></span><br><span class="line"><span class="meta">@EnableWebSocket</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WebSocketConfig</span> <span class="keyword">extends</span> <span class="title">WebMvcConfigurerAdapter</span> <span class="keyword">implements</span> <span class="title">WebSocketConfigurer</span></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">registerWebSocketHandlers</span><span class="params">(WebSocketHandlerRegistry registry)</span> </span>&#123;</span><br><span class="line">		 registry.addHandler(systemWebSocketHandler(),<span class="string">"webSocketServer.do"</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> WebSocketHandler <span class="title">systemWebSocketHandler</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> SystemWebSocketHandler();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> WebSocketContainerFactoryBean <span class="title">createWebSocketContainer</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        WebSocketContainerFactoryBean container = <span class="keyword">new</span> WebSocketContainerFactoryBean();</span><br><span class="line">        container.setMaxTextMessageBufferSize(<span class="number">8192</span>);</span><br><span class="line">        container.setMaxBinaryMessageBufferSize(<span class="number">8192</span>);</span><br><span class="line">        <span class="keyword">return</span> container;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4><span id="2websockethandler设置">2.WebSocketHandler设置</span><a href="#2websockethandler设置" class="header-anchor"> </a></h4>
+<p>服务器如何处理WebSocket请求在这里面填写</p>
+<blockquote>
+<p>成功建立连接
+接收到消息处理
+处理异常
+连接关闭后</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SystemWebSocketHandler</span> <span class="keyword">implements</span> <span class="title">WebSocketHandler</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">afterConnectionEstablished</span><span class="params">(WebSocketSession session)</span></span></span><br><span class="line"><span class="function">			<span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"ConnectionEstablished"</span>);</span><br><span class="line">        <span class="comment">//TODO</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(WebSocketSession session,</span></span></span><br><span class="line"><span class="function"><span class="params">			WebSocketMessage&lt;?&gt; message)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		<span class="comment">//TODO</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleTransportError</span><span class="params">(WebSocketSession session,</span></span></span><br><span class="line"><span class="function"><span class="params">			Throwable exception)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		<span class="comment">//TODO</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">afterConnectionClosed</span><span class="params">(WebSocketSession session,</span></span></span><br><span class="line"><span class="function"><span class="params">			CloseStatus closeStatus)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"ConnectionClosed"</span>);</span><br><span class="line">		<span class="comment">//TODO</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">supportsPartialMessages</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2><span id="四-运行结果">四、运行结果</span><a href="#四-运行结果" class="header-anchor"> </a></h2>
+<h3><span id="用户注册">用户注册</span><a href="#用户注册" class="header-anchor"> </a></h3>
+<p>在浏览器中输入 <a href="http://localhost:8080/RealTimeChat/register.do" target="_blank" rel="noopener">http://localhost:8080/RealTimeChat/register.do</a>
+<img src="//img.tianle.me/image/20151217/register.png" alt="注册界面">
+填写用户名及密码后，点击注册按钮
+注册成功后，自动跳转至聊天页面</p>
+<h3><span id="聊天界面">聊天界面</span><a href="#聊天界面" class="header-anchor"> </a></h3>
+<p><img src="//img.tianle.me/image/20151217/chat1.png" alt="聊天界面1">
+顶部为当前登录用户
+左上方为聊天室的聊天窗口
+右上方为当前聊天室所有的在线用户
+下方为用户的输入窗口</p>
+<h3><span id="登录界面">登录界面</span><a href="#登录界面" class="header-anchor"> </a></h3>
+<p>新用户登录 <a href="http://localhost:8080/RealTimeChat/login.do" target="_blank" rel="noopener">http://localhost:8080/RealTimeChat/login.do</a>
+<img src="//img.tianle.me/image/20151217/login1.png" alt="登录界面"></p>
+<h3><span id="多人聊天">多人聊天</span><a href="#多人聊天" class="header-anchor"> </a></h3>
+<p>新用户加入
+<img src="//img.tianle.me/image/20151217/chat2.png" alt="chat2"></p>
+<h3><span id="用户退出">用户退出</span><a href="#用户退出" class="header-anchor"> </a></h3>
+<p>kyle用户退出
+<img src="//img.tianle.me/image/20151217/chat3.png" alt="logout"></p>
+<h4><span id="五-项目代码">五、项目代码</span><a href="#五-项目代码" class="header-anchor"> </a></h4>
+<p><a href="https://github.com/zhangtianle/WebSocketChat" target="_blank" rel="noopener">github项目地址</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/java/" rel="tag"># java</a>
+              <a href="/tags/mybatis/" rel="tag"># mybatis</a>
+              <a href="/tags/spring/" rel="tag"># spring</a>
+              <a href="/tags/websocket/" rel="tag"># websocket</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2015/12/16/hello-world/" rel="prev" title="Hello World">
+      <i class="fa fa-chevron-left"></i> Hello World
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2016/01/17/spring-mybatis事务管理配置与-Transactional注解使用/" rel="next" title="spring,mybatis事务管理配置与@Transactional注解使用">
+      spring,mybatis事务管理配置与@Transactional注解使用 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">1.</span> <span class="nav-text">零、总体介绍 </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">1.1.</span> <span class="nav-text">项目背景 </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">1.2.</span> <span class="nav-text">文档说明 </span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">2.</span> <span class="nav-text">一、技术背景 </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">2.1.</span> <span class="nav-text">1.WebSocket </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">2.2.</span> <span class="nav-text">2.Spring </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">2.3.</span> <span class="nav-text">3.Spring WebSocket </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">2.4.</span> <span class="nav-text">4.Spring MVC </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">2.5.</span> <span class="nav-text">5.MyBatis </span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">3.</span> <span class="nav-text">二、目录结构 </span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">4.</span> <span class="nav-text">三、实验步骤 </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">4.1.</span> <span class="nav-text">web服务前端 </span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">4.1.1.</span> <span class="nav-text">1、socket相关代码结构 </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">4.1.2.</span> <span class="nav-text">2.本次实验所封装的一些函数的解析 </span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">4.2.</span> <span class="nav-text">Spring &amp; Spring MVC配置 </span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">4.2.1.</span> <span class="nav-text">1、Web.xml 配置 </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">4.2.2.</span> <span class="nav-text">2.as-servlet.xml 配置Spring MVC </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">4.2.3.</span> <span class="nav-text">3.编写Spring MVC controller </span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#null"><span class="nav-number">4.2.3.1.</span> <span class="nav-text">例： </span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">4.3.</span> <span class="nav-text">Mybatis配置 </span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">4.3.1.</span> <span class="nav-text">1.建立与数据库表对应的model，POJO类 </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">4.3.2.</span> <span class="nav-text">2.mybatis-config.xml设置 </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">4.3.3.</span> <span class="nav-text">3.mapping.xml设置 </span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">4.4.</span> <span class="nav-text">DAO层代码 </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">4.5.</span> <span class="nav-text">service层代码 </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">4.6.</span> <span class="nav-text">Spring websocket配置 </span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">4.6.1.</span> <span class="nav-text">1.WebSocketConfigurer设置 </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">4.6.2.</span> <span class="nav-text">2.WebSocketHandler设置 </span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">5.</span> <span class="nav-text">四、运行结果 </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">5.1.</span> <span class="nav-text">用户注册 </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">5.2.</span> <span class="nav-text">聊天界面 </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">5.3.</span> <span class="nav-text">登录界面 </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">5.4.</span> <span class="nav-text">多人聊天 </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">5.5.</span> <span class="nav-text">用户退出 </span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">5.5.1.</span> <span class="nav-text">五、项目代码 </span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Tianle Zhang</p>
+  <div class="site-description" itemprop="description">Talk is cheap, Show me the code</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">64</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">114</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zhangtianle" title="GitHub → https://github.com/zhangtianle" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://weibo.com/tianlezh" title="Weibo → http://weibo.com/tianlezh" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://coderchat.cn/" title="http://coderchat.cn/" rel="noopener" target="_blank">南山</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/rongfangliu/" title="http://www.cnblogs.com/rongfangliu/" rel="noopener" target="_blank">柳如风</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://baoyuzhang.github.io/" title="https://baoyuzhang.github.io/" rel="noopener" target="_blank">浅茉</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.iots.vip/" title="https://www.iots.vip/" rel="noopener" target="_blank">Alliot</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://printempw.github.io/" title="https://printempw.github.io/" rel="noopener" target="_blank">PRIN BLOG</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn" rel="noopener" target="_blank">陕ICP备16015673号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tianle Zhang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://tianle.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://tianle.me/2015/12/17/spring-websocket开发/";
+    this.page.identifier = "2015/12/17/spring-websocket开发/";
+    this.page.title = "spring websocket开发";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://tianle.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>

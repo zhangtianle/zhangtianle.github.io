@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/default_avatar.jpg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/default_avatar.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/default_avatar.jpg">
+  <link rel="mask-icon" href="/default_avatar.jpg" color="#222">
+  <meta name="google-site-verification" content="S7CcF76Y3WPq3DKyOvsZGmSEALaSes364lNi0PMvhh4">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"tianle.me","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="赛题回顾 京东金融提供8到11月的用户借款信息，订单购买信息，页面点击信息以及用户个人和贷款的初始额度信息；要求预测12月每个用户的贷款信息。评价方式采用RMSE函数： $$RMSE = \sqrt {\frac{1}{n}\sum\nolimits_{i = 1}^n {{{({y_i} - {{\hat y}_i})}^2}} } $$   其中yi真实值，y_hati为预测值，n为用户总数。">
+<meta name="keywords" content="机器学习,数据挖掘,竞赛,京东">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2017京东金融信贷需求预测 赛题总结">
+<meta property="og:url" content="https://tianle.me/2017/12/12/jd/index.html">
+<meta property="og:site_name" content="Niu Code">
+<meta property="og:description" content="赛题回顾 京东金融提供8到11月的用户借款信息，订单购买信息，页面点击信息以及用户个人和贷款的初始额度信息；要求预测12月每个用户的贷款信息。评价方式采用RMSE函数： $$RMSE = \sqrt {\frac{1}{n}\sum\nolimits_{i = 1}^n {{{({y_i} - {{\hat y}_i})}^2}} } $$   其中yi真实值，y_hati为预测值，n为用户总数。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://img.tianle.me/image/20171212/a.png">
+<meta property="og:image" content="https://img.tianle.me/image/20171212/b.png">
+<meta property="og:updated_time" content="2020-01-02T08:47:22.677Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="2017京东金融信贷需求预测 赛题总结">
+<meta name="twitter:description" content="赛题回顾 京东金融提供8到11月的用户借款信息，订单购买信息，页面点击信息以及用户个人和贷款的初始额度信息；要求预测12月每个用户的贷款信息。评价方式采用RMSE函数： $$RMSE = \sqrt {\frac{1}{n}\sum\nolimits_{i = 1}^n {{{({y_i} - {{\hat y}_i})}^2}} } $$   其中yi真实值，y_hati为预测值，n为用户总数。">
+<meta name="twitter:image" content="https://img.tianle.me/image/20171212/a.png">
+
+<link rel="canonical" href="https://tianle.me/2017/12/12/jd/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>2017京东金融信贷需求预测 赛题总结 | Niu Code</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-71583311-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-71583311-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Niu Code</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">南山小马</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/zhangtianle" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://tianle.me/2017/12/12/jd/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Tianle Zhang">
+      <meta itemprop="description" content="Talk is cheap, Show me the code">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Niu Code">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          2017京东金融信贷需求预测 赛题总结
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-12-12 16:40:16" itemprop="dateCreated datePublished" datetime="2017-12-12T16:40:16+08:00">2017-12-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-02 16:47:22" itemprop="dateModified" datetime="2020-01-02T16:47:22+08:00">2020-01-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/算法/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2017/12/12/jd/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/12/12/jd/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2><span id="赛题回顾">赛题回顾</span><a href="#赛题回顾" class="header-anchor"> </a></h2>
+<p>京东金融提供8到11月的用户借款信息，订单购买信息，页面点击信息以及用户个人和贷款的初始额度信息；要求预测12月每个用户的贷款信息。评价方式采用RMSE函数：</p>
+$$RMSE = \sqrt {\frac{1}{n}\sum\nolimits_{i = 1}^n {{{({y_i} - {{\hat y}_i})}^2}} } $$  
+<p>其中yi真实值，y_hati为预测值，n为用户总数。<br>
+<a href="https://github.com/zhangtianle/jd" target="_blank" rel="noopener">项目代码 github</a><br>
+<a href="https://pan.baidu.com/s/1eSjeq9W" target="_blank" rel="noopener">数据下载,百度网盘</a>  密码：2lk3</p>
+<a id="more"></a>
+<p>---- 20171219更新 ----</p>
+<blockquote>
+<p>浪教授</p>
+</blockquote>
+<ol>
+<li>以30天划分训练集，按30天为周期对齐；</li>
+<li>滑动窗口特征，等差 每 7 天 10 天 等；</li>
+<li>让预测月份的均值等于前几个月的均值（比赛前期）；</li>
+<li>强特征：激活日期、loan time、可贷款金额、 pid param组合前20个 one-hot</li>
+<li>模型融合，加权平均</li>
+</ol>
+<blockquote>
+<p>第17名代码</p>
+</blockquote>
+<p><a href="https://github.com/klyan/JDD_Loan_Forecasting" target="_blank" rel="noopener">https://github.com/klyan/JDD_Loan_Forecasting</a></p>
+<h2><span id="比赛结果">比赛结果</span><a href="#比赛结果" class="header-anchor"> </a></h2>
+<p>A榜50，B榜48<br>
+<img src="//img.tianle.me/image/20171212/a.png" alt="A榜"><br>
+<img src="//img.tianle.me/image/20171212/b.png" alt="B榜"></p>
+<h2><span id="解决方案">解决方案</span><a href="#解决方案" class="header-anchor"> </a></h2>
+<ol>
+<li>数据分析</li>
+<li>区间划分</li>
+<li>特征提取</li>
+<li>模型分析</li>
+<li>模型调参</li>
+<li>模型融合</li>
+</ol>
+<h3><span id="数据分析">数据分析</span><a href="#数据分析" class="header-anchor"> </a></h3>
+<p>在本次比赛中，数据分析比较少，仅仅是用 Jupyter Notebook 简单的画了几个图，没有针对数据情况进行特定的特征提取，基本上是想到什么特征就用什么特征，然后 总和、平均、最大、最小、方差 这几个来一套。这是本次比赛中不足的地方。<br>
+赛题中对金额字段进行了加密，但是在竞赛群里，立刻就有大佬给出了加密（$y = {\log _5}(x + 1)$）和脱敏（$y = {5^x} + 1$）方法，我们直接使用该方法，效果提升非常明显。</p>
+<h3><span id="区间划分">区间划分</span><a href="#区间划分" class="header-anchor"> </a></h3>
+<p>采用传统的划窗法对数据划分，<strong>注意：在划分数据时，一定不能出现数据穿越，即 训练的数据集中用到预测的数据</strong> <em>（如：要预测11月的贷款数据，则在训练数据中不能包含11月的数据信息）</em> 否则会造成线下CV（交叉验证）效果非常好，但是线上糟糕。<br>
+本次比赛的划分方式我们尝试了两种方案：</p>
+<ul>
+<li>方案一：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>0</th>
+<th>特征区间（feature）</th>
+<th>预测区间（llabel）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>训练集</td>
+<td>2016-08-03到2016-10-31</td>
+<td>2016-11-01到2016-11-30</td>
+</tr>
+<tr>
+<td>测试集</td>
+<td>2016-<strong>08</strong>-03到2016-11-30</td>
+<td>2016-12-01到2016-12-31</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>方案二：<br>
+将测试集中的8到11月改成9到11月，即</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>0</th>
+<th>特征区间（feature）</th>
+<th>预测区间（llabel）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>训练集</td>
+<td>2016-08-03到2016-10-31</td>
+<td>2016-11-01到2016-11-30</td>
+</tr>
+<tr>
+<td>测试集</td>
+<td>2016-<strong>09</strong>-01到2016-11-30</td>
+<td>2016-12-01到2016-12-31</td>
+</tr>
+</tbody>
+</table>
+<p>在实际测试中我们发现，本次比赛，在相同的特征提取方式下，方案一的结果优于方案二，因此采用方案一。</p>
+<h3><span id="特征提取">特征提取</span><a href="#特征提取" class="header-anchor"> </a></h3>
+<p>这就比较多了。。。。
+参数说明：<br>
+<code>start_month</code> 划分区间的起始月份<br>
+<code>end_month</code> 划分区间的结束月份<br>
+<code>NUM</code> 结束月份 - 起始月份 + 1，即 期间经过了<code>NUM</code>个月</p>
+<h4><span id="user用户信息表">user用户信息表</span><a href="#user用户信息表" class="header-anchor"> </a></h4>
+<table>
+<thead>
+<tr>
+<th>特征名</th>
+<th>特征含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>delta_time</td>
+<td>结束时间 - 激活时间 （天）</td>
+</tr>
+<tr>
+<td>start_delta_time</td>
+<td>起始时间 - 激活时间 （天）</td>
+</tr>
+<tr>
+<td>age，sex，limit</td>
+<td>年龄，性别，初始额度 one-hot编码</td>
+</tr>
+</tbody>
+</table>
+<h4><span id="click点击信息表">click点击信息表</span><a href="#click点击信息表" class="header-anchor"> </a></h4>
+<p>这个表貌似没什么用，也不知道这里面具体参数是什么含义，所以直接one-hot编码</p>
+<table>
+<thead>
+<tr>
+<th>特征名</th>
+<th>特征含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>uid，param</td>
+<td>点击页面，点击参数 one-hot编码</td>
+</tr>
+</tbody>
+</table>
+<h4><span id="loan贷款信息表">loan贷款信息表</span><a href="#loan贷款信息表" class="header-anchor"> </a></h4>
+<table>
+<thead>
+<tr>
+<th>特征名</th>
+<th>特征含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>remain_days</td>
+<td>到下个月的天数 （平均、方差、最大、最小） datetime(2016, end_month+ 1, 1) - parse(x)</td>
+</tr>
+<tr>
+<td>pass_days</td>
+<td>开始月的天数过去的天数 （平均、方差、最大、最小） parse(x) - dt.datetime(2016, start_month, 1)</td>
+</tr>
+<tr>
+<td>over</td>
+<td>计划时间是否超出时间</td>
+</tr>
+<tr>
+<td>average_loan</td>
+<td>平均每月贷款</td>
+</tr>
+<tr>
+<td>loan_month</td>
+<td>区间内贷款额（最大、最小、方差）</td>
+</tr>
+<tr>
+<td>average_pay</td>
+<td>每月月供（平均、最小、最大）</td>
+</tr>
+<tr>
+<td>remain_loan</td>
+<td>历史贷款总额</td>
+</tr>
+<tr>
+<td>remain_pay</td>
+<td>累计月供</td>
+</tr>
+<tr>
+<td>current_loan_sum</td>
+<td>当月月供（总和、最大、最小、平均、方差）</td>
+</tr>
+<tr>
+<td>current_pay</td>
+<td>当月贷款总额（总和、最大、最小、平均、方差）</td>
+</tr>
+<tr>
+<td>pay_each</td>
+<td>每一次月供（最大、最小、平均）</td>
+</tr>
+<tr>
+<td>loan_each</td>
+<td>每一贷款（最大、最小、平均）</td>
+</tr>
+<tr>
+<td>average_plannum</td>
+<td>平均贷款还款周期</td>
+</tr>
+</tbody>
+</table>
+<h4><span id="order订单信息表">order订单信息表</span><a href="#order订单信息表" class="header-anchor"> </a></h4>
+<p>参数说明：<br>
+<code>per_price</code>：用户购买单价<br>
+<code>price_sum</code>：购买总和<br>
+<code>discount_ratio</code>：优惠率</p>
+<table>
+<thead>
+<tr>
+<th>特征名</th>
+<th>特征含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>price_sum_mean</td>
+<td>每次购物的平均价格</td>
+</tr>
+<tr>
+<td>num_order</td>
+<td>每月购买次数（最大、最小、平均、方差）</td>
+</tr>
+<tr>
+<td>price_each</td>
+<td>每个用户每次消费（最大、最小、平均、方差）</td>
+</tr>
+<tr>
+<td>price</td>
+<td>每个用户购物价格（最大、最小、平均、方差）</td>
+</tr>
+<tr>
+<td>real_price</td>
+<td>每个用户购物折扣后总价（最大、最小、平均、方差）</td>
+</tr>
+<tr>
+<td>average_discount</td>
+<td>平均折扣</td>
+</tr>
+<tr>
+<td>qty_each</td>
+<td>每个用户每次购买（最大、最小、平均、方差）</td>
+</tr>
+<tr>
+<td>discount_price_ration</td>
+<td>历史折扣力度(平均、方差)</td>
+</tr>
+<tr>
+<td>no_free_discount_ratio</td>
+<td>每月非免费平均总价格/每月非免费平均折扣后的总价/每月非免费平均折扣力度/每月非免费平均折扣(平均、方差)</td>
+</tr>
+<tr>
+<td>current_real_price</td>
+<td>每个用户当月的购买物品总价格和(平均、方差)</td>
+</tr>
+<tr>
+<td>current_price</td>
+<td>当月平均单价（平均、方差）</td>
+</tr>
+<tr>
+<td>current_no_freeprice</td>
+<td>当月非免费平均单价（平均、方差）</td>
+</tr>
+<tr>
+<td>current_discount</td>
+<td>当月每次平均折扣（平均、方差）</td>
+</tr>
+<tr>
+<td>current_discount_ratio</td>
+<td>每次折扣力度（平均、方差）</td>
+</tr>
+</tbody>
+</table>
+<h4><span id="order_loan-订单-贷款交叉信息">order_loan 订单-贷款交叉信息</span><a href="#order_loan-订单-贷款交叉信息" class="header-anchor"> </a></h4>
+<table>
+<thead>
+<tr>
+<th>特征名</th>
+<th>特征含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>loan_order_ratio</td>
+<td>贷款总额 / 购买总额</td>
+</tr>
+<tr>
+<td>diff_order_loan</td>
+<td>购买总额 - 贷款总额</td>
+</tr>
+</tbody>
+</table>
+<h4><span id="user_order-用户-订单交叉信息">user_order 用户-订单交叉信息</span><a href="#user_order-用户-订单交叉信息" class="header-anchor"> </a></h4>
+<table>
+<thead>
+<tr>
+<th>特征名</th>
+<th>特征含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>diff_loan</td>
+<td>贷款总额和初始的差</td>
+</tr>
+</tbody>
+</table>
+<h3><span id="模型分析">模型分析</span><a href="#模型分析" class="header-anchor"> </a></h3>
+<p>一看题目，咋们就很明显的看出这是一个回归问题，那么我们就先选用回归的各种模型来尝试，比如 GBDT、XGB、LR、 Ridge。<br>
+随后，我们通过分析数据发现，有相当大的一部分用户没有发生贷款行为，那么是否可以尝试采用先分类再回归呢？分为用户是否会贷款，如果否，直接将贷款值设为0；如果是，那么再用回归模型对用户的贷款行为预测。但是实际情况是，我们的分类模型得到的CV结果准确率仅为85%，加上分类再回归，反而导致了总体评分下降。在做了简单的尝试之后，我们便放弃了这个方法，还是直接使用回归模型。</p>
+<h3><span id="模型调参">模型调参</span><a href="#模型调参" class="header-anchor"> </a></h3>
+<p>在这里，我们安利一个非常棒的 <strong>自动</strong> 特征处理（归一化、放缩）、模型选择、调参、模型融合的工具 <a href="https://rhiever.github.io/tpot/" target="_blank" rel="noopener">TPOT</a>，它是用遗传算法跑的，所以运行速度非常非常慢。在本次比赛中，我们一百多维的特征，9W多行（用户），TPOT参数设置：迭代25次，种群规模40，跑完一次，得到模型结果需要1-2天的时间。<br>
+此外，我们主要尝试了XGB和GBDT模型，最终的结果是GBDT要优于XGB，参数如下：
+GBDT：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">X_train, X_test, y_train, y_test = train_test_split(train_X, train_Y, test_size=<span class="number">0.2</span>, random_state=<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">clf = GradientBoostingRegressor(loss=<span class="string">'ls'</span>, alpha=<span class="number">0.9</span>,</span><br><span class="line">                                n_estimators=<span class="number">500</span>,</span><br><span class="line">                                learning_rate=<span class="number">0.05</span>,</span><br><span class="line">                                max_depth=<span class="number">8</span>,</span><br><span class="line">                                subsample=<span class="number">0.8</span>,</span><br><span class="line">                                max_features=<span class="number">0.6</span>,</span><br><span class="line">                                min_samples_split=<span class="number">9</span>,</span><br><span class="line">                                max_leaf_nodes=<span class="number">10</span>)</span><br><span class="line">clf = clf.fit(X_train, y_train)</span><br></pre></td></tr></table></figure>
+<p>XGB：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="string">'max_depth'</span>: <span class="number">5</span>, <span class="string">'eta'</span>: <span class="number">0.05</span>, <span class="string">'silent'</span>: <span class="number">1</span>, <span class="string">'eval_metric'</span>: <span class="string">'rmse'</span>, <span class="string">'max_leaf_nodes'</span>: <span class="number">5</span>&#125;</span><br></pre></td></tr></table></figure>
+<h4><span id="模型融合">模型融合</span><a href="#模型融合" class="header-anchor"> </a></h4>
+<p>在这次比赛中，我们采用了Stacking融合方法，理解不深，只是简单尝试了一下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">gbdt = GradientBoostingRegressor(loss=<span class="string">'ls'</span>, alpha=<span class="number">0.9</span>,</span><br><span class="line">                                         n_estimators=<span class="number">500</span>,</span><br><span class="line">                                         learning_rate=<span class="number">0.05</span>,</span><br><span class="line">                                         max_depth=<span class="number">8</span>,</span><br><span class="line">                                         subsample=<span class="number">0.8</span>,</span><br><span class="line">                                         min_samples_split=<span class="number">9</span>,</span><br><span class="line">                                         max_leaf_nodes=<span class="number">10</span>)</span><br><span class="line">xgb = XGBRegressor(max_depth=<span class="number">5</span>, n_estimators=<span class="number">500</span>, learning_rate=<span class="number">0.05</span>, silent=<span class="literal">False</span>)</span><br><span class="line">lr = LinearRegression()</span><br><span class="line">rfg = RandomForestRegressor(bootstrap=<span class="literal">False</span>, max_features=<span class="number">0.05</span>, min_samples_leaf=<span class="number">11</span>, min_samples_split=<span class="number">8</span>,n_estimators=<span class="number">100</span>)</span><br><span class="line">svr_rbf = SVR(kernel=<span class="string">'rbf'</span>)</span><br><span class="line"></span><br><span class="line">stregr = StackingRegressor(regressors=[gbdt, xgb, lr, rfg], meta_regressor=svr_rbf)</span><br><span class="line"></span><br><span class="line">stregr.fit(X_train, y_train)</span><br><span class="line">stregr.predict(X_train)</span><br></pre></td></tr></table></figure>
+<p>但是效果不咋滴。<br>
+由于我们用了TPOT这个调参工具，根据它生成的模型，貌似已经加上模型融合，所以我们在这一块没有放上太多的时间。<br>
+还有其他几个模型融合方法，比如：blending，加权平均。据师兄介绍，加权平均的融合方法有时候能取得一个非常不错的结果。根据阿里天池O2O比赛第一名的分享，他们就采用了加权的方法<a href="https://github.com/wepe/O2O-Coupon-Usage-Forecast" target="_blank" rel="noopener">O2O-Coupon-Usage-Forecast</a>。</p>
+<h3><span id="总结">总结</span><a href="#总结" class="header-anchor"> </a></h3>
+<p>初次比赛，还不懂套路，拿到赛题和数据后，我们没有做数据分析，直接巴拉巴拉暴力提取特征，导致很多特征都没有什么实际用处。另外在数据清洗上也没有进行操作，直接选取了全部数据；在一些缺失值，异常值（比如购买金额，贷款金额为负值）操作上，直接进行填零。不知道是否因为这些原因导致结果比较差。另外，在比赛初期，我们新增特征时，对结果有较大提高，特别是一些强特征（GBDT特征重要性排序），但在比赛后期，新增特征后，对结果几乎没有提高，有时甚至下降了。在本次比赛中，没有找到什么骚操作，也没有发掘出某个神奇的东西，对结果有大幅提高。但是，TPOT是个不错的东西，在特征确定的情况下，通过该工具，对模型调整有着突出的效果，缺点是运行速度太慢。过段时间，看看各位大佬的分享，再好好总结总结。</p>
+<h3><span id="参考资料">参考资料</span><a href="#参考资料" class="header-anchor"> </a></h3>
+<p><a href="https://dnc1994.com/2016/04/rank-10-percent-in-first-kaggle-competition/" target="_blank" rel="noopener">如何在 Kaggle 首战中进入前 10%</a><br>
+<a href="http://scarletpan.github.io/summary-of-get-a-silver-medal-in-kaggle/" target="_blank" rel="noopener">第一次参加Kaggle拿银总结</a><br>
+<a href="http://blog.csdn.net/bryan__/article/details/53907292" target="_blank" rel="noopener">[天池竞赛系列]O2O优惠券使用预测复赛第三名思路</a><br>
+<a href="https://github.com/wepe/O2O-Coupon-Usage-Forecast" target="_blank" rel="noopener">O2O第一名【诗人都藏在水底】代码 思路</a><br>
+<a href="https://github.com/InsaneLife/O2O-Predict-Coupon-Usage" target="_blank" rel="noopener">O2O第十六名代码 思路</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/机器学习/" rel="tag"># 机器学习</a>
+              <a href="/tags/数据挖掘/" rel="tag"># 数据挖掘</a>
+              <a href="/tags/竞赛/" rel="tag"># 竞赛</a>
+              <a href="/tags/京东/" rel="tag"># 京东</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/11/05/nginxConfig/" rel="prev" title="nginx服务器常见配置">
+      <i class="fa fa-chevron-left"></i> nginx服务器常见配置
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/12/28/decision-tree/" rel="next" title="决策树笔记">
+      决策树笔记 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">1.</span> <span class="nav-text">赛题回顾 </span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">2.</span> <span class="nav-text">比赛结果 </span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">3.</span> <span class="nav-text">解决方案 </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">3.1.</span> <span class="nav-text">数据分析 </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">3.2.</span> <span class="nav-text">区间划分 </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">3.3.</span> <span class="nav-text">特征提取 </span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">3.3.1.</span> <span class="nav-text">user用户信息表 </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">3.3.2.</span> <span class="nav-text">click点击信息表 </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">3.3.3.</span> <span class="nav-text">loan贷款信息表 </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">3.3.4.</span> <span class="nav-text">order订单信息表 </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">3.3.5.</span> <span class="nav-text">order_loan 订单-贷款交叉信息 </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">3.3.6.</span> <span class="nav-text">user_order 用户-订单交叉信息 </span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">3.4.</span> <span class="nav-text">模型分析 </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">3.5.</span> <span class="nav-text">模型调参 </span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">3.5.1.</span> <span class="nav-text">模型融合 </span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">3.6.</span> <span class="nav-text">总结 </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">3.7.</span> <span class="nav-text">参考资料 </span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Tianle Zhang</p>
+  <div class="site-description" itemprop="description">Talk is cheap, Show me the code</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">64</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">114</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zhangtianle" title="GitHub → https://github.com/zhangtianle" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://weibo.com/tianlezh" title="Weibo → http://weibo.com/tianlezh" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://coderchat.cn/" title="http://coderchat.cn/" rel="noopener" target="_blank">南山</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/rongfangliu/" title="http://www.cnblogs.com/rongfangliu/" rel="noopener" target="_blank">柳如风</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://baoyuzhang.github.io/" title="https://baoyuzhang.github.io/" rel="noopener" target="_blank">浅茉</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.iots.vip/" title="https://www.iots.vip/" rel="noopener" target="_blank">Alliot</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://printempw.github.io/" title="https://printempw.github.io/" rel="noopener" target="_blank">PRIN BLOG</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn" rel="noopener" target="_blank">陕ICP备16015673号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tianle Zhang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://tianle.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://tianle.me/2017/12/12/jd/";
+    this.page.identifier = "2017/12/12/jd/";
+    this.page.title = "2017京东金融信贷需求预测 赛题总结";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://tianle.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>

@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/default_avatar.jpg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/default_avatar.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/default_avatar.jpg">
+  <link rel="mask-icon" href="/default_avatar.jpg" color="#222">
+  <meta name="google-site-verification" content="S7CcF76Y3WPq3DKyOvsZGmSEALaSes364lNi0PMvhh4">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"tianle.me","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="虽然Linux已经很安全了，但是如果密码设置的不够复杂，如果说小写+数字共12位以下，你的SSH还用的默认端口，那么你的服务器是非常危险的。">
+<meta name="keywords" content="Linux,security,ssh,密码">
+<meta property="og:type" content="article">
+<meta property="og:title" content="提高Linux服务器安全">
+<meta property="og:url" content="https://tianle.me/2016/11/14/serverSecurity/index.html">
+<meta property="og:site_name" content="Niu Code">
+<meta property="og:description" content="虽然Linux已经很安全了，但是如果密码设置的不够复杂，如果说小写+数字共12位以下，你的SSH还用的默认端口，那么你的服务器是非常危险的。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://img.tianle.me/image/20161114/1.png">
+<meta property="og:updated_time" content="2020-01-02T08:47:22.681Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="提高Linux服务器安全">
+<meta name="twitter:description" content="虽然Linux已经很安全了，但是如果密码设置的不够复杂，如果说小写+数字共12位以下，你的SSH还用的默认端口，那么你的服务器是非常危险的。">
+<meta name="twitter:image" content="https://img.tianle.me/image/20161114/1.png">
+
+<link rel="canonical" href="https://tianle.me/2016/11/14/serverSecurity/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>提高Linux服务器安全 | Niu Code</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-71583311-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-71583311-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Niu Code</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">南山小马</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/zhangtianle" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://tianle.me/2016/11/14/serverSecurity/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Tianle Zhang">
+      <meta itemprop="description" content="Talk is cheap, Show me the code">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Niu Code">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          提高Linux服务器安全
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-11-14 12:40:12" itemprop="dateCreated datePublished" datetime="2016-11-14T12:40:12+08:00">2016-11-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-02 16:47:22" itemprop="dateModified" datetime="2020-01-02T16:47:22+08:00">2020-01-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/服务器/" itemprop="url" rel="index"><span itemprop="name">服务器</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2016/11/14/serverSecurity/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/11/14/serverSecurity/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>虽然Linux已经很安全了，但是如果密码设置的不够复杂，如果说小写+数字共12位以下，你的SSH还用的默认端口，那么你的服务器是非常危险的。</p>
+<a id="more"></a>
+<p>下面放一张图，来展示一下攻击的频繁程度，大家自行体会一下。<br>
+这个是我买的阿里主机<br>
+<img src="//img.tianle.me/image/20161114/1.png" alt="服务器被攻击"><br>
+好啦，下面开始正题：</p>
+<h2><span id="修改ssh端口禁止root登陆">修改SSH端口+禁止ROOT登陆</span><a href="#修改ssh端口禁止root登陆" class="header-anchor"> </a></h2>
+<p><strong>为了防止误操作，而导致无法登录系统，建议先新建快照</strong></p>
+<h3><span id="修改默认ssh默认22端口">修改默认SSH默认22端口</span><a href="#修改默认ssh默认22端口" class="header-anchor"> </a></h3>
+<h4><span id="一-修改文件etcsshsshd_config">一、修改文件：/etc/ssh/sshd_config</span><a href="#一-修改文件etcsshsshd_config" class="header-anchor"> </a></h4>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/ssh/sshd_config</span><br></pre></td></tr></table></figure>
+<p>在原来大约第5行的地方，修改Port 22，中的22端口号，建议改为1025-65535之间，不要和其他端口产生冲突即可。修改完成后记得保存。</p>
+<h4><span id="二-重启ssh服务">二、重启ssh服务</span><a href="#二-重启ssh服务" class="header-anchor"> </a></h4>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/sshd restart #centos系统，重启ssh服务命令  </span><br><span class="line">/etc/init.d/ssh restart #debian/ubuntu系统，重启ssh服务命令  </span><br><span class="line">或 service ssh restart #debian/ubuntu系统，重启ssh服务命令</span><br></pre></td></tr></table></figure>
+<h4><span id="三-修改防火墙配置">三、修改防火墙配置</span><a href="#三-修改防火墙配置" class="header-anchor"> </a></h4>
+<p>改完端口号还不要忘了在防火墙中打开所修改的端口哦~</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/sbin/iptables -A INPUT -p tcp --dport 22(修改后的端口号) -j ACCEPT</span><br></pre></td></tr></table></figure>
+<h3><span id="禁止root登录">禁止root登录</span><a href="#禁止root登录" class="header-anchor"> </a></h3>
+<h4><span id="一-新建用户">一、新建用户</span><a href="#一-新建用户" class="header-anchor"> </a></h4>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo adduser username(要新建的用户名)</span><br></pre></td></tr></table></figure>
+<p>按照提示一步步操作即可</p>
+<h4><span id="二-修改配置文件禁止root登录">二、修改配置文件禁止root登录</span><a href="#二-修改配置文件禁止root登录" class="header-anchor"> </a></h4>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/ssh/sshd_config #修改的文件还是这个</span><br><span class="line">PermitRootLogin no #把yes，改成no，保存退出，并重启SSH服务（上面有重启命令）</span><br></pre></td></tr></table></figure>
+<p>OK 大功告成，还不赶紧试试</p>
+<h2><span id="设置-ssh-通过密钥登录">设置 SSH 通过密钥登录</span><a href="#设置-ssh-通过密钥登录" class="header-anchor"> </a></h2>
+<p>我们一般使用 PuTTY 等 SSH 客户端来远程管理 Linux 服务器。但是，一般的密码方式登录，容易有密码被暴力破解的问题。所以，一般我们会将 SSH 的端口设置为默认的 22 以外的端口，或者禁用 root 账户登录。其实，有一个更好的办法来保证安全，而且让你可以放心地用 root 账户从远程登录——那就是通过密钥方式登录。</p>
+<p>密钥形式登录的原理是：利用密钥生成器制作一对密钥——一只公钥和一只私钥。将公钥添加到服务器的某个账户上，然后在客户端利用私钥即可完成认证并登录。这样一来，没有私钥，任何人都无法通过 SSH 暴力破解你的密码来远程登录到系统。此外，如果将公钥复制到其他账户甚至主机，利用私钥也可以登录。</p>
+<p>下面来讲解如何在 Linux 服务器上制作密钥对，将公钥添加给账户，设置 SSH，最后通过客户端登录。</p>
+<h3><span id="1-制作密钥对">1. 制作密钥对</span><a href="#1-制作密钥对" class="header-anchor"> </a></h3>
+<p>首先在服务器上制作密钥对。首先用密码登录到你打算使用密钥登录的账户，然后执行以下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@host ~]$ ssh-keygen  &lt;== 建立密钥对</span><br><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file in which to save the key (/root/.ssh/id_rsa): &lt;== 按 Enter</span><br><span class="line">Created directory &apos;/root/.ssh&apos;.</span><br><span class="line">Enter passphrase (empty for no passphrase): &lt;== 输入密钥锁码，或直接按 Enter 留空</span><br><span class="line">Enter same passphrase again: &lt;== 再输入一遍密钥锁码</span><br><span class="line">Your identification has been saved in /root/.ssh/id_rsa. &lt;== 私钥</span><br><span class="line">Your public key has been saved in /root/.ssh/id_rsa.pub. &lt;== 公钥</span><br><span class="line">The key fingerprint is:</span><br><span class="line">0f:d3:e7:1a:1c:bd:5c:03:f1:19:f1:22:df:9b:cc:08 root@host</span><br></pre></td></tr></table></figure>
+<p>密钥锁码在使用私钥时必须输入，这样就可以保护私钥不被盗用。当然，也可以留空，实现无密码登录。</p>
+<p>现在，在 root 用户的家目录中生成了一个 .ssh 的隐藏目录，内含两个密钥文件。id_rsa 为私钥，id_rsa.pub 为公钥。</p>
+<h3><span id="2-在服务器上安装公钥">2. 在服务器上安装公钥</span><a href="#2-在服务器上安装公钥" class="header-anchor"> </a></h3>
+<p>键入以下命令，在服务器上安装公钥：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@host ~]$ cd .ssh</span><br><span class="line">[root@host .ssh]$ cat id_rsa.pub &gt;&gt; authorized_keys</span><br></pre></td></tr></table></figure>
+<p>如此便完成了公钥的安装。为了确保连接成功，请保证以下文件权限正确：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@host .ssh]$ chmod 600 authorized_keys</span><br><span class="line">[root@host .ssh]$ chmod 700 ~/.ssh</span><br></pre></td></tr></table></figure>
+<h3><span id="3-设置-ssh打开密钥登录功能">3. 设置 SSH，打开密钥登录功能</span><a href="#3-设置-ssh打开密钥登录功能" class="header-anchor"> </a></h3>
+<p>编辑 /etc/ssh/sshd_config 文件，进行如下设置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">RSAAuthentication yes</span><br><span class="line">PubkeyAuthentication yes</span><br></pre></td></tr></table></figure>
+<p>另外，请留意 root 用户能否通过 SSH 登录：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PermitRootLogin yes</span><br></pre></td></tr></table></figure>
+<p>当你完成全部设置，并以密钥方式登录成功后，再禁用密码登录：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PasswordAuthentication no</span><br></pre></td></tr></table></figure>
+<p>最后，重启 SSH 服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@host .ssh]$ service sshd restart</span><br></pre></td></tr></table></figure>
+<h3><span id="4-将私钥下载到客户端然后转换为-putty-能使用的格式">4. 将私钥下载到客户端，然后转换为 PuTTY 能使用的格式</span><a href="#4-将私钥下载到客户端然后转换为-putty-能使用的格式" class="header-anchor"> </a></h3>
+<p>使用 WinSCP、SFTP 等工具将私钥文件 id_rsa 下载到客户端机器上。然后打开 PuTTYGen，单击 Actions 中的 Load 按钮，载入你刚才下载到的私钥文件。如果你刚才设置了密钥锁码，这时则需要输入。</p>
+<p>载入成功后，PuTTYGen 会显示密钥相关的信息。在 Key comment 中键入对密钥的说明信息，然后单击 Save private key 按钮即可将私钥文件存放为 PuTTY 能使用的格式。</p>
+<p>今后，当你使用 PuTTY 登录时，可以在左侧的 Connection -&gt; SSH -&gt; Auth 中的 Private key file for authentication: 处选择你的私钥文件，然后即可登录了，过程中只需输入密钥锁码即可。</p>
+<h2><span id="iptables配置">iptables配置</span><a href="#iptables配置" class="header-anchor"> </a></h2>
+<p>来源<a href="https://wsgzao.github.io/post/iptables/" target="_blank" rel="noopener">iptables配置实践</a></p>
+<h3><span id="前言">前言</span><a href="#前言" class="header-anchor"> </a></h3>
+<p>在大企业中防火墙角色主要交给硬件来支持，效果自然没话说只是需要增加一点点成本，但对于大多数个人或者互联网公司来说选择系统自带的<code>iptables</code>或者第三方云防火墙似乎是更加合适的选择，通过一些合理的优化和灵活的配置，我们也可以很轻松实现硬件防火墙的部分功能，够用就好。</p>
+<blockquote>
+<p>建立防火墙白名单机制很重要</p>
+</blockquote>
+<h3><span id="基础知识">基础知识</span><a href="#基础知识" class="header-anchor"> </a></h3>
+<h4><span id="关闭iptables">关闭iptables</span><a href="#关闭iptables" class="header-anchor"> </a></h4>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/iptables stop</span><br><span class="line">chkconfig iptables off</span><br></pre></td></tr></table></figure>
+<h4><span id="基础语法">基础语法</span><a href="#基础语法" class="header-anchor"> </a></h4>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line">#规则的观察与清除</span><br><span class="line"></span><br><span class="line">     iptables [-t tables] [-L] [-nv]</span><br><span class="line"></span><br><span class="line">选项与参数：</span><br><span class="line">-t ：后面接 table ，例如 nat 或 filter ，若省略此项目，则使用默认的 filter</span><br><span class="line">-L ：列出目前的 table 的规则</span><br><span class="line">-n ：不进行 IP 与 HOSTNAME 的反查，显示讯息的速度会快很多！</span><br><span class="line">-v ：列出更多的信息，包括通过该规则的封包总位数、相关的网络接口等</span><br><span class="line"></span><br><span class="line">     iptables [-t tables] [-FXZ]</span><br><span class="line"></span><br><span class="line">选项与参数：</span><br><span class="line">-F ：清除所有的已订定的规则；</span><br><span class="line">-X ：杀掉所有使用者 &quot;自定义&quot; 的 chain (应该说的是 tables ）啰；</span><br><span class="line">-Z ：将所有的 chain 的计数与流量统计都归零</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#封包的基础比对：IP, 网域及接口装置</span><br><span class="line"></span><br><span class="line">    iptables [-AI 链名] [-io 网络接口] [-p 协议] [-s 来源IP/网域] [-d 目标IP/网域] -j [ACCEPT|DROP|REJECT|LOG]</span><br><span class="line"></span><br><span class="line">选项与参数：</span><br><span class="line">-AI 链名：针对某的链进行规则的 &quot;插入&quot; 或 &quot;累加&quot;</span><br><span class="line">    -A ：新增加一条规则，该规则增加在原本规则的最后面。例如原本已经有四条规则，</span><br><span class="line">         使用 -A 就可以加上第五条规则！</span><br><span class="line">    -I ：插入一条规则。如果没有指定此规则的顺序，默认是插入变成第一条规则。</span><br><span class="line">         例如原本有四条规则，使用 -I 则该规则变成第一条，而原本四条变成 2~5 号</span><br><span class="line">    链 ：有 INPUT, OUTPUT, FORWARD 等，此链名称又与 -io 有关，请看底下。</span><br><span class="line"></span><br><span class="line">-io 网络接口：设定封包进出的接口规范</span><br><span class="line">    -i ：封包所进入的那个网络接口，例如 eth0, lo 等接口。需与 INPUT 链配合；</span><br><span class="line">    -o ：封包所传出的那个网络接口，需与 OUTPUT 链配合；</span><br><span class="line"></span><br><span class="line">-p 协定：设定此规则适用于哪种封包格式</span><br><span class="line">   主要的封包格式有： tcp, udp, icmp 及 all 。</span><br><span class="line"></span><br><span class="line">-s 来源 IP/网域：设定此规则之封包的来源项目，可指定单纯的 IP 或包括网域，例如：</span><br><span class="line">   IP  ：192.168.0.100</span><br><span class="line">   网域：192.168.0.0/24, 192.168.0.0/255.255.255.0 均可。</span><br><span class="line">   若规范为『不许』时，则加上 ! 即可，例如：</span><br><span class="line">   -s ! 192.168.100.0/24 表示不许 192.168.100.0/24 之封包来源；</span><br><span class="line"></span><br><span class="line">-d 目标 IP/网域：同 -s ，只不过这里指的是目标的 IP 或网域。</span><br><span class="line"></span><br><span class="line">-j ：后面接动作，主要的动作有接受(ACCEPT)、丢弃(DROP)、拒绝(REJECT)及记录(LOG)</span><br><span class="line"></span><br><span class="line">#TCP, UDP 的规则比对：针对端口设定</span><br><span class="line"></span><br><span class="line">    iptables [-AI 链] [-io 网络接口] [-p tcp,udp] [-s 来源IP/网域] [--sport 埠口范围] [-d 目标IP/网域] [--dport 端口范围] -j [ACCEPT|DROP|REJECT]</span><br><span class="line"></span><br><span class="line">选项与参数：</span><br><span class="line">--sport 埠口范围：限制来源的端口号码，端口号码可以是连续的，例如 1024:65535</span><br><span class="line">--dport 埠口范围：限制目标的端口号码。</span><br><span class="line"></span><br><span class="line">#iptables 外挂模块：mac 与 state</span><br><span class="line"></span><br><span class="line">    iptables -A INPUT [-m state] [--state 状态]</span><br><span class="line"></span><br><span class="line">选项与参数：</span><br><span class="line">-m ：一些 iptables 的外挂模块，主要常见的有：</span><br><span class="line">     state ：状态模块</span><br><span class="line">     mac   ：网络卡硬件地址 (hardware address)</span><br><span class="line">--state ：一些封包的状态，主要有：</span><br><span class="line">     INVALID    ：无效的封包，例如数据破损的封包状态</span><br><span class="line">     ESTABLISHED：已经联机成功的联机状态；</span><br><span class="line">     NEW        ：想要新建立联机的封包状态；</span><br><span class="line">     RELATED    ：这个最常用！表示这个封包是与我们主机发送出去的封包有关</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#ICMP 封包规则的比对：针对是否响应 ping 来设计</span><br><span class="line"></span><br><span class="line">    iptables -A INPUT [-p icmp] [--icmp-type 类型] -j ACCEPT</span><br><span class="line"></span><br><span class="line">选项与参数：</span><br><span class="line">--icmp-type ：后面必须要接 ICMP 的封包类型，也可以使用代号，</span><br><span class="line">              例如 8  代表 echo request 的意思。</span><br></pre></td></tr></table></figure>
+<h3><span id="配置iptables白名单机制">配置iptables白名单机制</span><a href="#配置iptables白名单机制" class="header-anchor"> </a></h3>
+<blockquote>
+<p>配置iptables白名单是相对简单有效的管理手段</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line">#清除所有规则(慎用)</span><br><span class="line">iptables -F</span><br><span class="line">iptables -X</span><br><span class="line">iptables -Z</span><br><span class="line"></span><br><span class="line">#查看iptable和行号</span><br><span class="line">iptables -nL --line-number</span><br><span class="line"></span><br><span class="line">#保存当前防火墙配置</span><br><span class="line">service iptables save</span><br><span class="line"></span><br><span class="line">#手动编辑防火墙策略</span><br><span class="line">vi /etc/sysconfig/iptables</span><br><span class="line"></span><br><span class="line"># Generated by iptables-save v1.4.7 on Fri Jul 24 09:42:09 2015</span><br><span class="line">*filter</span><br><span class="line">:INPUT ACCEPT [0:0]</span><br><span class="line">:FORWARD ACCEPT [0:0]</span><br><span class="line">:OUTPUT ACCEPT [0:0]</span><br><span class="line">#开放本地和Ping</span><br><span class="line">-A INPUT -i lo -j ACCEPT  </span><br><span class="line">-A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT</span><br><span class="line">-A INPUT -p icmp -j ACCEPT</span><br><span class="line">#配置内网白名单</span><br><span class="line">-A INPUT -s 10.0.0.0/8 -j ACCEPT</span><br><span class="line">-A INPUT -s 172.16.0.0/12 -j ACCEPT</span><br><span class="line">-A INPUT -s 192.168.0.0/16 -j ACCEPT</span><br><span class="line">#配置外网白名单</span><br><span class="line">-A INPUT -s 180.168.36.198 -j ACCEPT</span><br><span class="line">-A INPUT -s 180.168.34.218 -j ACCEPT</span><br><span class="line">-A INPUT -s 222.73.202.251 -j ACCEPT</span><br><span class="line">#控制端口</span><br><span class="line">-A INPUT -p tcp --dport 80 -j ACCEPT</span><br><span class="line">-A INPUT -p tcp --dport 22 -j ACCEPT</span><br><span class="line">#拒绝其它</span><br><span class="line">-A INPUT -j DROP</span><br><span class="line">-A FORWARD -j DROP</span><br><span class="line">#开放出口</span><br><span class="line">-A OUTPUT -j ACCEPT</span><br><span class="line">COMMIT</span><br><span class="line"># Completed on Fri Jul 24 09:40:16 2015</span><br><span class="line"></span><br><span class="line">#重启生效</span><br><span class="line">service iptables restart</span><br><span class="line"></span><br><span class="line">#复查结果</span><br><span class="line"></span><br><span class="line">iptables -nL --line-number</span><br><span class="line"></span><br><span class="line">Chain INPUT (policy ACCEPT)</span><br><span class="line">num  target     prot opt source               destination         </span><br><span class="line">1    ACCEPT     all  --  0.0.0.0/0            0.0.0.0/0           </span><br><span class="line">2    ACCEPT     all  --  0.0.0.0/0            0.0.0.0/0           state RELATED,ESTABLISHED</span><br><span class="line">3    ACCEPT     icmp --  0.0.0.0/0            0.0.0.0/0           </span><br><span class="line">4    ACCEPT     all  --  10.0.0.0/8           0.0.0.0/0           </span><br><span class="line">5    ACCEPT     all  --  172.16.0.0/12        0.0.0.0/0           </span><br><span class="line">6    ACCEPT     all  --  192.168.0.0/16       0.0.0.0/0           </span><br><span class="line">7    ACCEPT     all  --  180.168.36.198       0.0.0.0/0           </span><br><span class="line">8    ACCEPT     all  --  180.168.34.218       0.0.0.0/0           </span><br><span class="line">9    ACCEPT     all  --  222.73.202.251       0.0.0.0/0           </span><br><span class="line">10   ACCEPT     tcp  --  0.0.0.0/0            0.0.0.0/0           tcp dpt:80</span><br><span class="line">11   ACCEPT     tcp  --  0.0.0.0/0            0.0.0.0/0           tcp dpt:22</span><br><span class="line">12   DROP       all  --  0.0.0.0/0            0.0.0.0/0           </span><br><span class="line"></span><br><span class="line">Chain FORWARD (policy ACCEPT)</span><br><span class="line">num  target     prot opt source               destination         </span><br><span class="line">1    DROP       all  --  0.0.0.0/0            0.0.0.0/0           </span><br><span class="line"></span><br><span class="line">Chain OUTPUT (policy ACCEPT)</span><br><span class="line">num  target     prot opt source               destination         </span><br><span class="line">1    ACCEPT     all  --  0.0.0.0/0            0.0.0.0/0</span><br></pre></td></tr></table></figure>
+<h3><span id="设置crontab脚本">设置crontab脚本</span><a href="#设置crontab脚本" class="header-anchor"> </a></h3>
+<blockquote>
+<p>便于运维集中化管理扩展</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">vi /root/start_iptables.sh</span><br><span class="line"></span><br><span class="line">#!/bin/bash</span><br><span class="line">#0 0 * * * /root/start_iptables.sh</span><br><span class="line"></span><br><span class="line">#清除配置</span><br><span class="line">/sbin/iptables -P INPUT ACCEPT</span><br><span class="line">/sbin/iptables -F</span><br><span class="line">/sbin/iptables -X</span><br><span class="line">#开放本地和Ping</span><br><span class="line">/sbin/iptables -A INPUT -i lo -j ACCEPT  </span><br><span class="line">/sbin/iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT</span><br><span class="line">/sbin/iptables -A INPUT -p icmp -j ACCEPT</span><br><span class="line">#配置内网白名单</span><br><span class="line">/sbin/iptables -A INPUT -s 10.0.0.0/8 -j ACCEPT</span><br><span class="line">/sbin/iptables -A INPUT -s 172.16.0.0/12 -j ACCEPT</span><br><span class="line">/sbin/iptables -A INPUT -s 192.168.0.0/16 -j ACCEPT</span><br><span class="line">#配置外网白名单</span><br><span class="line">/sbin/iptables -A INPUT -s 180.168.36.198 -j ACCEPT</span><br><span class="line">/sbin/iptables -A INPUT -s 180.168.34.218 -j ACCEPT</span><br><span class="line">/sbin/iptables -A INPUT -s 222.73.202.251 -j ACCEPT</span><br><span class="line">#控制端口</span><br><span class="line">/sbin/iptables -A INPUT -p tcp --dport 80 -j ACCEPT</span><br><span class="line">/sbin/iptables -A INPUT -p tcp --dport 22 -j ACCEPT</span><br><span class="line">#拒绝其它</span><br><span class="line">/sbin/iptables -A INPUT -j DROP</span><br><span class="line">/sbin/iptables -A FORWARD -j DROP</span><br><span class="line">#开放出口</span><br><span class="line">/sbin/iptables -A OUTPUT -j ACCEPT</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">chmod 755 /root/start_iptables.sh</span><br><span class="line">crontab -e</span><br><span class="line">0 0 * * * /root/start_iptables.sh</span><br></pre></td></tr></table></figure>
+<h3><span id="我的iptables脚本">我的iptables脚本</span><a href="#我的iptables脚本" class="header-anchor"> </a></h3>
+<blockquote>
+<p>附上我目前在用的服务器iptables脚本 <a href="http://ipt.sh" target="_blank" rel="noopener">ipt.sh</a></p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">/sbin/iptables -F</span><br><span class="line">/sbin/iptables -X</span><br><span class="line">/sbin/iptables -F -t mangle</span><br><span class="line">/sbin/iptables -t mangle -X</span><br><span class="line">/sbin/iptables -F -t nat</span><br><span class="line">/sbin/iptables -t nat -X</span><br><span class="line"></span><br><span class="line">/sbin/iptables -P INPUT DROP</span><br><span class="line">/sbin/iptables -P OUTPUT ACCEPT</span><br><span class="line">/sbin/iptables -P FORWARD DROP</span><br><span class="line"></span><br><span class="line">#/sbin/iptables -A INPUT -p icmp --icmp-type 8 -s 0/0 -j DROP</span><br><span class="line">/sbin/iptables -I INPUT -p icmp --icmp-type echo-request -m limit --limit 6/min --limit-burst 4 -j ACCEPT</span><br><span class="line">/sbin/iptables -A INPUT -p tcp --tcp-flags ALL FIN,URG,PSH -j DROP</span><br><span class="line">/sbin/iptables -A INPUT -p tcp --tcp-flags ALL ALL -j DROP</span><br><span class="line">/sbin/iptables -A INPUT -p tcp --tcp-flags ALL SYN,RST,ACK,FIN,URG -j DROP</span><br><span class="line">/sbin/iptables -A INPUT -p tcp --tcp-flags ALL NONE -j DROP</span><br><span class="line">/sbin/iptables -A INPUT -p tcp --tcp-flags SYN,RST SYN,RST -j DROP</span><br><span class="line">/sbin/iptables -A INPUT -p tcp --tcp-flags SYN,FIN SYN,FIN -j DROP</span><br><span class="line"></span><br><span class="line">/sbin/iptables -A INPUT -p tcp --dport 22 -j ACCEPT</span><br><span class="line">/sbin/iptables -A INPUT -p tcp --dport 80 -j ACCEPT</span><br><span class="line">/sbin/iptables -A INPUT -p tcp --dport 3333 -j ACCEPT</span><br><span class="line">#/sbin/iptables -A INPUT -p tcp --dport 443 -j ACCEPT</span><br><span class="line">#/sbin/iptables -A INPUT -p tcp --dport 4000 -j ACCEPT</span><br><span class="line">#/sbin/iptables -A INPUT -p tcp --dport 8080 -j ACCEPT</span><br><span class="line">#/sbin/iptables -A INPUT -p tcp --dport 3306 -j ACCEPT</span><br><span class="line">#/sbin/iptables -A INPUT -p icmp -j ACCEPT</span><br><span class="line">/sbin/iptables -A INPUT -d 127.0.0.1 -j ACCEPT</span><br><span class="line">/sbin/iptables -A INPUT -i lo -p all -j ACCEPT</span><br><span class="line">/sbin/iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT</span><br><span class="line"></span><br><span class="line">#/sbin/iptables -A INPUT -p udp --sport 53 -j ACCEPT</span><br><span class="line"></span><br><span class="line">/sbin/iptables -A OUTPUT -p tcp --sport 31337 -j DROP</span><br><span class="line">/sbin/iptables -A OUTPUT -p tcp --dport 31337 -j DROP</span><br><span class="line"></span><br><span class="line">/sbin/iptables -A INPUT -m state --state INVALID -j DROP</span><br><span class="line">/sbin/iptables -A OUTPUT -m state --state INVALID -j DROP</span><br><span class="line">/sbin/iptables -A FORWARD -m state --state INVALID -j DROP</span><br></pre></td></tr></table></figure>
+<h3><span id="扩展阅读">扩展阅读</span><a href="#扩展阅读" class="header-anchor"> </a></h3>
+<p>Linux 防火墙和 iptables - <a href="http://liaoph.com/iptables/" target="_blank" rel="noopener">http://liaoph.com/iptables/</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+              <a href="/tags/security/" rel="tag"># security</a>
+              <a href="/tags/ssh/" rel="tag"># ssh</a>
+              <a href="/tags/密码/" rel="tag"># 密码</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2016/10/29/MODPSO/" rel="prev" title="Complex Network Clustering by Multiobjective Discrete Particle Swarm Optimization Based on Decomposition">
+      <i class="fa fa-chevron-left"></i> Complex Network Clustering by Multiobjective Discrete Particle Swarm Optimization Based on Decomposition
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2016/11/22/phicommPassionRoot/" rel="next" title="斐讯K1S路由器刷机">
+      斐讯K1S路由器刷机 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">1.</span> <span class="nav-text">修改SSH端口+禁止ROOT登陆 </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">1.1.</span> <span class="nav-text">修改默认SSH默认22端口 </span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">1.1.1.</span> <span class="nav-text">一、修改文件：/etc/ssh/sshd_config </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">1.1.2.</span> <span class="nav-text">二、重启ssh服务 </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">1.1.3.</span> <span class="nav-text">三、修改防火墙配置 </span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">1.2.</span> <span class="nav-text">禁止root登录 </span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">1.2.1.</span> <span class="nav-text">一、新建用户 </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">1.2.2.</span> <span class="nav-text">二、修改配置文件禁止root登录 </span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">2.</span> <span class="nav-text">设置 SSH 通过密钥登录 </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">2.1.</span> <span class="nav-text">1. 制作密钥对 </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">2.2.</span> <span class="nav-text">2. 在服务器上安装公钥 </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">2.3.</span> <span class="nav-text">3. 设置 SSH，打开密钥登录功能 </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">2.4.</span> <span class="nav-text">4. 将私钥下载到客户端，然后转换为 PuTTY 能使用的格式 </span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">3.</span> <span class="nav-text">iptables配置 </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">3.1.</span> <span class="nav-text">前言 </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">3.2.</span> <span class="nav-text">基础知识 </span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">3.2.1.</span> <span class="nav-text">关闭iptables </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">3.2.2.</span> <span class="nav-text">基础语法 </span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">3.3.</span> <span class="nav-text">配置iptables白名单机制 </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">3.4.</span> <span class="nav-text">设置crontab脚本 </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">3.5.</span> <span class="nav-text">我的iptables脚本 </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#null"><span class="nav-number">3.6.</span> <span class="nav-text">扩展阅读 </span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Tianle Zhang</p>
+  <div class="site-description" itemprop="description">Talk is cheap, Show me the code</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">64</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">114</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zhangtianle" title="GitHub → https://github.com/zhangtianle" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://weibo.com/tianlezh" title="Weibo → http://weibo.com/tianlezh" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://coderchat.cn/" title="http://coderchat.cn/" rel="noopener" target="_blank">南山</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/rongfangliu/" title="http://www.cnblogs.com/rongfangliu/" rel="noopener" target="_blank">柳如风</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://baoyuzhang.github.io/" title="https://baoyuzhang.github.io/" rel="noopener" target="_blank">浅茉</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.iots.vip/" title="https://www.iots.vip/" rel="noopener" target="_blank">Alliot</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://printempw.github.io/" title="https://printempw.github.io/" rel="noopener" target="_blank">PRIN BLOG</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn" rel="noopener" target="_blank">陕ICP备16015673号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tianle Zhang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://tianle.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://tianle.me/2016/11/14/serverSecurity/";
+    this.page.identifier = "2016/11/14/serverSecurity/";
+    this.page.title = "提高Linux服务器安全";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://tianle.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>

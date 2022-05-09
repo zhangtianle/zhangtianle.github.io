@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/default_avatar.jpg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/default_avatar.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/default_avatar.jpg">
+  <link rel="mask-icon" href="/default_avatar.jpg" color="#222">
+  <meta name="google-site-verification" content="S7CcF76Y3WPq3DKyOvsZGmSEALaSes364lNi0PMvhh4">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"tianle.me","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="记录春招实习面试">
+<meta name="keywords" content="算法,机器学习,网易,面试,百度,阿里,腾讯">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习算法春招实习面试">
+<meta property="og:url" content="https://tianle.me/2018/09/01/interviewSharing/index.html">
+<meta property="og:site_name" content="Niu Code">
+<meta property="og:description" content="记录春招实习面试">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-01-02T08:47:22.677Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="机器学习算法春招实习面试">
+<meta name="twitter:description" content="记录春招实习面试">
+
+<link rel="canonical" href="https://tianle.me/2018/09/01/interviewSharing/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>机器学习算法春招实习面试 | Niu Code</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-71583311-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-71583311-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Niu Code</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">南山小马</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/zhangtianle" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://tianle.me/2018/09/01/interviewSharing/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Tianle Zhang">
+      <meta itemprop="description" content="Talk is cheap, Show me the code">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Niu Code">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          机器学习算法春招实习面试
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-09-01 22:56:32" itemprop="dateCreated datePublished" datetime="2018-09-01T22:56:32+08:00">2018-09-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-02 16:47:22" itemprop="dateModified" datetime="2020-01-02T16:47:22+08:00">2020-01-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/生活记录/" itemprop="url" rel="index"><span itemprop="name">生活记录</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2018/09/01/interviewSharing/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/09/01/interviewSharing/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>记录春招实习面试</p>
+<a id="more"></a>
+<h4><span id="426-微软-算法-一面-二面">4.26 微软 算法 一面 二面</span><a href="#426-微软-算法-一面-二面" class="header-anchor"> </a></h4>
+<p>隔离外网ip怎么做<br>
+基本上全是手写代码<br>
+判断某个ip是否属于这个子网<br>
+多个已经排好序的链表，找到其前k个最大的值<br>
+两数之和为某值，leetcode原题<br>
+快排<br>
+年龄排序，时间复杂度为o(n)<br>
+从多个服务器中，找到前k个最大值</p>
+<h4><span id="425-阿里-hr面">4.25 阿里 hr面</span><a href="#425-阿里-hr面" class="header-anchor"> </a></h4>
+<p>你想做算法还是工程，你是怎么看待的<br>
+我说我还是想做算法，但是给我做工程也可以，毕竟算法要落地实现的<br>
+讲一个对你影响最大的项目吧<br>
+你有没有帮助过别人<br>
+什么时候能来实习<br>
+我和你的部门老大再沟通沟通</p>
+<h4><span id="424-京东-算法-二面-挂">4.24 京东 算法 二面 挂</span><a href="#424-京东-算法-二面-挂" class="header-anchor"> </a></h4>
+<p>你对京东有什么看法，为什么要投京东<br>
+问项目<br>
+xgb的原理</p>
+<h4><span id="423-网易-offer-沟通">4.23 网易 offer 沟通</span><a href="#423-网易-offer-沟通" class="header-anchor"> </a></h4>
+<p>给你发offer你还要考虑一下，还是马上确认<br>
+什么时候能来<br>
+讲了一下待遇<br>
+有问题再联系</p>
+<h4><span id="420-京东-算法-一面">4.20 京东 算法 一面</span><a href="#420-京东-算法-一面" class="header-anchor"> </a></h4>
+<p>自我介绍完，先两道编程题，由于电话面试，讲思路即可<br>
+求二叉树，每个节点下面包含其子节点的数目<br>
+投骰子，每投一次根据其点数往前走k格，如点数2，往前走2格，求在在第n格的概率是多少<br>
+说一下条件概率<br>
+投影矩阵<br>
+了解深度学习吗，讲一下cnn<br>
+样本不平衡怎么办<br>
+梯度消失怎么回事<br>
+怎么防止过拟合<br>
+随便讲一个机器学习算法<br>
+讲一个你熟悉的项目<br>
+有没有什么想问我的<br>
+你是哪个部门的，能不能简单介绍一下<br>
+实习可以留下来吗<br>
+我的表现如何</p>
+<h4><span id="418-蘑菇街-算法-hr面-三面">4.18 蘑菇街 算法 hr面 三面</span><a href="#418-蘑菇街-算法-hr面-三面" class="header-anchor"> </a></h4>
+<p>评价一下你之前的面试表现<br>
+老师或者你周围的人是如何评价你的<br>
+评价一下你自己<br>
+你觉得你在哪些地方可以改进<br>
+你的求职标准有哪些<br>
+你是如何看待大公司和小公司的<br>
+你对职业方向有什么规划<br>
+你面试了哪些公司，有哪些offer<br>
+有没有什么想问我的<br>
+问：我问实习转正流程是怎么样的，能不能转正<br>
+问：实习的住房能解决吗</p>
+<h4><span id="417-阿里零售通-算法-四面">4.17 阿里零售通 算法 四面</span><a href="#417-阿里零售通-算法-四面" class="header-anchor"> </a></h4>
+<p>没有自我介绍<br>
+先问我怎么看待算法与工程相结合的，你讲讲你的理解，比如对于分类问题，你分别从算法角度和工程角度讲讲<br>
+他说你的理解就是给算法打下手啊，那这样还有人愿意做吗？<br>
+没有讲项目，直接开始问Java<br>
+你知道LinkedHashMap 和 HashMap吗，他们有什么区别<br>
+LinkedHashMap可以做冷热分离吗？如何可以怎么做？<br>
+说一说你的优势<br>
+Spring MVC的安全问题<br>
+知不知道Spring Security<br>
+CSRF攻击<br>
+数据库索引<br>
+lock synchronized 区别<br>
+堆和栈的区别，里面都存了什么东西<br>
+程序计数器是什么，做什么用的<br>
+垃圾回收有哪些算法<br>
+在浏览器中输入http://www.taobao.com会发生什么动作<br>
+tcp  、ip 是哪一层的<br>
+用过哪些数据库<br>
+分布式数据库用过没有<br>
+负载均衡<br>
+说一说volatile，在jvm中是怎么样的<br>
+你未来的职业规划是怎么样的</p>
+<h4><span id="416-蘑菇街-算法-二面">4.16 蘑菇街 算法 二面</span><a href="#416-蘑菇街-算法-二面" class="header-anchor"> </a></h4>
+<p>自我介绍<br>
+讲论文<br>
+讲比赛<br>
+问的特别细</p>
+<p>有什么要问她的<br>
+你们做什么的<br>
+对于新人有没有培训或者交流</p>
+<h4><span id="415-腾讯-基础研究-算法-一面">4.15 腾讯 基础研究 算法 一面</span><a href="#415-腾讯-基础研究-算法-一面" class="header-anchor"> </a></h4>
+<p>自我介绍<br>
+讲你的三个优点<br>
+讲你的一个缺点<br>
+介绍一个你的项目<br>
+评价指标是什么<br>
+你是怎么调参的，哪些参数比较重要<br>
+你常用的机器学习算法有哪些<br>
+面试官在草稿纸上画了一个图，其实就是 多目标优化问题里面的 非支配解，把所有的非支配解求出来</p>
+<p>机器学习里面的偏差和方差有什么区别<br>
+L1和L2有什么区别<br>
+为什么L1能得到稀疏解</p>
+<h4><span id="413-网易-hr面">4.13 网易 hr面</span><a href="#413-网易-hr面" class="header-anchor"> </a></h4>
+<p>讲一讲你的比赛<br>
+你的比赛有几个人参加，你是负责哪一块的，分工<br>
+这么做会不会效率比较低呢<br>
+时间怎么规划的<br>
+针对这个比赛，你有没有做过计划<br>
+有拿到其他公司的offer吗<br>
+你以后想在哪里工作<br>
+说说你了解的最新的技术<br>
+讲一次和老师发生过冲突的事<br>
+你觉得这件事情你有没有错<br>
+简历上都是你成功的事，讲一次你失败的事</p>
+<h4><span id="413-网易-算法-二面">4.13 网易 算法 二面</span><a href="#413-网易-算法-二面" class="header-anchor"> </a></h4>
+<p>没有自我介绍<br>
+说项目（但是比较少）<br>
+面试官：你了解过时序问题吗，怎么处理<br>
+面试官：时间序列问题和其他问题有什么区别<br>
+面试官：给你一道题，你讲下思路，或者最好写一下代码<br>
+一组时序的数据集，如<br>
+1.10 A<br>
+1.10 B<br>
+1.10 C<br>
+1.11 A<br>
+1.11 B<br>
+。。。。<br>
+第一列为时间，第二列为key 表示这条数据的类别，其余列为特征<br>
+时间窗口为3，你怎么把它进行划分，把这些数据拼接在一起。给你5分钟的时间</p>
+<h4><span id="413-网易-算法-一面">4.13 网易 算法 一面</span><a href="#413-网易-算法-一面" class="header-anchor"> </a></h4>
+<p>自我介绍<br>
+说项目<br>
+几个人做的，你负责那一部分<br>
+模型融合<br>
+lgb和xgb有什么区别<br>
+xgb没有用直方图加速吗</p>
+<h4><span id="412-蘑菇街-算法-一面">4.12 蘑菇街 算法 一面</span><a href="#412-蘑菇街-算法-一面" class="header-anchor"> </a></h4>
+<p>自我介绍<br>
+先做一道编程题：两个数组的交集<br>
+nums1 = [1 ,2, 2, 1]  nums2 = [2, 2] 返回 [2] 结果去重</p>
+<h4><span id="409-阿里零售通-算法-三面">4.09 阿里零售通 算法 三面</span><a href="#409-阿里零售通-算法-三面" class="header-anchor"> </a></h4>
+<p>自我介绍<br>
+挑一个最能表现你自己的项目讲讲吧<br>
+你Java怎么样<br>
+有没有接过项目<br>
+你对我们部门有什么了解吗，有没有下过我们的app</p>
+<h4><span id="408-阿里零售通-算法-二面">4.08 阿里零售通 算法 二面</span><a href="#408-阿里零售通-算法-二面" class="header-anchor"> </a></h4>
+<p>编程题<br>
+你觉得你的研究方向，在我们部门有什么应用呢？</p>
+<h4><span id="330-阿里零售通-算法-一面">3.30 阿里零售通 算法 一面</span><a href="#330-阿里零售通-算法-一面" class="header-anchor"> </a></h4>
+<p>自我介绍<br>
+讲一讲你研究方向，做了什么，论文，突出创新点，你的工作<br>
+PageRank<br>
+天池比赛<br>
+GBDT  和 XGB 比较<br>
+怎么调参的<br>
+你知道我们做什么的吗，之前是否有了解</p>
+<h4><span id="326-百度算法-二面-get-offer">3.26 百度算法 二面 get offer</span><a href="#326-百度算法-二面-get-offer" class="header-anchor"> </a></h4>
+<p>了解了一下基本情况，哪个学校，现在是硕士，做的什么东西，研究方向是啥，问我本科是学什么的，上过哪些计算机的课。<br>
+论文<br>
+数据哪里来的<br>
+深度学习和机器学习有什么区别，应用场景有哪些，什么地方用深度学习，什么地方用机器学习，为什么这些场景深度学习的效果比较好。<br>
+你得到的特征怎么用<br>
+贪心算法，基于网络性质的算法，启发式算法，问这些算法有什么区别，为什么在这个场景下贪心算法比较好，贪心算法在哪些地方不好<br>
+python，dict和list 有什么区别<br>
+list是怎么实现的<br>
+list的get是怎么实现的<br>
+python 底层的list是用什么语言写的。<br>
+场景题，数字键盘上有各个字母，按下一个数字键如 9673，打出单词word，不用考虑很大的单词量，设计一个算法？</p>
+<h4><span id="322-百度算法面试-一面-实习-通过">3.22 百度算法面试 一面 实习 通过</span><a href="#322-百度算法面试-一面-实习-通过" class="header-anchor"> </a></h4>
+<p>一面主要是基础知识，分为Java 基础知识、数据结构算法、编程题<br>
+自我介绍<br>
+讲了一堆项目和论文，但是本轮面试主要是基础知识，基本上没问，面试官问我简历上哪个比较突出讲一讲，我说了论文，结果他不感兴趣，直接开始问Java。<br>
+redis<br>
+String是否为java的基本数据类型<br>
+基本数据类型有哪些<br>
+面向对象怎么理解，多态、继承、封装， 怎么理解继承<br>
+抽象类 和 接口 有什么区别<br>
+Spring有什么特性<br>
+最后3道编程题<br>
+判断链表有没有环<br>
+两链表的公共节点<br>
+无序数组第k个数是多少</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/算法/" rel="tag"># 算法</a>
+              <a href="/tags/机器学习/" rel="tag"># 机器学习</a>
+              <a href="/tags/网易/" rel="tag"># 网易</a>
+              <a href="/tags/面试/" rel="tag"># 面试</a>
+              <a href="/tags/百度/" rel="tag"># 百度</a>
+              <a href="/tags/阿里/" rel="tag"># 阿里</a>
+              <a href="/tags/腾讯/" rel="tag"># 腾讯</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/08/31/neteaseSummarize/" rel="prev" title="网易实习总结">
+      <i class="fa fa-chevron-left"></i> 网易实习总结
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/11/23/internshipSummary/" rel="next" title="猪场实习小结">
+      猪场实习小结 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">1.</span> <span class="nav-text">4.26 微软 算法 一面 二面 </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">2.</span> <span class="nav-text">4.25 阿里 hr面 </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">3.</span> <span class="nav-text">4.24 京东 算法 二面 挂 </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">4.</span> <span class="nav-text">4.23 网易 offer 沟通 </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">5.</span> <span class="nav-text">4.20 京东 算法 一面 </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">6.</span> <span class="nav-text">4.18 蘑菇街 算法 hr面 三面 </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">7.</span> <span class="nav-text">4.17 阿里零售通 算法 四面 </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">8.</span> <span class="nav-text">4.16 蘑菇街 算法 二面 </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">9.</span> <span class="nav-text">4.15 腾讯 基础研究 算法 一面 </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">10.</span> <span class="nav-text">4.13 网易 hr面 </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">11.</span> <span class="nav-text">4.13 网易 算法 二面 </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">12.</span> <span class="nav-text">4.13 网易 算法 一面 </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">13.</span> <span class="nav-text">4.12 蘑菇街 算法 一面 </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">14.</span> <span class="nav-text">4.09 阿里零售通 算法 三面 </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">15.</span> <span class="nav-text">4.08 阿里零售通 算法 二面 </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">16.</span> <span class="nav-text">3.30 阿里零售通 算法 一面 </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">17.</span> <span class="nav-text">3.26 百度算法 二面 get offer </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">18.</span> <span class="nav-text">3.22 百度算法面试 一面 实习 通过 </span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Tianle Zhang</p>
+  <div class="site-description" itemprop="description">Talk is cheap, Show me the code</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">64</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">114</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zhangtianle" title="GitHub → https://github.com/zhangtianle" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="http://weibo.com/tianlezh" title="Weibo → http://weibo.com/tianlezh" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://coderchat.cn/" title="http://coderchat.cn/" rel="noopener" target="_blank">南山</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.cnblogs.com/rongfangliu/" title="http://www.cnblogs.com/rongfangliu/" rel="noopener" target="_blank">柳如风</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://baoyuzhang.github.io/" title="https://baoyuzhang.github.io/" rel="noopener" target="_blank">浅茉</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.iots.vip/" title="https://www.iots.vip/" rel="noopener" target="_blank">Alliot</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://printempw.github.io/" title="https://printempw.github.io/" rel="noopener" target="_blank">PRIN BLOG</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn" rel="noopener" target="_blank">陕ICP备16015673号-1 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tianle Zhang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/muse.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://tianle.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://tianle.me/2018/09/01/interviewSharing/";
+    this.page.identifier = "2018/09/01/interviewSharing/";
+    this.page.title = "机器学习算法春招实习面试";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://tianle.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>

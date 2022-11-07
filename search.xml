@@ -10,7 +10,7 @@
 <h2><span id="网络聚合算子">网络聚合算子</span><a href="#网络聚合算子" class="header-anchor"> </a></h2>
 <h3><span id="总体结构">总体结构</span><a href="#总体结构" class="header-anchor"> </a></h3>
 <p>输入一个异构网络，HGT利用所有节点对，(源节点 s，关系类型 e，目标节点 t )，其目标是汇聚目标节点t的各个源节点s的上下文表示信息，计算出t的表示。分为3个部分：Heterogeneous Mutual Attention，Heterogeneous Message Passing ， Target-Specific Aggregation
-<img src="https://img.blog.tianle.me/image/20210612/1.jpg" alt></p>
+<img src="https://img.niucode.cn/image/20210612/1.jpg" alt></p>
 <ul>
 <li><strong>Attention</strong>： 计算每一个源节点s相对于目标节点t的重要性</li>
 <li><strong>Message</strong>：抽取源节点s的信息</li>
@@ -20,7 +20,7 @@
 <ul>
 <li>首先，计算目标节点t 和 源节点s 的 mutual attention。</li>
 </ul>
-<p><img src="https://img.blog.tianle.me/image/20210612/2.jpg" alt></p>
+<p><img src="https://img.niucode.cn/image/20210612/2.jpg" alt></p>
 <ul>
 <li>与 Transformer 核心区别是，Transformer对所有的word都用了同一个 projections ，而HGT对每一种边类型（meta relation）都使用了不同的 projection weights.</li>
 </ul>
@@ -28,22 +28,22 @@
 <ul>
 <li>将信息从源节点传递到目标节点，同时在消息传递过程中加入边的元关系，以处理不同类型的节点和边的分布差异。</li>
 </ul>
-<p><img src="https://img.blog.tianle.me/image/20210612/3.jpg" alt></p>
+<p><img src="https://img.niucode.cn/image/20210612/3.jpg" alt></p>
 <h3><span id="步骤三target-specific-aggregation">步骤三：Target-Specific Aggregation</span><a href="#步骤三target-specific-aggregation" class="header-anchor"> </a></h3>
 <ul>
 <li>这一过程将以上的异构相互注意力Attention和异构信息Message进行Product再Add，从本质来看，这个操作的目的是将异构注意力和消息从源节点聚合到目标节点。</li>
 </ul>
-<p><img src="https://img.blog.tianle.me/image/20210612/4.jpg" alt></p>
+<p><img src="https://img.niucode.cn/image/20210612/4.jpg" alt></p>
 <ul>
 <li>然后上面得到的结果经过一个激活层，再做线性变换并做一个残差连接：</li>
 </ul>
-<p><img src="https://img.blog.tianle.me/image/20210612/5.jpg" alt></p>
+<p><img src="https://img.niucode.cn/image/20210612/5.jpg" alt></p>
 <h2><span id="mini-bach子图采样-hgsampling">mini-bach子图采样 HGSampling</span><a href="#mini-bach子图采样-hgsampling" class="header-anchor"> </a></h2>
 <p>为了适应大规模网络，必须要对网络进行采样。如果不采样的话，就需要把整个图塞到GPU里面去计算，因此大规模网络是不适用的。本人尝试使用了DGL框架的HGT方法，在1080Ti的GPU上，不使用图采样，仅能够支持万级别的节点和几十万条边的网络规模，再往大，显存就不够用了。</p>
 <p>此论文提出一种适用于异构图的子图采样方法HGSampling，该方法，1、保证每一种类型的节点和边都有相似的数量，2、保证采样后的子图是稠密的，从而达到最小化的信息损失和减少采样带来的偏差。</p>
 <p>算法1展示了采样的主过程，其主要思想是每个节点类型τ保留一个单独的节点Budget B[τ]，使用重要性采样策略对每种类型采样相同数量的节点。当某一节点t已经被采样，我们将它的所有邻居加入预备采样集合中（算法2），使用归一化的度数去计算采样概率，类似于随机游走。</p>
-<p><img src="https://img.blog.tianle.me/image/20210612/6.jpg" alt>
-<img src="https://img.blog.tianle.me/image/20210612/7.jpg" alt></p>
+<p><img src="https://img.niucode.cn/image/20210612/6.jpg" alt>
+<img src="https://img.niucode.cn/image/20210612/7.jpg" alt></p>
 ]]></content>
       <categories>
         <category>研究</category>
@@ -59,7 +59,18 @@
     <url>/2020/09/05/flask-python-web/</url>
     <content><![CDATA[<p>自从好久没写Java web之后，脑子只有一个印象，对于搭建一个简单站点，使用现成的SSM框架，应该很快就能搞定，但是殊不知，其中的环境配置、包依赖、数据库等配置如果不熟悉会非常麻烦。折腾了我n个小时，还没搞定。随后放弃。由于目前多用Python开发，转念一想，要不试试Python。事实证明，我的决策是正确的，从接触学习，到完成开发，总共耗时也不到3小时。</p>
 <a id="more"></a>
-<p>未完待续。。。。</p>
+<p>最好的参考资料当然是官方文档，附上链接。<a href="https://flask.palletsprojects.com/en/2.2.x/" target="_blank" rel="noopener">https://flask.palletsprojects.com/en/2.2.x/</a></p>
+<h2><span id="安装">安装</span><a href="#安装" class="header-anchor"> </a></h2>
+<p>首先安装python，安装Flask。</p>
+<p>对于安装python的第三方包而言，大部分都不是难事，一行命令搞定。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">$ pip install Flask</span><br></pre></td></tr></table></figure>
+<h2><span id="开始">开始</span><a href="#开始" class="header-anchor"> </a></h2>
+<p>学习一个框架，最快最有效的方式就是看Demo和看Quickstart，非常幸运的事，这个官方文档已经很详细的描述了这个框架整体的形态。<br>
+入门必备hello word ，创建 <a href="http://hello.py" target="_blank" rel="noopener">hello.py</a> 内容如下</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route("/")</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hello_world</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">"&lt;p&gt;Hello, World!&lt;/p&gt;"</span></span><br></pre></td></tr></table></figure>
+<p>运行</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span> flask --app hello run</span><br><span class="line"> * Serving Flask app 'hello'</span><br><span class="line"> * Running on http://127.0.0.1:5000 (Press CTRL+C to quit)</span><br></pre></td></tr></table></figure>
+<p>从这个hello word中可以看到，页面路由通过<code>@app.route(&quot;/&quot;)</code>注解标注。</p>
 ]]></content>
       <categories>
         <category>应用开发</category>
@@ -242,7 +253,7 @@ format中添加\XDU@bold</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">\newcommand*&#123;\noaddvspace&#125;&#123;\renewcommand*&#123;\addvspace&#125;[1]&#123;&#125;&#125;</span><br><span class="line">\addtocontents&#123;lof&#125;&#123;\protect\noaddvspace&#125;</span><br><span class="line">\addtocontents&#123;lot&#125;&#123;\protect\noaddvspace&#125;</span><br></pre></td></tr></table></figure>
 <h3><span id="大工告成">大工告成</span><a href="#大工告成" class="header-anchor"> </a></h3>
 <p>附上完成修改后的西电模板配置文件<code>XDUthesis.cls</code>，大家可以直接下载替换。<br>
-<a href="http://free.tianle.me/image/20190523/XDUthesis.cls" target="_blank" rel="noopener">点我下载XDUthesis.cls</a></p>
+<a href="http://img.niucode.cn/image/20190523/XDUthesis.cls" target="_blank" rel="noopener">点我下载XDUthesis.cls</a></p>
 <h3><span id="参考">参考</span><a href="#参考" class="header-anchor"> </a></h3>
 <p><a href="https://blog.csdn.net/qq_26023575/article/details/79458115" target="_blank" rel="noopener">西电硕士论文latex使用说明</a></p>
 ]]></content>
@@ -273,7 +284,7 @@ $$\begin{array}{*{20}{c}}
   {\sigma  = {\text{standard deviation}}} 
 \end{array}$$ 
 <p>让我们看看数据在标准化前后相似性变化的例子。在图1中发现红色与蓝色更相似，而不是黄色。这是因为，x轴和y轴上他们数据特征的量纲不同。因此，直接观察到的相似性可能是未经缩放的。使用z-score进行规范化后，所有特征具有相同的尺度。这时你会发现红色实际上更像黄色。因此，在对数据进行规范化之后，可以更准确地计算相似性。</p>
-<p><img src="//img.tianle.me/image/20190514/NormalizeData.png" alt><br>
+<p><img src="//img.niucode.cn/image/20190514/NormalizeData.png" alt><br>
 图1:规范化前后的特征数据比较。</p>
 <p>综上所述，当数据有如下之一情况时，推荐使用规范化：</p>
 <ol>
@@ -282,19 +293,19 @@ $$\begin{array}{*{20}{c}}
 </ol>
 <h2><span id="log转换">Log转换</span><a href="#log转换" class="header-anchor"> </a></h2>
 <p>当数据分布表现为长尾分布时，如图所示，红点看起来与黄点更加相似。
-<img src="//img.tianle.me/image/20190514/LeftSkew.png" alt><br>
+<img src="//img.niucode.cn/image/20190514/LeftSkew.png" alt><br>
 图2：幂率分布</p>
 <p>我们对图2幂率分布的数据应用log转换，让数据分布变得更加平滑。结果如图3所示，红色目前与蓝色更相似。</p>
-<p><img src="//img.tianle.me/image/20190514/NormalDistribution.png" alt><br>
+<p><img src="//img.niucode.cn/image/20190514/NormalDistribution.png" alt><br>
 图3：变化后的正态分布</p>
 <h2><span id="分位数">分位数</span><a href="#分位数" class="header-anchor"> </a></h2>
 <p>规范化和log转换依赖于特定的数据分布。如果数据不符合高斯分布或幂律分布怎么办，是否有适用于任何分布的数据预处理方法。</p>
 <p>尝试对如下分布进行预处理<br>
-<img src="//img.tianle.me/image/20190514/Preprocess.png" alt><br>
+<img src="//img.niucode.cn/image/20190514/Preprocess.png" alt><br>
 图4：无法归类的数据分布</p>
 <p>直观地说，如果两个样本之间只有少数几个样本，那么无论它们的值如何，这两个样本是相似的。相反，如果这两个样本之间有很多个其他样本，那么这两个样本就不那么相似了。因此，两个样本之间的相似性随着样本间的样本数量的增加而减少。</p>
 <p>如果对数据进行规范化（normalizing）只会复制数据分布，因为规范化是一个线性变换。应用log转换也不能反映相似性的原理，如图5所示。
-<img src="//img.tianle.me/image/20190514/LogTransform.png" alt><br>
+<img src="//img.niucode.cn/image/20190514/LogTransform.png" alt><br>
 图5：对数据分布进行log转换</p>
 <p>将数据划分为不同的区间，每个区间包含相同数量的样本。这些区间的边界称为分位数。</p>
 <p>执行以下步骤将数据转换为分位数:</p>
@@ -304,7 +315,7 @@ $$\begin{array}{*{20}{c}}
 <li>用样本所在区间的索引替代原先的样本值。</li>
 <li>将索引值缩放到[0,1]，使索引与其他特征的数据范围相同。</li>
 </ol>
-<p><img src="//img.tianle.me/image/20190514/Quantize.png" alt><br>
+<p><img src="//img.niucode.cn/image/20190514/Quantize.png" alt><br>
 图6：使用分位数转换后的数据分布</p>
 <p>将数据转换为分位数后，两个样本之间的相似性与这两个样本之间的样本数量成反比。在数学上，x是数据集中的任意一个样本：</p>
 $$sim(A,B) \approx 1 - |{\text{prob}}[x > A] - {\text{prob}}[x > B]|$$ 
@@ -312,7 +323,7 @@ $$sim(A,B) \approx 1 - |{\text{quantile}}(A) - {\text{quantile}}(B)|$$
 <p>分位数是转换数据的最佳默认选择。然而，要建立可靠的底层数据分布的分位数指标，需要大量数据支撑。以经验来说，要建立$n$个分位数指标，至少需要$10n$个样本。如果没有足够的数据，请仍旧使用标准化（normalization）。</p>
 <p>注意：
 对于如下数据分布，应当使用分位数处理，因为它不属于幂率分布，也不属于某个标准的数据分布形式<br>
-<img src="//img.tianle.me/image/20190514/Distribution_Processing_B.png" alt></p>
+<img src="//img.niucode.cn/image/20190514/Distribution_Processing_B.png" alt></p>
 <h2><span id="参考">参考</span><a href="#参考" class="header-anchor"> </a></h2>
 <p>本文主要内容翻译自<a href="https://developers.google.cn/machine-learning/clustering/prepare-data" target="_blank" rel="noopener">谷歌机器学习教程Clustering in Machine Learning-PrepareData</a></p>
 ]]></content>
@@ -332,12 +343,12 @@ $$sim(A,B) \approx 1 - |{\text{quantile}}(A) - {\text{quantile}}(B)|$$
     <url>/2019/05/12/donwload-jdk/</url>
     <content><![CDATA[<p>服务器需要安装oracle jdk，但是目前找到的下载网站只有oracle的官网，下载的时候需要先点击接受协议，然后才能下载。</p>
 <a id="more"></a>
-<p><img src="//img.tianle.me/image/20190512/1.png" alt></p>
+<p><img src="//img.niucode.cn/image/20190512/1.png" alt></p>
 <p>我们尝试直接复制下载链接，然后使用 <code>wget url</code> 发现服务器报错无法开始下载。</p>
-<p><img src="//img.tianle.me/image/20190512/3.png" alt></p>
+<p><img src="//img.niucode.cn/image/20190512/3.png" alt></p>
 <h3><span id="解决方法">解决方法</span><a href="#解决方法" class="header-anchor"> </a></h3>
 <p>接受协议后，打开浏览器的调试窗口（<code>F12</code>），选择网络tab，点击要下载的jdk类型，观察浏览器调试窗口显示的信息，复制如下图所示的<code>url</code>作为<code>wget</code>命令的地址进行下载。</p>
-<p><img src="//img.tianle.me/image/20190512/2.png" alt></p>
+<p><img src="//img.niucode.cn/image/20190512/2.png" alt></p>
 <h3><span id="参考资料">参考资料</span><a href="#参考资料" class="header-anchor"> </a></h3>
 <p><a href="https://blog.51cto.com/kingstar/1750513" target="_blank" rel="noopener">解决 Linux 终端 wget 命令下载jdk的问题,jdk在linux下的配置问题</a></p>
 ]]></content>
@@ -399,39 +410,39 @@ option + shift + 鼠标左键</p>
 为什么只休息了一个多月呢，一是想体验天猫双十一，二是感受氛围帮助自己决策校招offer。前者是主要原因，后者是主要目的。</p>
 <a id="more"></a>
 <p>阿里是我心目中的公司，也一直想进BAT去体验它的技术氛围。此次实习虽然只有三个月，但是在这里依旧收获满满，让即将毕业的我对今后工作有一个初步的认知。在此也真心感谢一起工作的同事以及主管、HR，谢谢你们！</p>
-<p><img src="//img.tianle.me/image/20190212/1.jpg" alt="实习照片1"><br>
+<p><img src="//img.niucode.cn/image/20190212/1.jpg" alt="实习照片1"><br>
 入职第一天</p>
 <h2><span id="对自己的要求">对自己的要求</span><a href="#对自己的要求" class="header-anchor"> </a></h2>
 <p>在阿里，不同级别的要求是不一样的。P5要求是能独立完成上面交给你的任务，把这个点给做好；P6除了完成任务外，还要基于你的任务形成一个解决方案，做成一条线；P7则在P6的要求之上，考虑这个系统的架构，各个算法、功能怎么解决，搭建出一个完整框架，做成一个面；那么P8则是要对自己的所在领域有深刻的理解。当然从P7开始也要有团队管理的能力。自己做的工作好不好，对照上面的标准，想要晋升，请自我检验，看看有没有达到要求。</p>
 <h2><span id="全局观">全局观</span><a href="#全局观" class="header-anchor"> </a></h2>
 <p>在工作中，仅仅了解自己做的那方面是远远不够的，要有一个全局观，首先要知道自己这个组是做什么的，这个团队、这个部门是做什么的，再大一点，这个公司、这个集团。从微观到宏观，对整个大环境至少需要有个感知。在大公司中你可能是个拧螺丝的，这个比喻一点也没错，如果只知道完成手头工作， <s>那么恭喜你，</s> 你真的是一颗螺丝钉，你应当了解你做的东西在哪一部分用，对于现有系统有何作用或者改进。因此，你应该更加了解你做的东西的前因后果。</p>
-<p><img src="//img.tianle.me/image/20190212/2.jpg" alt="实习照片2"><br>
+<p><img src="//img.niucode.cn/image/20190212/2.jpg" alt="实习照片2"><br>
 天猫双十一</p>
 <h2><span id="体系化">体系化</span><a href="#体系化" class="header-anchor"> </a></h2>
 <p>目前你做的可能只是其中一小块，但是从点到线到面，如何从纵向从横向拓宽你的工作是一个需要思考的问题。这个算法在这个场景下可以用了，但是能不能稍加改进在另一个类似的场景中也可以应用呢？举个例子，最开始的算法可能是为某个商家设计的，当又新来了一个类似的需求后，能不能拓展到多个商家，再往上拓展，能不能在IP上应用，在行业上应用，多个IP，多个行业，甚至整个大盘呢。其次，他们间的关系是什么样的。</p>
 <p>当然，这里说的体系化是有个前提的，如果这个需求时临时性的，遇到过一次后，后面不可能再遇到，那么就事论事，把这个需求搞定即可，没必要做成一个庞大复杂完善的功能。</p>
-<p><img src="//img.tianle.me/image/20190212/3.jpg" alt="实习照片3"><br>
+<p><img src="//img.niucode.cn/image/20190212/3.jpg" alt="实习照片3"><br>
 天猫双十一</p>
 <h2><span id="多思考">多思考</span><a href="#多思考" class="header-anchor"> </a></h2>
 <p>因此在工作中要多加思考，不能埋头苦干。给你一个需求时，一定要了解背景和目标。有时候可能连业务方自己也不知道想要什么，因此我们要理清楚需求的深层目的，遇到不懂，不清楚的多和业务方交流。</p>
 <p>老大交给你任务时，不要他说怎么做，你就怎么做，得要有自己的理解。还有哇，要理清楚你任务的前后关系，项目的背景、目标，不清楚就问。</p>
-<p><img src="//img.tianle.me/image/20190212/4.jpg" alt="实习照片4"><br>
+<p><img src="//img.niucode.cn/image/20190212/4.jpg" alt="实习照片4"><br>
 天猫双十一</p>
 <h2><span id="多学习">多学习</span><a href="#多学习" class="header-anchor"> </a></h2>
 <p>互联网行业、信息科技的发展是迅猛的，有可能现在很火的东西过几年就不火了，技术换代。只要我们的title上还有工程师这几个字，无论到了那个级别，都不能丢掉技术。</p>
 <p>无论在之前的网易还是现在的阿里，给我的感觉是，大家都一直在努力学习，从未停下。在我们组，主要还是通过业务来驱动技术的发展，遇到一个业务时，在内网ATA、外网、论文等各种渠道找有没有相似的解法，考虑如何应用到项目中。除此之外，每天、每周抽出时间学习新知识也是必不可以少的，时刻跟进行业的最新动态。</p>
 <p>我印象比较深的是组里的一个女孩子，她是从运营转过来的，而我们这边数据和算法比较多，不是很熟悉。为了能尽快上手，首先自己看书，看文章研究，看到同事有空的，就过去请教，既可以问他做过的东西，也可以问现在遇到的问题。</p>
 <p>最可怕的是，比你厉害的人，还比你努力。在阿里，真的是这样。我主管特别的忙，白天开会，晚上还要写代码，做PPT，同时还得补充新知识，下班走的也比我们晚。不只是业务、工作上的，其他技能也是杠杠的，社科类的知识讲起来一套一套，从微观到宏观，从经济学谈到博弈论、哲学、系统论，把我听的愣愣的。</p>
-<p><img src="//img.tianle.me/image/20190212/5.jpg" alt="实习照片5"><br>
+<p><img src="//img.niucode.cn/image/20190212/5.jpg" alt="实习照片5"><br>
 天猫双十一</p>
 <h2><span id="多问">多问</span><a href="#多问" class="header-anchor"> </a></h2>
 <p>在实习生百技中，大佬和我们说：新人入职最怕的就是没有问题，有很多问题可能不是你的原因，而是由于本身内部系统造成的，外面也查不到。所以不要害怕自己的问题有多蠢，大胆地问，可以问师兄、同事以及主管。特别是师兄，他专门是给你解答问题的，这是他的职责，要是他不答，那么就是他失职了。</p>
 <p>不要怕打扰到对方，总之多问。</p>
-<p><img src="//img.tianle.me/image/20190212/6.jpg" alt="实习照片6"><br>
+<p><img src="//img.niucode.cn/image/20190212/6.jpg" alt="实习照片6"><br>
 双十一快递爆仓</p>
 <h2><span id="多总结">多总结</span><a href="#多总结" class="header-anchor"> </a></h2>
 <p>阿里让我特别佩服的一点是这里的技术沉淀。不说每年的大促双十一结束后，都会有各种新鲜的技术沉淀下来，在每个组中，如果有好的技术或者想法，都会总结出来，供后人参考。</p>
-<p><img src="//img.tianle.me/image/20190212/7.jpg" alt="实习照片7"><br>
+<p><img src="//img.niucode.cn/image/20190212/7.jpg" alt="实习照片7"><br>
 雪景</p>
 <h2><span id="关于汇报">关于汇报</span><a href="#关于汇报" class="header-anchor"> </a></h2>
 <p>在实习期间，有幸经历了一次述职汇报，看了看组内成员都做了什么，了解了述职应该怎么汇报，虽然我没有讲，但是也有一个切身体会。</p>
@@ -440,13 +451,13 @@ option + shift + 鼠标左键</p>
 <p>简要清楚的讲明白背景（因为别人没做过，不知道是什么样子的）、难点，有哪些现有的方法，你怎么解决的，效果</p>
 <p>讲效果的时候，要体现出是你的原因导致的效果提升</p>
 <p>不要讲太细节的东西、突出你的创新</p>
-<p><img src="//img.tianle.me/image/20190212/8.jpg" alt="实习照片8"><br>
+<p><img src="//img.niucode.cn/image/20190212/8.jpg" alt="实习照片8"><br>
 雪景</p>
 <h2><span id="结语">结语</span><a href="#结语" class="header-anchor"> </a></h2>
 <p>先写到这吧，希望今年正式入职后能够，快乐工作，认真生活~</p>
-<p><img src="//img.tianle.me/image/20190212/9.jpg" alt="实习照片9"><br>
+<p><img src="//img.niucode.cn/image/20190212/9.jpg" alt="实习照片9"><br>
 晚上下班</p>
-<p><img src="//img.tianle.me/image/20190212/10.jpg" alt="实习照片10"><br>
+<p><img src="//img.niucode.cn/image/20190212/10.jpg" alt="实习照片10"><br>
 消防演习</p>
 ]]></content>
       <categories>
@@ -454,9 +465,9 @@ option + shift + 鼠标左键</p>
       </categories>
       <tags>
         <tag>感悟</tag>
+        <tag>阿里</tag>
         <tag>小结</tag>
         <tag>实习</tag>
-        <tag>阿里</tag>
         <tag>天猫</tag>
       </tags>
   </entry>
@@ -578,9 +589,9 @@ option + shift + 鼠标左键</p>
       </categories>
       <tags>
         <tag>感悟</tag>
+        <tag>网易</tag>
         <tag>小结</tag>
         <tag>实习</tag>
-        <tag>网易</tag>
       </tags>
   </entry>
   <entry>
@@ -772,11 +783,11 @@ Spring有什么特性<br>
       <tags>
         <tag>算法</tag>
         <tag>机器学习</tag>
-        <tag>网易</tag>
         <tag>面试</tag>
         <tag>百度</tag>
         <tag>阿里</tag>
         <tag>腾讯</tag>
+        <tag>网易</tag>
       </tags>
   </entry>
   <entry>
@@ -806,8 +817,8 @@ Spring有什么特性<br>
         <category>生活记录</category>
       </categories>
       <tags>
-        <tag>实习</tag>
         <tag>网易</tag>
+        <tag>实习</tag>
         <tag>总结</tag>
       </tags>
   </entry>
@@ -822,17 +833,17 @@ Spring Boot相对于传统的SSM(Spring MVC + Mybatis + Spring)框架用起来�
 <h3><span id="效果图">效果图</span><a href="#效果图" class="header-anchor"> </a></h3>
 <p><a href="http://tianle.me:8080">项目测试地址</a>：<a href="http://tianle.me:8080">http://tianle.me:8080</a></p>
 <p>项目代码：<a href="https://github.com/zhangtianle/SpringBoot-Based-Login" target="_blank" rel="noopener">github</a></p>
-<p><img src="//img.tianle.me/image/20180502/1.png" alt="效果图"></p>
+<p><img src="//img.niucode.cn/image/20180502/1.png" alt="效果图"></p>
 <h3><span id="应用技术">应用技术</span><a href="#应用技术" class="header-anchor"> </a></h3>
 <p>Spring Boot + bootstrap + thymeleaf</p>
 <h3><span id="项目搭建">项目搭建</span><a href="#项目搭建" class="header-anchor"> </a></h3>
 <p>使用Intellij中的Spring Initializr来快速构建Spring Boot</p>
 <p>菜单栏中选择File=&gt;New=&gt;Project…</p>
 <p>一直点下一步</p>
-<p><img src="//img.tianle.me/image/20180502/p1.png" alt="p1"><br>
-<img src="//img.tianle.me/image/20180502/p2.png" alt="p2"><br>
-<img src="//img.tianle.me/image/20180502/p3.png" alt="p3"><br>
-<img src="//img.tianle.me/image/20180502/p4.png" alt="p4"></p>
+<p><img src="//img.niucode.cn/image/20180502/p1.png" alt="p1"><br>
+<img src="//img.niucode.cn/image/20180502/p2.png" alt="p2"><br>
+<img src="//img.niucode.cn/image/20180502/p3.png" alt="p3"><br>
+<img src="//img.niucode.cn/image/20180502/p4.png" alt="p4"></p>
 <p>最后点击Finish</p>
 <p>联网自动从网站上下载Spring Boot的模板，稍作等待框架就搭好啦。</p>
 <h4><span id="项目目录结构">项目目录结构</span><a href="#项目目录结构" class="header-anchor"> </a></h4>
@@ -844,7 +855,7 @@ bean 目录存放的是要用到的实体类<br>
 controller 目录存放的是控制层类</p>
 <p>src/main/resources/template/ 为静态页面的模板文件，这里用了thymeleaf模板渲染引擎框架（据说Spring Boot推荐）<br>
 src/main/resources/application.properties 为Spring Boot的配置文件<br>
-<img src="//img.tianle.me/image/20180502/p5.png" alt="p5"></p>
+<img src="//img.niucode.cn/image/20180502/p5.png" alt="p5"></p>
 <h4><span id="maven配置">maven配置</span><a href="#maven配置" class="header-anchor"> </a></h4>
 <p>我们做的是Java web项目，在其默认生成的maven配置文件中添加web和thymeleaf依赖。<br>
 pom.xml</p>
@@ -869,7 +880,7 @@ pom.xml</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mvn install</span><br></pre></td></tr></table></figure>
 <p>Spring Boot里面嵌入了Tomcat，直接运行</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">java -jar xxx.jar</span><br></pre></td></tr></table></figure>
-<p><img src="//img.tianle.me/image/20180502/p6.png" alt="p6"><br>
+<p><img src="//img.niucode.cn/image/20180502/p6.png" alt="p6"><br>
 浏览器输入: <a href="http://localhost:8080" target="_blank" rel="noopener">http://localhost:8080</a><br>
 账号：qinya<br>
 密码：tianle</p>
@@ -1041,8 +1052,8 @@ $$\left\{ \begin{gathered}
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">changeMaking</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 输入数据</span></span><br><span class="line">    <span class="keyword">int</span>[] coins = <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;<span class="number">1</span>, <span class="number">3</span>, <span class="number">4</span>&#125;;</span><br><span class="line">    <span class="keyword">int</span> n = <span class="number">6</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// f(n) 为总金额为n的数量最小的硬币数目</span></span><br><span class="line">    <span class="keyword">int</span>[] f = <span class="keyword">new</span> <span class="keyword">int</span>[n + <span class="number">1</span>];</span><br><span class="line">    f[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">        <span class="keyword">int</span> min = Integer.MAX_VALUE;</span><br><span class="line">        <span class="keyword">int</span> j = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (j &lt; coins.length &amp;&amp; i &gt;= coins[j]) &#123;</span><br><span class="line">            min = Math.min(f[i - coins[j]], min);</span><br><span class="line">            j++;</span><br><span class="line">        &#125;</span><br><span class="line">        f[i] = min + <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println(f[n]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2><span id="硬币收集问题">硬币收集问题</span><a href="#硬币收集问题" class="header-anchor"> </a></h2>
 <p>在n*m格木板中放有一些硬币，每格的硬币数目最多为一个，在木板左上方的一个机器人需要收集尽可能多的硬币并把它们带到右下方的单元格。每一步，机器人可以从当前的位置向右移动一格或向下移动一格。当机器人遇到一个有硬币的单元格时，就会将这枚硬币收集起来。设计一个算法找出机器人能找到的最大硬币数并给出相应的路径。<br>
-<img src="//img.tianle.me/image/20180328/1.png" alt="硬币收集问题1"><br>
-<img src="//img.tianle.me/image/20180328/2.png" alt="硬币收集问题2"></p>
+<img src="//img.niucode.cn/image/20180328/1.png" alt="硬币收集问题1"><br>
+<img src="//img.niucode.cn/image/20180328/2.png" alt="硬币收集问题2"></p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">robotCoinCollection</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 输入数据</span></span><br><span class="line">    <span class="keyword">int</span>[][] coins = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">5</span>][<span class="number">6</span>];</span><br><span class="line">    coins[<span class="number">0</span>][<span class="number">4</span>] = <span class="number">1</span>;</span><br><span class="line">    coins[<span class="number">1</span>][<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line">    coins[<span class="number">1</span>][<span class="number">3</span>] = <span class="number">1</span>;</span><br><span class="line">    coins[<span class="number">2</span>][<span class="number">3</span>] = <span class="number">1</span>;</span><br><span class="line">    coins[<span class="number">2</span>][<span class="number">5</span>] = <span class="number">1</span>;</span><br><span class="line">    coins[<span class="number">3</span>][<span class="number">2</span>] = <span class="number">1</span>;</span><br><span class="line">    coins[<span class="number">3</span>][<span class="number">5</span>] = <span class="number">1</span>;</span><br><span class="line">    coins[<span class="number">4</span>][<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">    coins[<span class="number">4</span>][<span class="number">4</span>] = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// f(i,j) 为机器人截止到 i, j 单元格能够收集到的最大硬币数</span></span><br><span class="line">    <span class="keyword">int</span>[][] f = <span class="keyword">new</span> <span class="keyword">int</span>[coins.length][coins[<span class="number">0</span>].length];</span><br><span class="line">    f[<span class="number">0</span>][<span class="number">0</span>] = coins[<span class="number">0</span>][<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; coins[<span class="number">0</span>].length; i++) &#123;</span><br><span class="line">        f[<span class="number">0</span>][i] = f[<span class="number">0</span>][i - <span class="number">1</span>] + coins[<span class="number">0</span>][i];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; coins.length; i++) &#123;</span><br><span class="line">        f[i][<span class="number">0</span>] = f[i - <span class="number">1</span>][<span class="number">0</span>] + coins[i][<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt; coins[<span class="number">0</span>].length; j++) &#123;</span><br><span class="line">            f[i][j] = Math.max(f[i - <span class="number">1</span>][j], f[i][j - <span class="number">1</span>]) + coins[i][j];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    System.out.println(f[coins.length - <span class="number">1</span>][coins[<span class="number">0</span>].length - <span class="number">1</span>]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
       <categories>
         <category>算法</category>
@@ -1080,31 +1091,31 @@ $$p(M) = \frac1030 = \frac{1}{3}$$</p>
 <p>假设张明家订了一份报纸,送报人可能在早上6:30—7:30之间把报纸送到家,他父亲离开家去工作的时间在早上7:00—8:00之间,问他父亲在离开家前能得到报纸(称为事件A)的概率是多少?</p>
 </blockquote>
 <p>同理我们还是画图：
-<img src="//img.tianle.me/image/20180325/1.png" alt="几何概型"><br>
+<img src="//img.niucode.cn/image/20180325/1.png" alt="几何概型"><br>
 解:以横坐标x表示报纸送到时间,以纵坐标y表示张明父亲离家时间建立平面直角坐标系,假设随机试验落在方形区域内任何一点是等可能的,所以符合几何概型的条件.
 根据题意,只要点落到阴影部分,就表示他父亲在离开家前能得到报纸,它的约束条件是$x &lt; y$,即时间A发生,所以<br>
-<img src="//img.tianle.me/image/20180325/2.png" width="40%" height="40%"></p>
+<img src="//img.niucode.cn/image/20180325/2.png" width="40%" height="40%"></p>
 <blockquote>
 <p>在一个周五晚上，甲和朋友乙决定去夜店High一把。但是他们兴奋过头，忘记了约定的具体时间，只记得是在十二点到一点之间。假设他们随机地选择到达夜店的时间，并且都会在店门口等另一个人十分钟（如果在此期间对方并未出现，他就会离开）。那么，他们当晚能见面的概率是多大呢？</p>
 </blockquote>
 <p>如果把甲的到达的时间记在 x 轴上，把乙的到达时间记在 y 轴上，那么他们到达的时间便可以用坐标系中的点 ( x , y ) 来表示，根据设定可知这个点一定会落在图中的正方形区域中。而如果二人想见面，那么他们先后到达的时间间隔一定要小于十分钟，即 | x – y | ≤ 10。</p>
 <p>解这个不等式，可得 x – 10 ≤ y ≤ x + 10 。将这两条支线在坐标系中画出来，就能发现它们围成的区域正好是上图的阴影部分。</p>
 <p>换言之，如果两人要碰面，对应的到达的时间点 （x，y） 就必须要落在阴影部分内。所以阴影部分的面积与大正方形面积之比就是所要求的概率，据此我们就能很轻松地计算出答案：11／36。
-<img src="//img.tianle.me/image/20180325/3.png" alt="几何概型解"></p>
+<img src="//img.niucode.cn/image/20180325/3.png" alt="几何概型解"></p>
 <h2><span id="平均等公交时间">平均等公交时间</span><a href="#平均等公交时间" class="header-anchor"> </a></h2>
 <p>回到一开始的题目。<br>
 我们可以画一个图（至于图为什么是这样，我也没看明白，请大家参考<a href="http://www.cnblogs.com/jmp0xf/p/2014_Alibaba_Waiting_Bus.html" target="_blank" rel="noopener">阿里巴巴2014北京校招等车概率题分析</a><br>
-<img src="//img.tianle.me/image/20180325/5.png" width="50%" height="50%"><br>
+<img src="//img.niucode.cn/image/20180325/5.png" width="50%" height="50%"><br>
 想象成一个长方体，切了两刀，图中的虚线可以理解为等高线，右边的高度为5 ($min({t_A},{t_B})$)，左边为0，底边长为10，宽为5。<br>
 解法是   它的体积 / 它的底面积<br>
 $$E[t] = (125/2 + 125/3)/50 = 25/12$$</p>
 <h2><span id="参考资料">参考资料</span><a href="#参考资料" class="header-anchor"> </a></h2>
-<p><a href="https://img.tianle.me/image/20180325/%E5%87%A0%E4%BD%95%E6%A6%82%E7%8E%87%E6%A8%A1%E5%9E%8B--%E5%85%AC%E5%BC%80%E8%AF%BE.ppt" target="_blank" rel="noopener">几何概形ppt</a><br>
+<p><a href="https://img.niucode.cn/image/20180325/%E5%87%A0%E4%BD%95%E6%A6%82%E7%8E%87%E6%A8%A1%E5%9E%8B--%E5%85%AC%E5%BC%80%E8%AF%BE.ppt" target="_blank" rel="noopener">几何概形ppt</a><br>
 <a href="http://www.cnblogs.com/jmp0xf/p/2014_Alibaba_Waiting_Bus.html" target="_blank" rel="noopener">阿里巴巴2014北京校招等车概率题分析</a><br>
 <a href="https://www.guokr.com/article/61325/" target="_blank" rel="noopener">死理性派碰面法，100%遇见你</a><br>
 等公交车的概率：<a href="http://www.matrix67.com/blog/archives/4349" target="_blank" rel="noopener">等待的时间比你想象的更久</a><br>
 <a href="https://www.zhihu.com/question/36348471?utm_source=wechat_session&amp;utm_medium=social" target="_blank" rel="noopener">上班有A和B两班公交，A车间隔为0-15分钟，B车间隔为0-20分钟（均随机），那么我上班平均等多久？</a><br>
-<a href="https://img.tianle.me/image/20180325/4.png" target="_blank" rel="noopener">阿里题网页截图</a></p>
+<a href="https://img.niucode.cn/image/20180325/4.png" target="_blank" rel="noopener">阿里题网页截图</a></p>
 ]]></content>
       <categories>
         <category>算法</category>
@@ -1140,7 +1151,7 @@ $$E[t] = (125/2 + 125/3)/50 = 25/12$$</p>
 它能保证将任意长度为N的数组排序所需时间和NlogN成正比，但是它需要额外空间和N成正比。</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">mergingSort</span><span class="params">(<span class="keyword">int</span>[] arr)</span> </span>&#123;</span><br><span class="line">    aux = <span class="keyword">new</span> <span class="keyword">int</span>[arr.length];</span><br><span class="line">    mergingSortCore(arr, <span class="number">0</span>, arr.length - <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">mergingSortCore</span><span class="params">(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> lo, <span class="keyword">int</span> hi)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (lo &gt;= hi) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> mid = lo + (hi - lo) / <span class="number">2</span>;</span><br><span class="line">    mergingSortCore(arr, lo, mid);</span><br><span class="line">    mergingSortCore(arr, mid + <span class="number">1</span>, hi);</span><br><span class="line">    merge(arr, lo, mid, hi);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">merge</span><span class="params">(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> lo, <span class="keyword">int</span> mid, <span class="keyword">int</span> hi)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i = lo;</span><br><span class="line">    <span class="keyword">int</span> j = mid + <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> k = lo; k &lt;= hi; k++) &#123;</span><br><span class="line">        aux[k] = arr[k];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> k = lo; k &lt;= hi; k++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (i &gt; mid) &#123;</span><br><span class="line">            <span class="comment">// 左半边完了，把右半边复制过来</span></span><br><span class="line">            arr[k] = aux[j++];</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (j &gt; hi) &#123;</span><br><span class="line">            <span class="comment">// 右半边完了，把左半边复制过来</span></span><br><span class="line">            arr[k] = aux[i++];</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (aux[i] &gt; aux[j]) &#123;</span><br><span class="line">            <span class="comment">// 左半边大于右半边，把右半边复制过来</span></span><br><span class="line">            arr[k] = aux[j++];</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 右半边大于左半边，把左半边复制过来</span></span><br><span class="line">            arr[k] = aux[i++];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2><span id="总结">总结</span><a href="#总结" class="header-anchor"> </a></h2>
-<p><img src="//img.tianle.me/image/20180308/1.png" alt="sortpic"></p>
+<p><img src="//img.niucode.cn/image/20180308/1.png" alt="sortpic"></p>
 ]]></content>
       <categories>
         <category>算法</category>
@@ -1285,11 +1296,11 @@ $$G({\mathbf{x}}) = sign\left( {\sum\limits_{t = 1}^T {{\alpha _t}}  \cdot {g_t}
 <p>其中，${\alpha _t} \geqslant 0$。那么这些$g$是由最小化评价集合的最小误差得到的，然后通过“特征转化”: $\mathbf z_n = \phi^{-}(\mathbf x_n) = (g_1^{-}(\mathbf x_n), g_2^{-}(\mathbf x_n)...g_{T}^{-}(\mathbf x_n))$，数据变为$(z_n, y_n)$; 而 ${\alpha _t}$通过之前的线性回归，逻辑回归等方法得到投票权重；最后便得到了最终模型。</p>
 <h2><span id="stacking">Stacking</span><a href="#stacking" class="header-anchor"> </a></h2>
 <p>Stacking实际上就是把Blending组合起来，Blending只有一层，而Stacking有多层，它把各个基学习器的预测结果作为下一层新的训练集，来学习一个新的学习器。通过元分类器或元回归聚合多个分类或回归模型。基础层次模型（level model）基于完整的训练集进行训练，然后元模型基于基础层次模型的输出进行训练。<br>
-<img src="//img.tianle.me/image/20180211/stacking.jpg" alt="stacking"></p>
+<img src="//img.niucode.cn/image/20180211/stacking.jpg" alt="stacking"></p>
 <h2><span id="总结">总结</span><a href="#总结" class="header-anchor"> </a></h2>
 <p>上面的这几个方法都是先把小的模型训练出来，然后再进行加权融合。Stacking有个问题，由于它的模型复杂度过高，容易造成过拟合。</p>
 <p>在模型融合中，除了不同的算法模型之外，相同的算法模型不同的模型参数，算法中的不同随机种子，也可以用来融合。<br>
-<img src="//img.tianle.me/image/20180211/1.png" alt="1"></p>
+<img src="//img.niucode.cn/image/20180211/1.png" alt="1"></p>
 <h2><span id="参考资料">参考资料</span><a href="#参考资料" class="header-anchor"> </a></h2>
 <p><a href="http://shomy.top/2017/03/15/blending-bagging/" target="_blank" rel="noopener">机器学习技法笔记(9)-Blending and Bagging(模型融合)</a><br>
 <a href="http://blog.csdn.net/Mr_tyting/article/details/72957853" target="_blank" rel="noopener">机器学习–&gt;集成学习–&gt;Bagging,Boosting,Stacking</a></p>
@@ -1315,7 +1326,7 @@ $$G({\mathbf{x}}) = sign\left( {\sum\limits_{t = 1}^T {{\alpha _t}}  \cdot {g_t}
 pandas 中 count() 函数为不为空数据的个数，那么将shape与count做差就得到缺失个数，缺失率。</li>
 </ol>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">(df.shape[<span class="number">0</span>] - df.count())/df.shape[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
-<p><img src="//img.tianle.me/image/20180122/1.png" alt="missing"></p>
+<p><img src="//img.niucode.cn/image/20180122/1.png" alt="missing"></p>
 <ol start="2">
 <li>对于每个<strong>个体</strong>所缺失的特征个数<br>
 这一点是查找缺失的<strong>个体</strong><br>
@@ -1398,7 +1409,7 @@ pandas 中 count() 函数为不为空数据的个数，那么将shape与count做
 <h3><span id="插值填充">插值填充</span><a href="#插值填充" class="header-anchor"> </a></h3>
 <p>使用线性，多项式等差值方法，对于时间序列的缺失问题，可以使用此方法。</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">df.interpolate()</span><br></pre></td></tr></table></figure>
-<p><img src="//img.tianle.me/image/20180122/2.png" alt="插值填充"></p>
+<p><img src="//img.niucode.cn/image/20180122/2.png" alt="插值填充"></p>
 <h3><span id="插补法">插补法</span><a href="#插补法" class="header-anchor"> </a></h3>
 <ol>
 <li>随机插补法----从总体中随机抽取某个样本代替缺失样本</li>
@@ -1441,45 +1452,45 @@ pandas 中 count() 函数为不为空数据的个数，那么将shape与count做
 <p>给定<code>m</code>维的<code>n</code>个数据</p>
 $$D = \{ ({{\mathbf{x}}_i},{y_i})\} (\left| D \right| = n,{{\mathbf{x}}_i} \in {\mathbb{R}^m},{y_i} \in \mathbb{R})$$
 <p>树的集成方法使用<code>K</code>个方程来预测输出，也就是把各个树的预测结果累加作为算法的最终结果。
-<img src="//img.tianle.me/image/20180109/f1.png" alt="image"><br>
+<img src="//img.niucode.cn/image/20180109/f1.png" alt="image"><br>
 <code>F</code>表示回归树的模型（如：CART），一个回归树对应着输入空间（即特征空间）的一个划分以及在划分单元上输出值。<br>
 <code>q</code>表示每一棵树的结构，也就是每一个数据映射到叶子索引上。<code>T</code>是树的叶子数目。每一个$f_k$对应着一棵独立的树
-<img src="//img.tianle.me/image/20180109/f2.png" alt="image"><br>
+<img src="//img.niucode.cn/image/20180109/f2.png" alt="image"><br>
 上图展示了树集成模型的计算方法。提升方法实际采用加法模型（即基函数的线性组合）与前向分布算法。以决策树为基函数的提升方法称为提升树（boosting tree)。对分类问题决策树是二叉分类树，对回归问题决策树是二叉决策树。提升树模型可以表示为决策树的加法模型。</p>
 <h3><span id="正则化学习目标">正则化学习目标</span><a href="#正则化学习目标" class="header-anchor"> </a></h3>
 <p>为了学习树模型中的参数，构造了如下带有正则化项的目标函数：<br>
-<img src="//img.tianle.me/image/20180109/f3.png" alt="image"><br>
+<img src="//img.niucode.cn/image/20180109/f3.png" alt="image"><br>
 其中<code>l</code>为凸的损失函数，<code>omega</code>为模型复杂度的代价函数，可以减少过拟合的风险。</p>
 <h3><span id="梯度提升树">梯度提升树</span><a href="#梯度提升树" class="header-anchor"> </a></h3>
 <p>提升树采用向前分步算法，首先确定初始提升树${y_0} = 0$，第<code>t</code>步的模型是${y_t} = {y_{t - 1}} + {f_t}({\mathbf{x}})$ 其中，${y_{t - 1}}$为当前模型。<br>
-<img src="//img.tianle.me/image/20180109/f11.png" alt="image"><br>
+<img src="//img.niucode.cn/image/20180109/f11.png" alt="image"><br>
 通过经验风险极小化确定下一棵决策树的参数<code>q</code>，构造如下的损失函数：<br>
-<img src="//img.tianle.me/image/20180109/f4.png" alt="image"><br>
+<img src="//img.niucode.cn/image/20180109/f4.png" alt="image"><br>
 这意味着，我们可以通过不断添加${f_t}$来优化上面的损失函数。二阶相似性可以快速的优化损失函数。<br>
-<img src="//img.tianle.me/image/20180109/f5.png" alt="image"><br>
+<img src="//img.niucode.cn/image/20180109/f5.png" alt="image"><br>
 去掉常数项，化简为：<br>
-<img src="//img.tianle.me/image/20180109/f6.png" alt="image"><br>
+<img src="//img.niucode.cn/image/20180109/f6.png" alt="image"><br>
 最后，噼里啪啦一顿操作得到红框中的公式：<br>
-<img src="//img.tianle.me/image/20180109/f7.png" alt="image"><br>
+<img src="//img.niucode.cn/image/20180109/f7.png" alt="image"><br>
 红框中的式子可以被用来衡量树结构<code>q</code>。<br>
 决策树需要找到一个最优的切分变量和切分点，令$I = {I_L} \cup {I_R}$，$I_L$ 和 $I_L$ 为某个实例集合完成切分后的两个节点。那么它的损失减少量可以由下式表示：<br>
-<img src="//img.tianle.me/image/20180109/f8.png" alt="image"></p>
+<img src="//img.niucode.cn/image/20180109/f8.png" alt="image"></p>
 <h3><span id="剪枝和列采样">剪枝和列采样</span><a href="#剪枝和列采样" class="header-anchor"> </a></h3>
 <p>上面的目标函数可以通过添加正则化项来减少过拟合，同样在很多算法中还使用了剪枝和列采样的方式来减少过拟合。</p>
 <h2><span id="切分点查找算法">切分点查找算法</span><a href="#切分点查找算法" class="header-anchor"> </a></h2>
 <h3><span id="传统的精确贪心算法basic-exact-greedy-algorithm">传统的精确贪心算法（Basic Exact Greedy Algorithm）</span><a href="#传统的精确贪心算法basic-exact-greedy-algorithm" class="header-anchor"> </a></h3>
 <p>在一般的算法中，如sklearn，以及R语音的gbm，以及简单版本的xgboost都使用这一方法。它需要贪心地去遍历每一个可能的切分点，然后通过 式(7) 来找到最优的切分点。为了提高效率，算法必须先对特征的值进行一个排序，然后遍历这个有序的特征值，计算他们的累计梯度值，从而得到最大的损失降低量，具体算法如下图所示：<br>
-<img src="//img.tianle.me/image/20180109/f9.png" alt="image"></p>
+<img src="//img.niucode.cn/image/20180109/f9.png" alt="image"></p>
 <blockquote>
 <p>（这个是不是传中的预排序？？）</p>
 </blockquote>
 <p>例：<br>
 对于每次扩展，我们还是要枚举所有可能的分割方案，如何高效地枚举所有的分割呢？我假设我们要枚举所有$x &lt; a$这样的条件，对于某个特定的分割$a$我们要计算$a$左边和右边的导数和。
-<img src="//img.tianle.me/image/20180109/f10.png" alt="image"><br>
+<img src="//img.niucode.cn/image/20180109/f10.png" alt="image"><br>
 我们可以发现对于所有的a，我们只要做一遍从左到右的扫描就可以枚举出所有分割的梯度和$G_L$和$G_R$。然后用上面的公式计算每个分割方案的分数就可以了。</p>
 <h3><span id="近似分裂算法">近似分裂算法</span><a href="#近似分裂算法" class="header-anchor"> </a></h3>
 <p>传统的分裂方法虽然精确，但是十分耗时，而且一旦数据较多，非常占用内存，也不利于并行化。xbg提出了一种近似的算法，具体如下：<br>
-<img src="//img.tianle.me/image/20180109/f12.png" alt="image"><br>
+<img src="//img.niucode.cn/image/20180109/f12.png" alt="image"><br>
 对于每个特征，只考察分位点，减少计算复杂度</p>
 <ul>
 <li>Global：学习每棵树前，提出候选切分点</li>
@@ -1487,20 +1498,20 @@ $$D = \{ ({{\mathbf{x}}_i},{y_i})\} (\left| D \right| = n,{{\mathbf{x}}_i} \in {
 </ul>
 <blockquote>
 <p>近似算法举例：三分位数<br>
-<img src="//img.tianle.me/image/20180109/f14.png" alt="image"></p>
+<img src="//img.niucode.cn/image/20180109/f14.png" alt="image"></p>
 </blockquote>
 <p>实际上XGBoost不是简单地按照样本个数进行分位，而是以二阶导数值$h_i$作为权重(WeightedQuantileSketch)，比如:<br>
-<img src="//img.tianle.me/image/20180109/f15.png" alt="image"><br>
+<img src="//img.niucode.cn/image/20180109/f15.png" alt="image"><br>
 为什么用$h_i$加权？<br>
 把目标函数整理成以下形式，可以看出$h_i$有对loss加权的作用<br>
-<img src="//img.tianle.me/image/20180109/f16.png" alt="image"></p>
+<img src="//img.niucode.cn/image/20180109/f16.png" alt="image"></p>
 <p>同时，xgb还有处理稀疏数据的算法：<br>
 真实数据中，稀疏是比较普遍的，造成稀疏的原因主要有以下几点：</p>
 <ul>
 <li>存在缺失值</li>
 <li>有很多0</li>
 <li>人造特征，比如ont-hot编码<br>
-<img src="//img.tianle.me/image/20180109/f13.png" alt="image"><br>
+<img src="//img.niucode.cn/image/20180109/f13.png" alt="image"><br>
 从该算法中，我们可以看出XGBoost缺失值处理方式是，对于某一个特征，假设所有缺失的样本属于右子树或者左子树，然后分别计算其损失减少量得分，最后取其最高值对应的分裂位和得分值。</li>
 </ul>
 <h2><span id="其他">其他</span><a href="#其他" class="header-anchor"> </a></h2>
@@ -1524,10 +1535,10 @@ XGBoost的特征重要性是如何得到的？某个特征的重要性（feature
 <p><a href="https://arxiv.org/abs/1603.02754" target="_blank" rel="noopener">XGBoost: A Scalable Tree Boosting System</a><br>
 <a href="https://xgboost.readthedocs.io/en/latest/model.html" target="_blank" rel="noopener">Introduction to Boosted Trees</a><br>
 <a href="http://blog.csdn.net/a819825294/article/details/51206410" target="_blank" rel="noopener">xgboost原理 </a><br>
-<a href="http://free.tianle.me/image/20180109/xgboost.pdf" target="_blank" rel="noopener">xgboost导读和实战.pdf</a><br>
-<a href="http://free.tianle.me/image/20180109/wepon_gbdt.pdf" target="_blank" rel="noopener">wepon_gbdt_ppt.pdf</a><br>
+<a href="http://img.niucode.cn/image/20180109/xgboost.pdf" target="_blank" rel="noopener">xgboost导读和实战.pdf</a><br>
+<a href="http://img.niucode.cn/image/20180109/wepon_gbdt.pdf" target="_blank" rel="noopener">wepon_gbdt_ppt.pdf</a><br>
 <a href="https://github.com/dmlc/xgboost" target="_blank" rel="noopener">xgboost github项目地址</a><br>
-<a href="http://free.tianle.me/image/20180109/BoostedTree.pdf" target="_blank" rel="noopener">Introduction to Boosted Trees_ppt_pdf</a><br>
+<a href="http://img.niucode.cn/image/20180109/BoostedTree.pdf" target="_blank" rel="noopener">Introduction to Boosted Trees_ppt_pdf</a><br>
 <a href="http://wepon.me/2016/05/07/XGBoost%E6%B5%85%E5%85%A5%E6%B5%85%E5%87%BA/" target="_blank" rel="noopener">XGBoost浅入浅出</a></p>
 ]]></content>
       <categories>
@@ -1579,23 +1590,23 @@ XGBoost的特征重要性是如何得到的？某个特征的重要性（feature
 </ol>
 <p>除了找工作之外，还得陶冶陶冶情操吧，比如：多看看社科类的文学书籍、还有一些经典电影。找完工作之后呢，再好好出去玩玩。</p>
 <h2><span id="附图">附图</span><a href="#附图" class="header-anchor"> </a></h2>
-<p><img src="//img.tianle.me/image/20171229/1.jpg" alt="pic"><br>
-<img src="//img.tianle.me/image/20171229/2.jpg" alt="pic"><br>
-<img src="//img.tianle.me/image/20171229/6.jpg" alt="pic"><br>
-<img src="//img.tianle.me/image/20171229/8.jpg" alt="pic"><br>
-<img src="//img.tianle.me/image/20171229/12.jpg" alt="pic"><br>
-<img src="//img.tianle.me/image/20171229/15.jpg" alt="pic"><br>
-<img src="//img.tianle.me/image/20171229/17.jpg" alt="pic"><br>
-<img src="//img.tianle.me/image/20171229/3.jpg" alt="pic"><br>
-<img src="//img.tianle.me/image/20171229/4.jpg" alt="pic"><br>
-<img src="//img.tianle.me/image/20171229/5.jpg" alt="pic"><br>
-<img src="//img.tianle.me/image/20171229/7.jpg" alt="pic"><br>
-<img src="//img.tianle.me/image/20171229/16.jpg" alt="pic"></p>
-<p><img src="//img.tianle.me/image/20171229/9.jpg" alt="pic"><br>
-<img src="//img.tianle.me/image/20171229/11.jpg" alt="pic"><br>
-<img src="//img.tianle.me/image/20171229/14.jpg" alt="pic"><br>
-<img src="//img.tianle.me/image/20171229/13.jpg" alt="pic"><br>
-<img src="//img.tianle.me/image/20171229/10.jpg" alt="pic"></p>
+<p><img src="//img.niucode.cn/image/20171229/1.jpg" alt="pic"><br>
+<img src="//img.niucode.cn/image/20171229/2.jpg" alt="pic"><br>
+<img src="//img.niucode.cn/image/20171229/6.jpg" alt="pic"><br>
+<img src="//img.niucode.cn/image/20171229/8.jpg" alt="pic"><br>
+<img src="//img.niucode.cn/image/20171229/12.jpg" alt="pic"><br>
+<img src="//img.niucode.cn/image/20171229/15.jpg" alt="pic"><br>
+<img src="//img.niucode.cn/image/20171229/17.jpg" alt="pic"><br>
+<img src="//img.niucode.cn/image/20171229/3.jpg" alt="pic"><br>
+<img src="//img.niucode.cn/image/20171229/4.jpg" alt="pic"><br>
+<img src="//img.niucode.cn/image/20171229/5.jpg" alt="pic"><br>
+<img src="//img.niucode.cn/image/20171229/7.jpg" alt="pic"><br>
+<img src="//img.niucode.cn/image/20171229/16.jpg" alt="pic"></p>
+<p><img src="//img.niucode.cn/image/20171229/9.jpg" alt="pic"><br>
+<img src="//img.niucode.cn/image/20171229/11.jpg" alt="pic"><br>
+<img src="//img.niucode.cn/image/20171229/14.jpg" alt="pic"><br>
+<img src="//img.niucode.cn/image/20171229/13.jpg" alt="pic"><br>
+<img src="//img.niucode.cn/image/20171229/10.jpg" alt="pic"></p>
 ]]></content>
       <categories>
         <category>生活记录</category>
@@ -1719,8 +1730,8 @@ $$RMSE = \sqrt {\frac{1}{n}\sum\nolimits_{i = 1}^n {{{({y_i} - {{\hat y}_i})}^2}
 <p><a href="https://github.com/klyan/JDD_Loan_Forecasting" target="_blank" rel="noopener">https://github.com/klyan/JDD_Loan_Forecasting</a></p>
 <h2><span id="比赛结果">比赛结果</span><a href="#比赛结果" class="header-anchor"> </a></h2>
 <p>A榜50，B榜48<br>
-<img src="//img.tianle.me/image/20171212/a.png" alt="A榜"><br>
-<img src="//img.tianle.me/image/20171212/b.png" alt="B榜"></p>
+<img src="//img.niucode.cn/image/20171212/a.png" alt="A榜"><br>
+<img src="//img.niucode.cn/image/20171212/b.png" alt="B榜"></p>
 <h2><span id="解决方案">解决方案</span><a href="#解决方案" class="header-anchor"> </a></h2>
 <ol>
 <li>数据分析</li>
@@ -2060,7 +2071,7 @@ GBDT：</p>
 <p>目前很多网站都可以申请SSL免费证书<s>穷</s>，安照步骤来就好了，申请成功后下载证书。</p>
 <h3><span id="在nginx中安装证书">在nginx中安装证书</span><a href="#在nginx中安装证书" class="header-anchor"> </a></h3>
 <p>下载完证书，打开后我们会发现有很多服务器，我们选择nginx。<br>
-<img src="//img.tianle.me/image/20171105/1.jpg" alt="证书截图"><br>
+<img src="//img.niucode.cn/image/20171105/1.jpg" alt="证书截图"><br>
 把里面的两证书文件<code>crt</code>,<code>key</code>上传到服务器的任意路径，如：<code>~/ssl/</code></p>
 <h3><span id="修改配置文件">修改配置文件</span><a href="#修改配置文件" class="header-anchor"> </a></h3>
 <p>同样，在server里面加入如下：</p>
@@ -2218,7 +2229,7 @@ $\overleftarrow 1 \overleftarrow 2 \overleftarrow {\mathbf{3}} $， $\overleftar
     <url>/2017/06/30/SDNE/</url>
     <content><![CDATA[<h1><span id="structural-deep-network-embedding">Structural Deep Network Embedding</span><a href="#structural-deep-network-embedding" class="header-anchor"> </a></h1>
 <p>论文阅读<a href="http://dl.acm.org/citation.cfm?id=2939753" target="_blank" rel="noopener">Structural Deep Network Embedding</a><br>
-本文的PDF版<a href="//img.tianle.me/image/20170630/web.pdf">深层网络结构嵌入</a><br>
+本文的PDF版<a href="//img.niucode.cn/image/20170630/web.pdf">深层网络结构嵌入</a><br>
 这学期选了非线性电路与系统，最近又在做网络表示的相关研究，特将平时看过比较好的论文写一写，和大家分享一下。</p>
 <h2><span id="简介">简介</span><a href="#简介" class="header-anchor"> </a></h2>
 <p>信息网络在现实世界中普遍存在，例如航空公司网络，出版物网络，通信网络和万维网。这些信息网络的规模从几百个节点到数百万和数十亿个节点不等。大规模信息网络的分析在学术界和工业界引起越来越多的关注。本文研究的是将信息网络嵌入到低维空间的问题，其中每个顶点都表示为一个低维向量。这种低维嵌入在各种应用中非常有用，如可视化，节点分类，链路预测和选择推荐。</p>
@@ -2226,7 +2237,7 @@ $\overleftarrow 1 \overleftarrow 2 \overleftarrow {\mathbf{3}} $， $\overleftar
 <p>网络嵌入目前依旧面临许多挑战。（1）<strong>高维且非线性</strong>，深层的网络结构特征通常是非线性且高维的。因此，如何去描述学习这种高维非线性的特征是非常具有挑战性的。（2）<strong>结构保持</strong>，为了能够将结果应用到一些具体的网络分析任务中，网络嵌入方法需要能够将网络结构较好的保存下来，但是隐藏的网络结构是非常复杂并且难以发现的。节点的特性往往依赖于其局部和全局的网络结构。（3）<strong>稀疏性</strong>，真实世界中的大部分网络都是稀疏的，只能够利用极少数已发现的关系连接，因此还远远不能依此得到满意的效果。<br>
 近些年来，许多网络嵌入的方法相继被提出，它们采用了一些浅显的模型，比如说：IsoMAP，Laplacian Eigenmap(LE)，Line。由于这些模型的局限性，它们很难获得网络高维的非线性特征。为了解决这个难题，本文提出了深层模型来学习网络中的节点表示。我们受深度学习的启发，因为其展现出了强大的表示学习能力，能够从复杂的网络中学习特征。它已经在图像、文本、语音等方面取得了卓越的成绩。特别的，我们提出的模型设计了多层的网络结构，这些结构是由许多非线性函数构成，能够将网络数据映射到隐藏的非线性空间中，从而挖掘出网络的非线性结构。<br>
 为了处理网络结构保存以及稀疏性问题，我们把一阶相似度和二阶相似度相结合，并融于学习过程中。一阶相似度是两个顶点之间的局部点对的邻近度，但由于网络的稀疏性，许多真实存在的边可能缺失，因此，一阶相似度不足以表示网络结构。因此我们更进一步地提出了二阶相似度，一对顶点之间的接近程度表示在网络中其邻域网络结构之间的相似性。通过一阶相似度和二阶相似度，我们可以很好的捕获网络的局部特性与全局特性。为了保证网络的局部和全局特性在我们的模型中有较好的表示，我们提出了一种半监督的结构，其中，无监督部分重构了二阶相似度，以保持全局网络结构。而有监督的部分利用一阶相似度作为监督信息来保存网络的全局结构。因此，所学的表示能够很好的保存网络的局部和全局结构。此外，从图1可以看出，在许多网络中二阶相似度邻近点对的数目比一阶相似度多很多。由此可以得到，二阶相似度的引入能够在描述网络结构方面提供更多的信息。因此，我们的方法对稀疏网络是鲁棒的。<br>
-<img src="//img.tianle.me/image/20170630/1.png" alt="图一"><br>
+<img src="//img.niucode.cn/image/20170630/1.png" alt="图一"><br>
 图1</p>
 <h3><span id="主要贡献">主要贡献</span><a href="#主要贡献" class="header-anchor"> </a></h3>
 <ol>
@@ -2265,7 +2276,7 @@ ${r_{{v_i}}}$是点${v_i}$的向量表征, ${c_{{v_i}}}$是点${v_i}$上下文�
 <h3><span id="snde模型">SNDE模型</span><a href="#snde模型" class="header-anchor"> </a></h3>
 <h4><span id="算法框架">算法框架</span><a href="#算法框架" class="header-anchor"> </a></h4>
 <p>在本篇文章中，我们提出了一个半监督的网络嵌入深度框架，整体框架如图2所示。具体来说，为了捕捉高维非线性的网络结构，我们提出了一个深层的体系结构，它由多个非线性映射函数组成，将输入数据映射到一个高维非线性的隐藏空间，以捕获网络结构。为了解决网络结构保持和稀疏性问题，我们提出了一个半监督模型来利用一阶和二阶相似度。对于每个顶点，我们都可以得到它的邻域。因此，我们设计了无监督的组件来保持二阶相似度，并重建每个顶点的邻域结构。同时，对节点的一部分，我们可以获得他们的一阶相似度。因此，我们设计了有监督的组件，利用一阶相似度作为监督信息来改进隐藏空间中的表示。通过联合优化所提出的半监督深度模型，SDNE可以保持高维的非线性网络结构，保证稀疏网络的健壮性。在接下来的部分中，我们将详细介绍如何实现半监督的深度模型。<br>
-<img src="//img.tianle.me/image/20170630/2.png" alt="图2"><br>
+<img src="//img.niucode.cn/image/20170630/2.png" alt="图2"><br>
 图2.网络整体结构</p>
 <h3><span id="损失函数">损失函数</span><a href="#损失函数" class="header-anchor"> </a></h3>
 <p>我们首先描述无监督组件如何利用二阶近似保持全局网络结构。<br>
@@ -2375,18 +2386,18 @@ $$Micro - F1 = \frac{{2*\Pr *R}}{{\Pr  + R}}$$
 <h3><span id="实验结果">实验结果</span><a href="#实验结果" class="header-anchor"> </a></h3>
 <h4><span id="多标签分类">多标签分类</span><a href="#多标签分类" class="header-anchor"> </a></h4>
 <p>我们通过本实验中的多标签分类任务来评估不同网络表示的有效性。顶点的表示是从网络嵌入方法生成的，并被用作将每个顶点分成一组标签的特征。具体来说，我们采用LIBLINEAR软件包来训练分类器。训练分类器时，我们随机抽取标签节点的一部分作为训练数据，其余作为测试。对于BLOGCATALOG，我们随机抽取10％至90％的顶点作为训练样本，并使用剩余顶点来测试性能。对于FLICKR和YOUTUBE，我们随机抽取1％至10％的顶点作为训练样本，并使用剩余顶点来测试性能。另外，我们删除没有在YOUTUBE中被任何类别标记的顶点。我们重复进行5次实验，取Micro-F1和Macro-F1指标的平均值进行度量。结果分别如图3到图5所示。<br>
-<img src="//img.tianle.me/image/20170630/3.png" alt="图3"><br>
+<img src="//img.niucode.cn/image/20170630/3.png" alt="图3"><br>
 图3 .Micro-F1和Macro-F1在BLOGCATALOG上的表现<br>
-<img src="//img.tianle.me/image/20170630/4.png" alt="图4"><br>
+<img src="//img.niucode.cn/image/20170630/4.png" alt="图4"><br>
 图4 .Micro-F1和Macro-F1在FLICKR上的表现<br>
-<img src="//img.tianle.me/image/20170630/5.png" alt="图5"><br>
+<img src="//img.niucode.cn/image/20170630/5.png" alt="图5"><br>
 图5 .Micro-F1和Macro-F1在YOUTUBE上的表现<br>
 在图3到图5中，我们算法的曲线一直高于其他基准算法的曲线。它表明，在多标签分类任务中我们算法学习得到的网络表示比其他算法得到的效果更好。<br>
 在图3（BLOGCATALOG）中，当训练百分比从60％下降到10％时，我们的方法在基准线上的改善幅度更为明显。它表明当标签数据有限时，我们的方法可以比基准算法有更显着的改进。这样的优势对于现实世界的应用尤其重要，因为标记的数据通常很少。<br>
 在大多数情况下，DeepWalk的性能是网络嵌入方法中最差的。原因有两个方面。首先，DeepWalk没有明确的目标函数来捕获网络结构。其次，DeepWalk使用随机游走来获得顶点的邻居，由于随机性而引起了很多噪音，特别是对于度数高的顶点。</p>
 <h4><span id="可视化">可视化</span><a href="#可视化" class="header-anchor"> </a></h4>
 <p>网络嵌入的另一个重要应用是在二维空间上生成网络的可视化。对此我们在20-NEWSGROUP网络进行可视化的实验。我们使用不同网络嵌入方法学习的低维网络表示作为可视化工具t-SNE的输入。因此，每个新闻组文档被映射为二维向量。然后我们可以将每个向量可视化为二维空间上的一个点。对于被标记为不同类别的文档，我们在对应的点上使用不同的颜色。因此，良好的可视化结果能让相同颜色的点彼此靠近。可视化结果如图6所示。<br>
-<img src="//img.tianle.me/image/20170630/6.png" alt="图6"><br>
+<img src="//img.niucode.cn/image/20170630/6.png" alt="图6"><br>
 图6.  20-NEWSGROUP的可视化<br>
 每个点表示一个文档。点的颜色表示文档的类别。蓝色表示rec.sport.baseball的主题，红色表示comp.graphics的主题，绿色表示talk.politics.guns的主题。<br>
 从图7可以看出，LE和DeepWalk的结果并不理想，属于不同类别的点相互混合。对于LINE，形成不同类别的群集。然而，在中心部分，不同类别的文件仍然相互混合。对于GraRep，结果看起来更好，因为相同颜色的点分割成分组，但是，每个群体的边界不是很清楚。显然，SDNE的可视化效果在群体分离和边界方面都表现最好。</p>
@@ -2529,7 +2540,7 @@ Python除了<code>def/class/lambda</code> 外，其他如: if/elif/else/  try/ex
 <p>之前已经使用matlab实现了一次，由于现在又布置了作业，正好现在对python不是特别熟悉，那就写个代码练练手吧。</p>
 <h4><span id="目标函数">目标函数</span><a href="#目标函数" class="header-anchor"> </a></h4>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">max    f (x1, x2) = 21.5 + x1·sin(4 pi x1) + x2·sin(20 pi x2)  </span><br><span class="line">  </span><br><span class="line">s. t.    -3.0 &lt;= x1 &lt;= 12.1  </span><br><span class="line">          4.1 &lt;= x2 &lt;= 5.8</span><br></pre></td></tr></table></figure>
-<p><img src="//img.tianle.me/image/20170419/maxfunction.jpg" alt="function"></p>
+<p><img src="//img.niucode.cn/image/20170419/maxfunction.jpg" alt="function"></p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">func</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.decoding(self.code_x1, self.code_x2)</span><br><span class="line">        self.y = <span class="number">21.5</span> + self.x1 * math.sin(<span class="number">4</span> * math.pi * self.x1) + self.x2 * math.sin(<span class="number">20</span> * math.pi * self.x2)</span><br></pre></td></tr></table></figure>
 <h4><span id="二进制编码">二进制编码</span><a href="#二进制编码" class="header-anchor"> </a></h4>
 <p>在刚刚提到的遗传算法中，我们首先要将数据进行编码，这里我们采用二进制的方式进行编码。第一步，我们根据题目的介绍可以得知该函数含有两个变量，以及各自的定义域。在二进制编码中，我们首先要先计算它的编码长度。计算公式如下:</p>
@@ -2538,30 +2549,30 @@ $${2^{{m_j} - 1}} < ({b_j} - {a_j})*precision \le {2^{{m_j}}} - 1$$
 <h4><span id="二进制解码">二进制解码</span><a href="#二进制解码" class="header-anchor"> </a></h4>
 <p>解码即编码的逆过程:</p>
 $${x_j} = {a_j} + {\rm{decimal}}(substrin{g_j}) \times \frac{{{b_j} - {a_j}}}{{{2^{{m_j}}} - 1}}$$
-<p><img src="//img.tianle.me/image/20170419/coding.jpg" alt="function"></p>
+<p><img src="//img.niucode.cn/image/20170419/coding.jpg" alt="function"></p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">decoding</span><span class="params">(self, code_x1, code_x2)</span>:</span></span><br><span class="line">        self.x1 = self.bounds[<span class="number">0</span>][<span class="number">0</span>] + int(code_x1, <span class="number">2</span>) * (self.bounds[<span class="number">0</span>][<span class="number">1</span>] - self.bounds[<span class="number">0</span>][<span class="number">0</span>]) / (</span><br><span class="line">        <span class="number">2</span> ** self.code_x1_length - <span class="number">1</span>)</span><br><span class="line">        self.x2 = self.bounds[<span class="number">1</span>][<span class="number">0</span>] + int(code_x2, <span class="number">2</span>) * (self.bounds[<span class="number">1</span>][<span class="number">1</span>] - self.bounds[<span class="number">1</span>][<span class="number">0</span>]) / (</span><br><span class="line">        <span class="number">2</span> ** self.code_x2_length - <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
 <h4><span id="种群初始化">种群初始化</span><a href="#种群初始化" class="header-anchor"> </a></h4>
 <p>编码完成那我们就开始对种群初始化吧，为了简便我采用了随机地方式进行初始化。</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, bounds, precision)</span>:</span></span><br><span class="line">        self.x1 = <span class="number">1</span></span><br><span class="line">        self.x2 = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        self.y = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        self.code_x1 = <span class="string">''</span></span><br><span class="line">        self.code_x2 = <span class="string">''</span></span><br><span class="line"></span><br><span class="line">        self.bounds = bounds</span><br><span class="line"></span><br><span class="line">        temp1 = (bounds[<span class="number">0</span>][<span class="number">1</span>] - bounds[<span class="number">0</span>][<span class="number">0</span>]) * precision</span><br><span class="line">        self.code_x1_length = math.ceil(math.log(temp1, <span class="number">2</span>))</span><br><span class="line"></span><br><span class="line">        temp2 = (bounds[<span class="number">1</span>][<span class="number">1</span>] - bounds[<span class="number">1</span>][<span class="number">0</span>]) * precision</span><br><span class="line">        self.code_x2_length = math.ceil(math.log(temp2, <span class="number">2</span>))</span><br><span class="line"></span><br><span class="line">        self.rand_init()</span><br><span class="line">        self.func()</span><br><span class="line">        </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">rand_init</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(self.code_x1_length):</span><br><span class="line">            self.code_x1 += str(random.randint(<span class="number">0</span>, <span class="number">1</span>))</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(self.code_x2_length):</span><br><span class="line">            self.code_x2 += str(random.randint(<span class="number">0</span>, <span class="number">1</span>))</span><br></pre></td></tr></table></figure>
 <h4><span id="选择">选择</span><a href="#选择" class="header-anchor"> </a></h4>
 <p>选择我们采用轮盘赌方式进行选择，主要思想是适应度高的，被选择到的概率大。<br>
-<img src="//img.tianle.me/image/20170419/selection.jpg" alt="function"></p>
+<img src="//img.niucode.cn/image/20170419/selection.jpg" alt="function"></p>
 <p>没怎么优化，用了一堆for循环。。。。</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">select</span><span class="params">(self)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    轮盘赌选择</span></span><br><span class="line"><span class="string">    :return:</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="comment"># calculate fitness function</span></span><br><span class="line">    sum_f = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(self.pop_size):</span><br><span class="line">        self.pop[i].func()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># guarantee fitness &gt; 0</span></span><br><span class="line">    min = self.pop[<span class="number">0</span>].y</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(self.pop_size):</span><br><span class="line">        <span class="keyword">if</span> self.pop[i].y &lt; min:</span><br><span class="line">            min = self.pop[i].y</span><br><span class="line">    <span class="keyword">if</span> min &lt; <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(self.pop_size):</span><br><span class="line">            self.pop[i].y = self.pop[i].y + (<span class="number">-1</span>) * min</span><br><span class="line"></span><br><span class="line">    <span class="comment"># roulette</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(self.pop_size):</span><br><span class="line">        sum_f += self.pop[i].y</span><br><span class="line">    p = [<span class="number">0</span>] * self.pop_size</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(self.pop_size):</span><br><span class="line">        p[i] = self.pop[i].y / sum_f</span><br><span class="line">    q = [<span class="number">0</span>] * self.pop_size</span><br><span class="line">    q[<span class="number">0</span>] = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(self.pop_size):</span><br><span class="line">        s = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">0</span>, i+<span class="number">1</span>):</span><br><span class="line">            s += p[j]</span><br><span class="line">        q[i] = s</span><br><span class="line">    <span class="comment"># start roulette</span></span><br><span class="line">    v = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(self.pop_size):</span><br><span class="line">        r = random.random()</span><br><span class="line">        <span class="keyword">if</span> r &lt; q[<span class="number">0</span>]:</span><br><span class="line">            v.append(self.pop[<span class="number">0</span>])</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">1</span>, self.pop_size):</span><br><span class="line">            <span class="keyword">if</span> q[j - <span class="number">1</span>] &lt; r &lt;= q[j]:</span><br><span class="line">                v.append(self.pop[j])</span><br><span class="line">    self.pop = v</span><br></pre></td></tr></table></figure>
 <h4><span id="变异">变异</span><a href="#变异" class="header-anchor"> </a></h4>
 <p>这里的变异，我们先以变异概率，从种群中选一个，然后对选中的个体，随机选一个变异位点进行变异。<br>
-<img src="//img.tianle.me/image/20170419/mutation.jpg" alt="function"></p>
+<img src="//img.niucode.cn/image/20170419/mutation.jpg" alt="function"></p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">mutation</span><span class="params">(self)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    变异</span></span><br><span class="line"><span class="string">    :return:</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(self.pop_size):</span><br><span class="line">        <span class="keyword">if</span> self.pm &gt; random.random():</span><br><span class="line">            pop = self.pop[i]</span><br><span class="line">            <span class="comment"># select mutation index</span></span><br><span class="line">            index1 = random.randint(<span class="number">0</span>, pop.code_x1_length<span class="number">-1</span>)</span><br><span class="line">            index2 = random.randint(<span class="number">0</span>, pop.code_x2_length<span class="number">-1</span>)</span><br><span class="line"></span><br><span class="line">            i = pop.code_x1[index1]</span><br><span class="line">            i = self.__inverse(i)</span><br><span class="line">            pop.code_x1 = pop.code_x1[:index1] + i + pop.code_x1[index1+<span class="number">1</span>:]</span><br><span class="line"></span><br><span class="line">            i = pop.code_x2[index2]</span><br><span class="line">            i = self.__inverse(i)</span><br><span class="line">            pop.code_x2 = pop.code_x2[:index2] + i + pop.code_x2[index2+<span class="number">1</span>:]</span><br></pre></td></tr></table></figure>
 <h4><span id="交叉">交叉</span><a href="#交叉" class="header-anchor"> </a></h4>
 <p>这里采用单点交叉法。随机从种群中选两个个体，然后再随机选一个交叉点，交换位置。看图 = . =</p>
-<p><img src="//img.tianle.me/image/20170419/crossover.jpg" alt="function"></p>
-<p><img src="//img.tianle.me/image/20170419/crossoverCode.jpg" alt="function"></p>
+<p><img src="//img.niucode.cn/image/20170419/crossover.jpg" alt="function"></p>
+<p><img src="//img.niucode.cn/image/20170419/crossoverCode.jpg" alt="function"></p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cross</span><span class="params">(self)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    交叉</span></span><br><span class="line"><span class="string">    :return:</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(int(self.pop_size / <span class="number">2</span>)):</span><br><span class="line">        <span class="keyword">if</span> self.pc &gt; random.random():</span><br><span class="line">            <span class="comment"># randon select 2 chromosomes in pops</span></span><br><span class="line">            i = <span class="number">0</span></span><br><span class="line">            j = <span class="number">0</span></span><br><span class="line">            <span class="keyword">while</span> i == j:</span><br><span class="line">                i = random.randint(<span class="number">0</span>, self.pop_size<span class="number">-1</span>)</span><br><span class="line">                j = random.randint(<span class="number">0</span>, self.pop_size<span class="number">-1</span>)</span><br><span class="line">            pop_i = self.pop[i]</span><br><span class="line">            pop_j = self.pop[j]</span><br><span class="line"></span><br><span class="line">            <span class="comment"># select cross index</span></span><br><span class="line">            pop_1 = random.randint(<span class="number">0</span>, pop_i.code_x1_length - <span class="number">1</span>)</span><br><span class="line">            pop_2 = random.randint(<span class="number">0</span>, pop_i.code_x2_length - <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># get new code</span></span><br><span class="line">            new_pop_i_code1 = pop_i.code_x1[<span class="number">0</span>: pop_1] + pop_j.code_x1[pop_1: pop_i.code_x1_length]</span><br><span class="line">            new_pop_i_code2 = pop_i.code_x2[<span class="number">0</span>: pop_2] + pop_j.code_x2[pop_2: pop_i.code_x2_length]</span><br><span class="line"></span><br><span class="line">            new_pop_j_code1 = pop_j.code_x1[<span class="number">0</span>: pop_1] + pop_i.code_x1[pop_1: pop_i.code_x1_length]</span><br><span class="line">            new_pop_j_code2 = pop_j.code_x2[<span class="number">0</span>: pop_2] + pop_i.code_x2[pop_2: pop_i.code_x2_length]</span><br><span class="line"></span><br><span class="line">            pop_i.code_x1 = new_pop_i_code1</span><br><span class="line">            pop_i.code_x2 = new_pop_i_code2</span><br><span class="line"></span><br><span class="line">            pop_j.code_x1 = new_pop_j_code1</span><br><span class="line">            pop_j.code_x2 = new_pop_j_code2</span><br></pre></td></tr></table></figure>
 <h4><span id="算法主流程">算法主流程</span><a href="#算法主流程" class="header-anchor"> </a></h4>
 <p>至此，遗传的主要框架已经完毕，下面展示主流程，及画图部分代码。</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">ga</span><span class="params">(self)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    算法主函数</span></span><br><span class="line"><span class="string">    :return:</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    self.init_pop()</span><br><span class="line">    best = self.find_best()</span><br><span class="line">    self.g_best = copy.deepcopy(best)</span><br><span class="line">    y = [<span class="number">0</span>] * self.pop_size</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(self.max_gen):</span><br><span class="line">        self.cross()</span><br><span class="line">        self.mutation()</span><br><span class="line">        self.select()</span><br><span class="line">        best = self.find_best()</span><br><span class="line">        self.bests[i] = best</span><br><span class="line">        <span class="keyword">if</span> self.g_best.y &lt; best.y:</span><br><span class="line">            self.g_best = copy.deepcopy(best)</span><br><span class="line">        y[i] = self.g_best.y</span><br><span class="line">        print(self.g_best.y)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># plt</span></span><br><span class="line">    plt.figure(<span class="number">1</span>)</span><br><span class="line">    x = range(self.pop_size)</span><br><span class="line">    plt.plot(x, y)</span><br><span class="line">    plt.ylabel(<span class="string">'generations'</span>)</span><br><span class="line">    plt.xlabel(<span class="string">'function value'</span>)</span><br><span class="line">    plt.show()</span><br></pre></td></tr></table></figure>
 <h4><span id="实验结果图">实验结果图</span><a href="#实验结果图" class="header-anchor"> </a></h4>
-<p><img src="//img.tianle.me/image/20170419/result.png" alt="function"></p>
+<p><img src="//img.niucode.cn/image/20170419/result.png" alt="function"></p>
 <h3><span id="总结">总结</span><a href="#总结" class="header-anchor"> </a></h3>
 <p>在编码的时候，我偷懒了一下，把两个变量拆开写，x1和x2，导致之后的操作变得异常复杂，并且不利于代码重构。<br>
 程序中过多的使用了for循环，并没有对此进行优化。<br>
@@ -2575,11 +2586,11 @@ $${x_j} = {a_j} + {\rm{decimal}}(substrin{g_j}) \times \frac{{{b_j} - {a_j}}}{{{
         <category>算法</category>
       </categories>
       <tags>
+        <tag>算法</tag>
+        <tag>目标优化</tag>
         <tag>计算智能</tag>
         <tag>GA</tag>
-        <tag>目标优化</tag>
         <tag>遗传</tag>
-        <tag>算法</tag>
       </tags>
   </entry>
   <entry>
@@ -2596,15 +2607,15 @@ $${x_j} = {a_j} + {\rm{decimal}}(substrin{g_j}) \times \frac{{{b_j} - {a_j}}}{{{
 <li>团队的互相协助，是在比赛中陷入僵局时的解药。</li>
 </ol>
 <h3><span id="题目">题目</span><a href="#题目" class="header-anchor"> </a></h3>
-<p><a href="https://img.tianle.me/image/20170406/huawei2017.pdf" target="_blank" rel="noopener">【PDF】赛题</a></p>
+<p><a href="https://img.niucode.cn/image/20170406/huawei2017.pdf" target="_blank" rel="noopener">【PDF】赛题</a></p>
 <h3><span id="求解思路">求解思路</span><a href="#求解思路" class="header-anchor"> </a></h3>
 <p>基本思路是最小费用流+遗传<br>
 在刚看到题目的时候，很容易发现这是一个最优化问题，而且属于NP-难问题。因此我第一个想法就是，采用遗传或者粒子群算法进行求解，目标函数根据题意很快就可以写出，我们使用费用函数即可，但是却不知道怎么个编码，对服务器编码 or 网络流编码 or both。<br>
 直到我找到了最小费用最大流算法，使用该算法，输入服务器节点，即可计算出从服务器到满足各个消费节点需求的最小费用网络流路径。这样，结合第一个思路，算法的整体框架就很明确了。我们先通过遗传算法，产生一堆服务器节点，然后将这些服务器节点输入到最小费用流算法中，得出各条路径，通过路径和服务器信息我们既可以得出该方案下的网络费用，将费用作为遗传算法的适应度函数，再使用遗传算法中的变异、交叉、选择等操作，选出优秀的染色体，然后返回最小费用流算法，如此迭代循环。下面展示算法的流程图。<br>
-<img src="//img.tianle.me/image/20170406/2.png" alt="liuchengtu"></p>
+<img src="//img.niucode.cn/image/20170406/2.png" alt="liuchengtu"></p>
 <h3><span id="最大流-最小费用算法">最大流、最小费用算法</span><a href="#最大流-最小费用算法" class="header-anchor"> </a></h3>
 <p>算法的具体过程这里我就不展开了，放上比赛时，我们参考的一些文档与网页。<br>
-<a href="https://img.tianle.me/image/20170406/11_NF_3.pdf" target="_blank" rel="noopener">【PDF】网络流的应用</a><br>
+<a href="https://img.niucode.cn/image/20170406/11_NF_3.pdf" target="_blank" rel="noopener">【PDF】网络流的应用</a><br>
 <a href="https://riteme.github.io/blog/2016-2-2/mincost-maxflow.html" target="_blank" rel="noopener">最小费用最大流</a><br>
 <a href="https://artofproblemsolving.com/community/c1368h1020435__zkw" target="_blank" rel="noopener">从入门到精通: 最小费用流的“zkw算法”</a></p>
 <h3><span id="spfa算法">SPFA算法</span><a href="#spfa算法" class="header-anchor"> </a></h3>
@@ -2678,10 +2689,10 @@ GPU： GeForce GT 635M</p>
 <h3><span id="cuda安装步骤">CUDA安装步骤</span><a href="#cuda安装步骤" class="header-anchor"> </a></h3>
 <h4><span id="安装显卡驱动">安装显卡驱动</span><a href="#安装显卡驱动" class="header-anchor"> </a></h4>
 <p>System Setting --&gt; Driver Manager 选择合适的驱动<br>
-<img src="//img.tianle.me/image/20170201/1.png" alt="driver manger"></p>
+<img src="//img.niucode.cn/image/20170201/1.png" alt="driver manger"></p>
 <h4><span id="下载cuda">下载CUDA</span><a href="#下载cuda" class="header-anchor"> </a></h4>
 <p><a href="https://developer.nvidia.com/cuda-downloads" target="_blank" rel="noopener">点击此处进行下载</a><br>
-<img src="//img.tianle.me/image/20170201/2.png" alt="cuda downloads"></p>
+<img src="//img.niucode.cn/image/20170201/2.png" alt="cuda downloads"></p>
 <h4><span id="运行安装cuda">运行安装CUDA</span><a href="#运行安装cuda" class="header-anchor"> </a></h4>
 <p>进入刚刚下载的目录，并在终端中运行<br>
 Run <code>sudo sh cuda_8.0.44_linux.run</code><br>
@@ -2720,7 +2731,7 @@ Follow the command-line prompts<br>
 </blockquote>
 <p>注册完账号后我们选择下载<br>
 选择<code>cuDNN v5.1 Library for Linux</code><br>
-<img src="//img.tianle.me/image/20170201/3.png" alt="cuDNN downloads"><br>
+<img src="//img.niucode.cn/image/20170201/3.png" alt="cuDNN downloads"><br>
 安装cuDNN非常简单，我们只需解压下载的包，并将其拷贝到<code>lib64</code>和<code>include</code>这两个目录即可</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ cd ~</span><br><span class="line">$ tar -zxf cudnn-8.0-linux-x64-v5.1.tgz</span><br><span class="line">$ cd cuda</span><br><span class="line">$ sudo cp lib64/* /usr/local/cuda/lib64/</span><br><span class="line">$ sudo cp include/* /usr/local/cuda/include/</span><br></pre></td></tr></table></figure>
 <p>恭喜你！ cuDNN 已经安装成功</p>
@@ -2804,24 +2815,24 @@ I tensorflow/stream_executor/dso_loader.cc:128] successfully opened CUDA library
     <url>/2016/12/06/aliAI/</url>
     <content><![CDATA[<p>分享<a href="https://atf.alibaba.com/?spm=0.0.0.0.cafjha#index" target="_blank" rel="noopener">2016阿里巴巴技术论坛</a>（Alibaba Technology Forum，简称ATF）中《在线AI技术在搜索与推荐场景的应用》徐盈辉（仁基）的演讲PPT</p>
 <a id="more"></a>
-<p><img src="//img.tianle.me/image/20161206/1.png" alt="enter image description here">
-<img src="//img.tianle.me/image/20161206/2.png" alt="enter image description here">
-<img src="//img.tianle.me/image/20161206/3.png" alt="enter image description here">
-<img src="//img.tianle.me/image/20161206/4.png" alt="enter image description here">
-<img src="//img.tianle.me/image/20161206/5.png" alt="enter image description here">
-<img src="//img.tianle.me/image/20161206/6.png" alt="enter image description here">
-<img src="//img.tianle.me/image/20161206/7.png" alt="enter image description here">
-<img src="//img.tianle.me/image/20161206/8.png" alt="enter image description here">
-<img src="//img.tianle.me/image/20161206/9.png" alt="enter image description here">
-<img src="//img.tianle.me/image/20161206/10.png" alt="enter image description here">
-<img src="//img.tianle.me/image/20161206/11.png" alt="enter image description here">
-<img src="//img.tianle.me/image/20161206/12.png" alt="enter image description here">
-<img src="//img.tianle.me/image/20161206/13.png" alt="enter image description here">
-<img src="//img.tianle.me/image/20161206/14.png" alt="enter image description here">
-<img src="//img.tianle.me/image/20161206/15.png" alt="enter image description here">
-<img src="//img.tianle.me/image/20161206/16.png" alt="enter image description here">
-<img src="//img.tianle.me/image/20161206/17.png" alt="enter image description here">
-<img src="//img.tianle.me/image/20161206/18.png" alt="enter image description here"></p>
+<p><img src="//img.niucode.cn/image/20161206/1.png" alt="enter image description here">
+<img src="//img.niucode.cn/image/20161206/2.png" alt="enter image description here">
+<img src="//img.niucode.cn/image/20161206/3.png" alt="enter image description here">
+<img src="//img.niucode.cn/image/20161206/4.png" alt="enter image description here">
+<img src="//img.niucode.cn/image/20161206/5.png" alt="enter image description here">
+<img src="//img.niucode.cn/image/20161206/6.png" alt="enter image description here">
+<img src="//img.niucode.cn/image/20161206/7.png" alt="enter image description here">
+<img src="//img.niucode.cn/image/20161206/8.png" alt="enter image description here">
+<img src="//img.niucode.cn/image/20161206/9.png" alt="enter image description here">
+<img src="//img.niucode.cn/image/20161206/10.png" alt="enter image description here">
+<img src="//img.niucode.cn/image/20161206/11.png" alt="enter image description here">
+<img src="//img.niucode.cn/image/20161206/12.png" alt="enter image description here">
+<img src="//img.niucode.cn/image/20161206/13.png" alt="enter image description here">
+<img src="//img.niucode.cn/image/20161206/14.png" alt="enter image description here">
+<img src="//img.niucode.cn/image/20161206/15.png" alt="enter image description here">
+<img src="//img.niucode.cn/image/20161206/16.png" alt="enter image description here">
+<img src="//img.niucode.cn/image/20161206/17.png" alt="enter image description here">
+<img src="//img.niucode.cn/image/20161206/18.png" alt="enter image description here"></p>
 ]]></content>
       <categories>
         <category>研究</category>
@@ -2847,27 +2858,27 @@ I tensorflow/stream_executor/dso_loader.cc:128] successfully opened CUDA library
 <li>打开电脑浏览器，在地址栏中输入http://192.168.2.1 ，登录账号名以及密码为admin、admin</li>
 <li>在web管理界面中依次点击“高级设置”——“系统管理”</li>
 <li>上传经过修改的“官方”固件，K1s选择“K1S_V22.3.1.5.bin”，K2选择“K2 V22.4.2.8 测试版.bin”，点击升级<br>
-<img src="//img.tianle.me/image/20161123/01.png-tianle.me" alt="降级"></li>
+<img src="//img.niucode.cn/image/20161123/01.png-tianle.me" alt="降级"></li>
 <li>等待路由器重启完毕，重新打开web管理界面<br>
-<img src="//img.tianle.me/image/20161123/02.png-tianle.me" alt="enter link description here"></li>
+<img src="//img.niucode.cn/image/20161123/02.png-tianle.me" alt="enter link description here"></li>
 </ol>
 <h2><span id="开始刷机">开始刷机</span><a href="#开始刷机" class="header-anchor"> </a></h2>
 <ol>
 <li>在web管理界面中依次点击高级设置”——“系统设置”——“备份恢复“</li>
 <li>在恢复配置文件一栏，点击浏览，选中配置文件“tianbaoha_breed_ssh.dat”</li>
 <li>选择完毕后，点击“恢复备份”
-<img src="//img.tianle.me/image/20161123/03.png-tianle.me" alt="恢复备份"></li>
+<img src="//img.niucode.cn/image/20161123/03.png-tianle.me" alt="恢复备份"></li>
 <li>等待路由器重启完毕<br>
-<img src="//img.tianle.me/image/20161123/02.png-tianle.me" alt="enter link description here"></li>
+<img src="//img.niucode.cn/image/20161123/02.png-tianle.me" alt="enter link description here"></li>
 <li>重启完毕后登录web管理系统http://192.168.2.1，登录密码修改为 tianbaoha</li>
 </ol>
 <h2><span id="刷入第三方固件">刷入第三方固件</span><a href="#刷入第三方固件" class="header-anchor"> </a></h2>
 <p>附一张华硕Padavan的固件图<br>
-<img src="//img.tianle.me/image/20161123/5.png-tianle.me" alt="华硕Padavan"></p>
+<img src="//img.niucode.cn/image/20161123/5.png-tianle.me" alt="华硕Padavan"></p>
 <h3><span id="方法一通过破解的管理界面升级">方法一：通过破解的管理界面升级</span><a href="#方法一通过破解的管理界面升级" class="header-anchor"> </a></h3>
 <ol>
 <li>在web管理界面中依次点击“高级设置”——“系统设置”——“手动升级” ，选择你想刷的第三方固件，并点击升级<br>
-<img src="//img.tianle.me/image/20161123/04.png-tianle.me" alt="刷机"></li>
+<img src="//img.niucode.cn/image/20161123/04.png-tianle.me" alt="刷机"></li>
 <li>等待路由器重启完毕后，重新进入web管理界面（华硕固件管理界面为：<a href="http://192.168.123.1" target="_blank" rel="noopener">http://192.168.123.1</a> 账号密码admin、admin，openwrt为：<a href="http://192.168.1.1" target="_blank" rel="noopener">http://192.168.1.1</a> 账号密码root、root）</li>
 </ol>
 <h3><span id="方法二通过下方所述的救砖方法进入breed恢复页面更新固件刷机">方法二：通过下方所述的救砖方法进入breed恢复页面，更新固件刷机</span><a href="#方法二通过下方所述的救砖方法进入breed恢复页面更新固件刷机" class="header-anchor"> </a></h3>
@@ -2880,11 +2891,11 @@ I tensorflow/stream_executor/dso_loader.cc:128] successfully opened CUDA library
 <li>断开路由器电源</li>
 <li>接通路由器电源，同时按住reset按钮不放，大约需要按住3-5秒</li>
 <li>在电脑浏览器中访问http://192.168.1.1<br>
-<img src="//img.tianle.me/image/20161123/1.jpg-tianle.me" alt="breed web恢复"></li>
+<img src="//img.niucode.cn/image/20161123/1.jpg-tianle.me" alt="breed web恢复"></li>
 <li>选择固件更新，选择需要上传的固件<br>
-<img src="//img.tianle.me/image/20161123/2.jpg-tianle.me" alt="固件更新"></li>
+<img src="//img.niucode.cn/image/20161123/2.jpg-tianle.me" alt="固件更新"></li>
 <li>点击更新<br>
-<img src="//img.tianle.me/image/20161123/3.jpg-tianle.me" alt="固件更新2"></li>
+<img src="//img.niucode.cn/image/20161123/3.jpg-tianle.me" alt="固件更新2"></li>
 </ol>
 <h2><span id="参考资料">参考资料</span><a href="#参考资料" class="header-anchor"> </a></h2>
 <p><a href="http://blog.sina.com.cn/s/blog_dc642faa0102x1on.html" target="_blank" rel="noopener">斐讯新版V22固件（V22.3.17.148、V22.3.15.128等）K2 K1S路由刷机教程</a><br>
@@ -2915,7 +2926,7 @@ I tensorflow/stream_executor/dso_loader.cc:128] successfully opened CUDA library
 <a id="more"></a>
 <p>下面放一张图，来展示一下攻击的频繁程度，大家自行体会一下。<br>
 这个是我买的阿里主机<br>
-<img src="//img.tianle.me/image/20161114/1.png" alt="服务器被攻击"><br>
+<img src="//img.niucode.cn/image/20161114/1.png" alt="服务器被攻击"><br>
 好啦，下面开始正题：</p>
 <h2><span id="修改ssh端口禁止root登陆">修改SSH端口+禁止ROOT登陆</span><a href="#修改ssh端口禁止root登陆" class="header-anchor"> </a></h2>
 <p><strong>为了防止误操作，而导致无法登录系统，建议先新建快照</strong></p>
@@ -3026,7 +3037,7 @@ I tensorflow/stream_executor/dso_loader.cc:128] successfully opened CUDA library
 对于符号网络，G=(V,PE,NE)，PE和NE分别为积极连接和消极连接。令A为权重邻接矩阵， ${A_{ij} = 1}$,if ${e_{ij}} \in PE$；${A_{ij} = -1}$,if ${e_{ij}} \in NE$；${A_{ij} = 0}$,if$\nexists {e_{ij}}$。给定$S \subset G$，其中节点i属于其中${(k_i^ + )^{in}} = \sum\nolimits_{j \in S,{e_{ij}} \in PE} {\left| {{A_{ij}}} \right|} $和${(k_i^ - )^{in}} = \sum\nolimits_{j \in S,{e_{ij}} \in NE} {\left| {{A_{ij}}} \right|} $分别为积极和消极的内在节点i的度数，特别的S为强感知如果满足</p>
 $$\forall i \in S,{\kern 1pt} {\kern 1pt} {(k_i^ + )^{in}} > {\kern 1pt} {(k_i^ - )^{in}}$$  
 <p>另外<br>
-<img src="//img.tianle.me/image/20161029/block1.jpg" alt></p>
+<img src="//img.niucode.cn/image/20161029/block1.jpg" alt></p>
 $$\left\{ \begin{array}{l}\sum\nolimits_{i \in S} {{{(k_i^ + )}^{in}}}  > \sum\nolimits_{i \in S} {{{(k_i^ + )}^{out}}} \\\sum\nolimits_{i \in S} {{{(k_i^ - )}^{out}}}  > \sum\nolimits_{i \in S} {{{(k_i^ - )}^{in}}} \end{array} \right.$$  
 <p>由此可以看出，在强感知的情况下，在社区中一个节点拥有比消极连接更多的积极连接。在弱感知的情况下，在一个社区中积极连接非常稠密，同时在不同的社区直接它们的消极连接也非常稠密。</p>
 <h3><span id="网络聚类问题">网络聚类问题</span><a href="#网络聚类问题" class="header-anchor"> </a></h3>
@@ -3052,7 +3063,7 @@ ${L^ - }({V_i},{V_j}) = \sum\nolimits_{i \in {V_i},j \in Vj} {\left| {{A_{ij}}} 
 <li>
 <p>位置<br>
 对某个粒子i，${X_i} = \{ {x_1},{x_2}, \cdots ,{x_n}\} $。粒子位置的每一个维度是从1到n的随机数，例：${x_i} \in [1,n]$，其中n为网络中所有节点的个数，如果${x_i} = {x_j}$那么我们认为节点i和j属于同一个集合<br>
-<img src="//img.tianle.me/image/20161029/g1.jpg" alt></p>
+<img src="//img.niucode.cn/image/20161029/g1.jpg" alt></p>
 </li>
 <li>
 <p>速度</p>
@@ -3077,7 +3088,7 @@ $$\left\{ \begin{array}{l}{x_{2i}} = {x_{1i}}{\kern 1pt} {\kern 1pt} {\kern 1pt}
 $$Nbes{t_i} = \arg {\kern 1pt} {\kern 1pt} {\kern 1pt} \mathop {\max }\limits_r \sum\limits_{j \in N} {\varphi ({x_{1j}},r)}$$<br>
 其中如果i = j，则$\varphi (i,j) = 1$，否则为0，函数$\arg {\max _r}f(x)$返回当f(x)取得最大值时的r。可以看出$Nbes{t_i}$为节点i的邻居节点集合的主要标签。这可以在现实生活中很好的理解，因为对于一个人而言，他更愿意加入他朋友最多的社区中。<br>
 在图二中，$X_i$和$Nbes{t_i}$是粒子i的当前位置和个体极值。Gbest是粒子群的群体最优。$V_1$，$V_2$，$V_3$，$V_4$，$V_5$，是中间变量。$V_6$和$X_j$，由式（10）和式（13）计算得到。<br>
-<img src="//img.tianle.me/image/20161029/g2.jpg" alt><br>
+<img src="//img.niucode.cn/image/20161029/g2.jpg" alt><br>
 根据上述介绍，我们可以看出，我们提出的DPSO框架具有以下几个特性</p>
 <ol>
 <li>粒子的位置和速度更新策略非常简单</li>
@@ -3090,7 +3101,7 @@ $$Nbes{t_i} = \arg {\kern 1pt} {\kern 1pt} {\kern 1pt} \mathop {\max }\limits_r 
 $$l(i) = \arg {\kern 1pt} {\max _r}\sum\nolimits_{j \in \Omega (i)} {\delta (l(j),r)} $$  
 <p>其中如果i = j，则$\delta (i,j) = 1$，否则为0。我们迭代地执行这个过程，其中在每个步骤，每个节点基于其邻居的标签来更新其标签。 当传播迭代达到五个，并且如果我们将所有的团体标签形成为染色体，则所创建的候选个体具有高聚类精度，此外，我们可以获得相当多样的种群 。<br>
 算法的伪代码如下：<br>
-<img src="//img.tianle.me/image/20161029/oa2.jpg" alt></p>
+<img src="//img.niucode.cn/image/20161029/oa2.jpg" alt></p>
 <h3><span id="领袖选择">领袖选择</span><a href="#领袖选择" class="header-anchor"> </a></h3>
 <p>在本文中采用随机的策略来选择gbest，因为它既能够带来种群的多样性，又能够减少时间复杂度。对于一个粒子，有ns个相应的邻居（基于聚合权重系数向量之间的欧几里德距离定义）;然后我们从邻居中随机选择一个粒子作为领袖。</p>
 <h3><span id="算法框架">算法框架</span><a href="#算法框架" class="header-anchor"> </a></h3>
@@ -3098,12 +3109,12 @@ $$l(i) = \arg {\kern 1pt} {\max _r}\sum\nolimits_{j \in \Omega (i)} {\delta (l(j
 $${g^{te}}(x|\omega ,{z^*}) = \mathop {\max }\limits_{1 \le i \le k} {\kern 1pt} {\omega _i}\left| {{f_i}(x) - z_i^*} \right|$$  
 <p>$$subject{\kern 1pt} {\kern 1pt} to{\kern 1pt} {\kern 1pt} x \in \Omega $$<br>
 其中${z^*} = (z_1^*,z_2^*,z_3^*, \cdots ,z_k^*)$为参考点，$z_i^* = \{ \min {\kern 1pt} {f_i}(x)|x \in \Omega \} $,i=1,…,k<br>
-<img src="//img.tianle.me/image/20161029/a01.jpg" alt>
+<img src="//img.niucode.cn/image/20161029/a01.jpg" alt>
 这个算法框架在上图中给出，其中第3.8步，通过使用帕累托占优的概念来更新pbest，即，如果新生成的解支配pbest解，则用新解来更新它; 如果pbest支配新产生的解，pbest保持其原始状态; 如果它们是相互非支配的，那么我们使用聚合方法来确定是否更新pbest。下面我们给出其算法2<br>
-<img src="//img.tianle.me/image/20161029/a2.jpg" alt></p>
+<img src="//img.niucode.cn/image/20161029/a2.jpg" alt></p>
 <h3><span id="震荡操作turbulence-operator">震荡操作(Turbulence Operator)</span><a href="#震荡操作turbulence-operator" class="header-anchor"> </a></h3>
 <p>为了保持多样性并帮助MOPSO逃离局部最优，许多现有的MOPSO采用震荡算子。 对于网络聚类问题，在我们的算法中，采用的震荡算子称为基于邻域的突变（NBM）。 该过程可以描述如下。首先，我们生成在0和1之间的伪随机数; 对于每个染色体中的每个基因，如果随机数小于突变概率pm，则将NBM过程应用于基因，即，将其标签标识符分配给其所有邻居。算法3<br>
-<img src="//img.tianle.me/image/20161029/a3.jpg" alt></p>
+<img src="//img.niucode.cn/image/20161029/a3.jpg" alt></p>
 <h3><span id="复杂性分析">复杂性分析</span><a href="#复杂性分析" class="header-anchor"> </a></h3>
 <p>……</p>
 <h2><span id="实验分析">实验分析</span><a href="#实验分析" class="header-anchor"> </a></h2>
@@ -3114,7 +3125,7 @@ $${g^{te}}(x|\omega ,{z^*}) = \mathop {\max }\limits_{1 \le i \le k} {\kern 1pt}
 $$NMI = \frac{{ - 2\sum\nolimits_{i = 1}^{{C_A}} {\sum\nolimits_{j = 1}^{{C_B}} {{C_{ij}}\log ({C_{ij}}N/{C_{i.}}{C_{.j}})} } }}{{\sum\nolimits_{i = 1}^{{C_A}} {{C_{i.}}\log ({C_{i.}}/N) + \sum\nolimits_{j = 1}^{{C_B}} {{C_{.j}}\log ({C_{.j}}/N)} } }}$$  
 <p>其中${C_A}({C_B})$是分区A(B)中的聚类数目。${C_{i.}}({C_{.j}})$是C中第i行（j列）的元素个数之和，N是网络中节点数，如果A=B则，NMI(A,B)=1,如果A,B完全不同则NMI(A,B)=0</p>
 <blockquote>
-<p><a href="//img.tianle.me/image/20161029/%E7%A4%BE%E5%8C%BA%E8%81%9A%E7%B1%BBMODPSO.pdf">PPT下载</a></p>
+<p><a href="//img.niucode.cn/image/20161029/%E7%A4%BE%E5%8C%BA%E8%81%9A%E7%B1%BBMODPSO.pdf">PPT下载</a></p>
 </blockquote>
 ]]></content>
       <categories>
@@ -3122,9 +3133,9 @@ $$NMI = \frac{{ - 2\sum\nolimits_{i = 1}^{{C_A}} {\sum\nolimits_{j = 1}^{{C_B}} 
       </categories>
       <tags>
         <tag>计算智能</tag>
-        <tag>网络</tag>
         <tag>PSO</tag>
         <tag>粒子群</tag>
+        <tag>网络</tag>
         <tag>聚类</tag>
         <tag>多目标优化</tag>
       </tags>
@@ -3165,14 +3176,14 @@ $$NMI = \frac{{ - 2\sum\nolimits_{i = 1}^{{C_A}} {\sum\nolimits_{j = 1}^{{C_B}} 
 <p>大数据问题可以被看做是一个网络问题。大部分的网络问题可以被建模成非凸优化问题，因此可以采用最优化的方式来解决，其中进化计算是一个有效的解决办法。在本篇文章中，我们着重介绍采用基于非凸优化方法的进化计算来解决社区检测问题。基于单目标和多目标在社区检测的优化问题我们接下来都会进行一个详细分析。一些基于经验且有效的网络分析优化方法也会进行介绍。</p>
 <h3><span id="网络问题-特性-符号">网络问题、特性、符号</span><a href="#网络问题-特性-符号" class="header-anchor"> </a></h3>
 <p>近些年来，我们发现大数据是一个非常热门的话题。图一表示了网络与网络数据挖掘对网络分析的重要性。网络分析不仅仅能够找出隐藏在网络中的信息还能发现网络中某些重要的属性来控制网络的发展。在图二中，我们列举了12个网络分析中的关键问题。
-<img src="//img.tianle.me/image/20161023/1.jpg" alt>
+<img src="//img.niucode.cn/image/20161023/1.jpg" alt>
 图一
-<img src="//img.tianle.me/image/20161023/2.jpg" alt>
+<img src="//img.niucode.cn/image/20161023/2.jpg" alt>
 图二</p>
 <h4><span id="著名的网络属性">著名的网络属性</span><a href="#著名的网络属性" class="header-anchor"> </a></h4>
 <p>由于网络的结构常常会影响其功能，因此在分析复杂网络的结构特性中做了大量研究工作。有很多值得注意的网络，如：小世界网络（small-world property）、无标度网络（scale-free network）、群落结构（community structure property）等。<br>
 图三展示了一些典型的网络结构。<br>
-<img src="//img.tianle.me/image/20161023/3.jpg" alt>
+<img src="//img.niucode.cn/image/20161023/3.jpg" alt>
 图三: (a) An example of a scale-free network. (b) An example of a small-world network.© An example of a network with two communities.</p>
 <p><strong>无标度网络</strong>在于其度分布没有一个特定的平均值指标，即大多数节点的度在此附近。在研究这个网络的度分布时，Barabási等人发现其遵守幂律分布（也称为帕累托分布），也就是说，随机抽取一个节点，它的度d是自然数k的概率：<br>
 $P(k) \sim {k^{ - \gamma }}$
@@ -3182,28 +3193,28 @@ $P(k) \sim {k^{ - \gamma }}$
 网络中的<strong>社区结构</strong>指的是，一个网络可以被划分为多个不同大小的群落，一个网络中具有相似属性的节点大都来源于同一个较大的群落，而不同的群落则来源较少。</p>
 <h4><span id="图的符号表示">图的符号表示</span><a href="#图的符号表示" class="header-anchor"> </a></h4>
 <p>一般来说图用G={V,E}来进行表示，其中V表示网络中的点，E表示边（点之间的相互关系）。图G可以表示为一个${A_{n \times n}}$的邻接矩阵，其中${a_{ij}}$可表示为<br>
-<img src="//img.tianle.me/image/20161023/s2.jpg" alt>
+<img src="//img.niucode.cn/image/20161023/s2.jpg" alt>
 其中<code>L&lt;i,j&gt;</code>表示节点i,j间的相互连接，${\omega _{ij}}$表示<code>L&lt;i,j&gt;</code>的权重。<br>
 如果他们有积极关系或者是消极关系，那么他们用分别用PE、和NE来表示<br>
-<img src="//img.tianle.me/image/20161023/s3.jpg" alt></p>
+<img src="//img.niucode.cn/image/20161023/s3.jpg" alt></p>
 <h3><span id="介绍非凸优化问题和计算计算">介绍非凸优化问题和计算计算</span><a href="#介绍非凸优化问题和计算计算" class="header-anchor"> </a></h3>
 <h4><span id="什么是优化问题">什么是优化问题</span><a href="#什么是优化问题" class="header-anchor"> </a></h4>
 <p>优化问题是一个非常活跃的讨论话题，在数学上可以简单的表示为：<br>
-<img src="//img.tianle.me/image/20161023/s4.jpg" alt>式（4）
+<img src="//img.niucode.cn/image/20161023/s4.jpg" alt>式（4）
 x被称为决策向量，d是需要优化的参数个数，φ是在决策空间中的可行域，${g_i}(x)$是约束条件。<br>
 如果φ是凸集，<code>f(x)</code>可被称为凸函数，其中$\forall {x_1},{x_2} \in \phi ,\forall \alpha  \in [0,1]$<br>
-<img src="//img.tianle.me/image/20161023/s5.jpg" alt><br>
+<img src="//img.niucode.cn/image/20161023/s5.jpg" alt><br>
 特别的，如果f(x)为严格凸函数，则<br>
-<img src="//img.tianle.me/image/20161023/s6.jpg" alt><br>
+<img src="//img.niucode.cn/image/20161023/s6.jpg" alt><br>
 如果f(x)和${g_i}(x)$都是凸函数，那么我们可称为式（4）为凸优化问题。如果是严格凸优化问题，那么其只有一个最小值，且为全局最小值。但如果是非凸的，那么必然存在很多个局部或全局最小值。事实上，许多现实问题都是非凸优化问题。<br>
 同时，许多优化问题可以看做是多目标优化，他们超过一个目标函数f(x)需要优化，在数学上，多目标优化问题可以被描述为：<br>
-<img src="//img.tianle.me/image/20161023/s7.jpg" alt>
+<img src="//img.niucode.cn/image/20161023/s7.jpg" alt>
 在这个多目标优化问题中，各个目标常常会出现冲突，比如一个目标的改进会导致另一个目标变差。因此得到一个能够使各个目标都达到最优的解是不存在的。在多目标优化中，我们常常做了一个妥协，我们把这类解称为帕累托最优（Pareto optimal solutions)，下面有几个定义：<br>
 <strong>定义1 帕累托最优(Pareto Optimality)</strong><br>
 <strong>定义2 帕累托占有(Pareto Dominance)</strong><br>
 <strong>定义3 帕累托最优集合(Pareto Optimal Set)</strong><br>
 <strong>定义4 帕累托前沿(Pareto Front)</strong><br>
-<img src="//img.tianle.me/image/20161023/f4.jpg" alt><br>
+<img src="//img.niucode.cn/image/20161023/f4.jpg" alt><br>
 Figure 4: Graphical illustration of Pareto optimal solution and Pareto front.</p>
 <h4><span id="如何解决优化问题">如何解决优化问题</span><a href="#如何解决优化问题" class="header-anchor"> </a></h4>
 ]]></content>
@@ -3211,10 +3222,10 @@ Figure 4: Graphical illustration of Pareto optimal solution and Pareto front.</p
         <category>研究</category>
       </categories>
       <tags>
-        <tag>计算智能</tag>
-        <tag>目标优化</tag>
-        <tag>算法</tag>
         <tag>network</tag>
+        <tag>算法</tag>
+        <tag>目标优化</tag>
+        <tag>计算智能</tag>
         <tag>社区发现</tag>
       </tags>
   </entry>
@@ -3586,9 +3597,9 @@ Intellij更加智能的又一佐证是在任意菜单或显示窗口，都可以
 <h3><span id="短期实习">短期实习</span><a href="#短期实习" class="header-anchor"> </a></h3>
 <h4><span id="准备出发">准备出发</span><a href="#准备出发" class="header-anchor"> </a></h4>
 <p>实习是我一直想要做的，一是在学校太久，希望去外面看看，了解一些新鲜的行业动态。二是与同学聚聚，聊聊人生。。。</p>
-<p><img src="//img.tianle.me/image/20160822/3.jpg" alt="宝石山看西湖"></p>
+<p><img src="//img.niucode.cn/image/20160822/3.jpg" alt="宝石山看西湖"></p>
 <p>7月11回到家，由于时间比较晚，各互联网的大公司针对学生的暑期实习招聘都已经结束，在家修整一天后就开始疯狂的在智联招聘上投递简历，只要是看到与Java相关，且符合我能力水平的都投了一遍。两天之内总计发出的简历估计有80份左右，接下来的几天就陆续接到几十个面试邀请。由于8月底还要去学校读研，因此在面试邀请时，直接坦白地表示我只能实习一到两个月，结果可想而知，大部分的公司都拒绝了，最后只剩下3家。确定好面试公司及时间后，周四便飞奔杭州，周五正式开始面试。</p>
-<p><img src="//img.tianle.me/image/20160822/1.jpg" alt="初到杭州运河"></p>
+<p><img src="//img.niucode.cn/image/20160822/1.jpg" alt="初到杭州运河"></p>
 <h4><span id="面试">面试</span><a href="#面试" class="header-anchor"> </a></h4>
 <p>面试进展还是比较顺利，主要就问了之前做过的项目，还有一些Java、SSM框架的基础知识，比如Java中的HashMap，Spring MVC的请求，Controller中的返回值等等。<br>
 　　面试结束当晚就通知明天正式上班了，看来公司还是非常缺人的。</p>
@@ -3645,11 +3656,11 @@ Intellij更加智能的又一佐证是在任意菜单或显示窗口，都可以
 <p>“江南忆，最忆是杭州，山寺月中寻桂子，郡亭枕上看潮头，何日更重游。”</p>
 </blockquote>
 <p>在杭州，还念周末与朋友游西湖，想念夜晚与妹子逛运河，正是他们让我爱上这座城市。
-<img src="//img.tianle.me/image/20160822/2.jpg" alt="西湖莲花"></p>
-<p><img src="//img.tianle.me/image/20160822/7.jpg" alt="逛运河"></p>
-<p><img src="//img.tianle.me/image/20160822/4.jpg" alt="八卦田凤凰山"></p>
-<p><img src="//img.tianle.me/image/20160822/5.jpg" alt="虎跑"></p>
-<p><img src="//img.tianle.me/image/20160822/6.jpg" alt="宝石山夜看西湖"></p>
+<img src="//img.niucode.cn/image/20160822/2.jpg" alt="西湖莲花"></p>
+<p><img src="//img.niucode.cn/image/20160822/7.jpg" alt="逛运河"></p>
+<p><img src="//img.niucode.cn/image/20160822/4.jpg" alt="八卦田凤凰山"></p>
+<p><img src="//img.niucode.cn/image/20160822/5.jpg" alt="虎跑"></p>
+<p><img src="//img.niucode.cn/image/20160822/6.jpg" alt="宝石山夜看西湖"></p>
 ]]></content>
       <categories>
         <category>生活记录</category>
@@ -3741,9 +3752,9 @@ $$\omega (k) = {\omega _{end}} + ({\omega _{start}} - {\omega _{end}})({T_{\max 
         <category>算法</category>
       </categories>
       <tags>
-        <tag>计算智能</tag>
-        <tag>目标优化</tag>
         <tag>算法</tag>
+        <tag>目标优化</tag>
+        <tag>计算智能</tag>
         <tag>PSO</tag>
         <tag>粒子群</tag>
       </tags>
@@ -4247,7 +4258,7 @@ As-servlet.xml spring mvc 配置文件
 Web.xml web项目配置文件</p>
 </li>
 </ul>
-<p><img src="//img.tianle.me/image/20151217/spring.png" alt="目录结构"></p>
+<p><img src="//img.niucode.cn/image/20151217/spring.png" alt="目录结构"></p>
 <h2><span id="三-实验步骤">三、实验步骤</span><a href="#三-实验步骤" class="header-anchor"> </a></h2>
 <h3><span id="web服务前端">web服务前端</span><a href="#web服务前端" class="header-anchor"> </a></h3>
 <h4><span id="1-socket相关代码结构">1、socket相关代码结构</span><a href="#1-socket相关代码结构" class="header-anchor"> </a></h4>
@@ -4341,24 +4352,24 @@ xxx填写准备使用的WebSocket服务器请求地址，本项目中以 <a href
 <h2><span id="四-运行结果">四、运行结果</span><a href="#四-运行结果" class="header-anchor"> </a></h2>
 <h3><span id="用户注册">用户注册</span><a href="#用户注册" class="header-anchor"> </a></h3>
 <p>在浏览器中输入 <a href="http://localhost:8080/RealTimeChat/register.do" target="_blank" rel="noopener">http://localhost:8080/RealTimeChat/register.do</a>
-<img src="//img.tianle.me/image/20151217/register.png" alt="注册界面">
+<img src="//img.niucode.cn/image/20151217/register.png" alt="注册界面">
 填写用户名及密码后，点击注册按钮
 注册成功后，自动跳转至聊天页面</p>
 <h3><span id="聊天界面">聊天界面</span><a href="#聊天界面" class="header-anchor"> </a></h3>
-<p><img src="//img.tianle.me/image/20151217/chat1.png" alt="聊天界面1">
+<p><img src="//img.niucode.cn/image/20151217/chat1.png" alt="聊天界面1">
 顶部为当前登录用户
 左上方为聊天室的聊天窗口
 右上方为当前聊天室所有的在线用户
 下方为用户的输入窗口</p>
 <h3><span id="登录界面">登录界面</span><a href="#登录界面" class="header-anchor"> </a></h3>
 <p>新用户登录 <a href="http://localhost:8080/RealTimeChat/login.do" target="_blank" rel="noopener">http://localhost:8080/RealTimeChat/login.do</a>
-<img src="//img.tianle.me/image/20151217/login1.png" alt="登录界面"></p>
+<img src="//img.niucode.cn/image/20151217/login1.png" alt="登录界面"></p>
 <h3><span id="多人聊天">多人聊天</span><a href="#多人聊天" class="header-anchor"> </a></h3>
 <p>新用户加入
-<img src="//img.tianle.me/image/20151217/chat2.png" alt="chat2"></p>
+<img src="//img.niucode.cn/image/20151217/chat2.png" alt="chat2"></p>
 <h3><span id="用户退出">用户退出</span><a href="#用户退出" class="header-anchor"> </a></h3>
 <p>kyle用户退出
-<img src="//img.tianle.me/image/20151217/chat3.png" alt="logout"></p>
+<img src="//img.niucode.cn/image/20151217/chat3.png" alt="logout"></p>
 <h4><span id="五-项目代码">五、项目代码</span><a href="#五-项目代码" class="header-anchor"> </a></h4>
 <p><a href="https://github.com/zhangtianle/WebSocketChat" target="_blank" rel="noopener">github项目地址</a></p>
 ]]></content>

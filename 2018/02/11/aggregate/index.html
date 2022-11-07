@@ -29,13 +29,13 @@
 <meta property="og:site_name" content="Niu Code">
 <meta property="og:description" content="构建并结合多个学习器来完成学习任务，我们把它称为模型融合或者集成学习。 不同的模型有各自的长处，具有差异性，而模型融合可以使得发挥出各个模型的优势，让这些相对较弱的模型（学习器）通过某种策略结合起来，达到比较强的模型（学习器）。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://img.tianle.me/image/20180211/stacking.jpg">
-<meta property="og:image" content="https://img.tianle.me/image/20180211/1.png">
-<meta property="og:updated_time" content="2020-01-02T08:47:22.674Z">
+<meta property="og:image" content="https://img.niucode.cn/image/20180211/stacking.jpg">
+<meta property="og:image" content="https://img.niucode.cn/image/20180211/1.png">
+<meta property="og:updated_time" content="2022-11-07T06:51:58.416Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="模型融合 Blending 和 Stacking">
 <meta name="twitter:description" content="构建并结合多个学习器来完成学习任务，我们把它称为模型融合或者集成学习。 不同的模型有各自的长处，具有差异性，而模型融合可以使得发挥出各个模型的优势，让这些相对较弱的模型（学习器）通过某种策略结合起来，达到比较强的模型（学习器）。">
-<meta name="twitter:image" content="https://img.tianle.me/image/20180211/stacking.jpg">
+<meta name="twitter:image" content="https://img.niucode.cn/image/20180211/stacking.jpg">
 
 <link rel="canonical" href="https://tianle.me/2018/02/11/aggregate/">
 
@@ -217,7 +217,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-02 16:47:22" itemprop="dateModified" datetime="2020-01-02T16:47:22+08:00">2020-01-02</time>
+                <time title="修改时间：2022-11-07 14:51:58" itemprop="dateModified" datetime="2022-11-07T14:51:58+08:00">2022-11-07</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -273,11 +273,11 @@ $$G({\mathbf{x}}) = sign\left( {\sum\limits_{t = 1}^T {{\alpha _t}}  \cdot {g_t}
 <p>其中，${\alpha _t} \geqslant 0$。那么这些$g$是由最小化评价集合的最小误差得到的，然后通过“特征转化”: $\mathbf z_n = \phi^{-}(\mathbf x_n) = (g_1^{-}(\mathbf x_n), g_2^{-}(\mathbf x_n)...g_{T}^{-}(\mathbf x_n))$，数据变为$(z_n, y_n)$; 而 ${\alpha _t}$通过之前的线性回归，逻辑回归等方法得到投票权重；最后便得到了最终模型。</p>
 <h2><span id="stacking">Stacking</span><a href="#stacking" class="header-anchor"> </a></h2>
 <p>Stacking实际上就是把Blending组合起来，Blending只有一层，而Stacking有多层，它把各个基学习器的预测结果作为下一层新的训练集，来学习一个新的学习器。通过元分类器或元回归聚合多个分类或回归模型。基础层次模型（level model）基于完整的训练集进行训练，然后元模型基于基础层次模型的输出进行训练。<br>
-<img src="//img.tianle.me/image/20180211/stacking.jpg" alt="stacking"></p>
+<img src="//img.niucode.cn/image/20180211/stacking.jpg" alt="stacking"></p>
 <h2><span id="总结">总结</span><a href="#总结" class="header-anchor"> </a></h2>
 <p>上面的这几个方法都是先把小的模型训练出来，然后再进行加权融合。Stacking有个问题，由于它的模型复杂度过高，容易造成过拟合。</p>
 <p>在模型融合中，除了不同的算法模型之外，相同的算法模型不同的模型参数，算法中的不同随机种子，也可以用来融合。<br>
-<img src="//img.tianle.me/image/20180211/1.png" alt="1"></p>
+<img src="//img.niucode.cn/image/20180211/1.png" alt="1"></p>
 <h2><span id="参考资料">参考资料</span><a href="#参考资料" class="header-anchor"> </a></h2>
 <p><a href="http://shomy.top/2017/03/15/blending-bagging/" target="_blank" rel="noopener">机器学习技法笔记(9)-Blending and Bagging(模型融合)</a><br>
 <a href="http://blog.csdn.net/Mr_tyting/article/details/72957853" target="_blank" rel="noopener">机器学习–&gt;集成学习–&gt;Bagging,Boosting,Stacking</a></p>

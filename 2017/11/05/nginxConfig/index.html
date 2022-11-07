@@ -29,12 +29,12 @@
 <meta property="og:site_name" content="Niu Code">
 <meta property="og:description" content="nginx是一个优秀的静态服务器，本博客就搭建在nginx服务器中。本博客由Hexo生成静态文件，上传至nginx里的网站目录中(www)即可，用起来非常方便。现将搭博客中用到的配置总结一下，包括： 排除指定目录； 添加服务器ssl证书； 301重定向">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://img.tianle.me/image/20171105/1.jpg">
-<meta property="og:updated_time" content="2020-01-02T08:47:22.679Z">
+<meta property="og:image" content="https://img.niucode.cn/image/20171105/1.jpg">
+<meta property="og:updated_time" content="2022-11-07T06:51:58.591Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="nginx服务器常见配置">
 <meta name="twitter:description" content="nginx是一个优秀的静态服务器，本博客就搭建在nginx服务器中。本博客由Hexo生成静态文件，上传至nginx里的网站目录中(www)即可，用起来非常方便。现将搭博客中用到的配置总结一下，包括： 排除指定目录； 添加服务器ssl证书； 301重定向">
-<meta name="twitter:image" content="https://img.tianle.me/image/20171105/1.jpg">
+<meta name="twitter:image" content="https://img.niucode.cn/image/20171105/1.jpg">
 
 <link rel="canonical" href="https://tianle.me/2017/11/05/nginxConfig/">
 
@@ -216,7 +216,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-02 16:47:22" itemprop="dateModified" datetime="2020-01-02T16:47:22+08:00">2020-01-02</time>
+                <time title="修改时间：2022-11-07 14:51:58" itemprop="dateModified" datetime="2022-11-07T14:51:58+08:00">2022-11-07</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -276,7 +276,7 @@
 <p>目前很多网站都可以申请SSL免费证书<s>穷</s>，安照步骤来就好了，申请成功后下载证书。</p>
 <h3><span id="在nginx中安装证书">在nginx中安装证书</span><a href="#在nginx中安装证书" class="header-anchor"> </a></h3>
 <p>下载完证书，打开后我们会发现有很多服务器，我们选择nginx。<br>
-<img src="//img.tianle.me/image/20171105/1.jpg" alt="证书截图"><br>
+<img src="//img.niucode.cn/image/20171105/1.jpg" alt="证书截图"><br>
 把里面的两证书文件<code>crt</code>,<code>key</code>上传到服务器的任意路径，如：<code>~/ssl/</code></p>
 <h3><span id="修改配置文件">修改配置文件</span><a href="#修改配置文件" class="header-anchor"> </a></h3>
 <p>同样，在server里面加入如下：</p>

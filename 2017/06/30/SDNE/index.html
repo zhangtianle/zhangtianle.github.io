@@ -29,17 +29,17 @@
 <meta property="og:site_name" content="Niu Code">
 <meta property="og:description" content="Structural Deep Network Embedding 论文阅读Structural Deep Network Embedding 本文的PDF版深层网络结构嵌入 这学期选了非线性电路与系统，最近又在做网络表示的相关研究，特将平时看过比较好的论文写一写，和大家分享一下。 简介 信息网络在现实世界中普遍存在，例如航空公司网络，出版物网络，通信网络和万维网。这些信息网络的规模从几百个节点到">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://img.tianle.me/image/20170630/1.png">
-<meta property="og:image" content="https://img.tianle.me/image/20170630/2.png">
-<meta property="og:image" content="https://img.tianle.me/image/20170630/3.png">
-<meta property="og:image" content="https://img.tianle.me/image/20170630/4.png">
-<meta property="og:image" content="https://img.tianle.me/image/20170630/5.png">
-<meta property="og:image" content="https://img.tianle.me/image/20170630/6.png">
-<meta property="og:updated_time" content="2020-01-02T08:47:22.674Z">
+<meta property="og:image" content="https://img.niucode.cn/image/20170630/1.png">
+<meta property="og:image" content="https://img.niucode.cn/image/20170630/2.png">
+<meta property="og:image" content="https://img.niucode.cn/image/20170630/3.png">
+<meta property="og:image" content="https://img.niucode.cn/image/20170630/4.png">
+<meta property="og:image" content="https://img.niucode.cn/image/20170630/5.png">
+<meta property="og:image" content="https://img.niucode.cn/image/20170630/6.png">
+<meta property="og:updated_time" content="2022-11-07T06:51:58.375Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深层网络结构嵌入">
 <meta name="twitter:description" content="Structural Deep Network Embedding 论文阅读Structural Deep Network Embedding 本文的PDF版深层网络结构嵌入 这学期选了非线性电路与系统，最近又在做网络表示的相关研究，特将平时看过比较好的论文写一写，和大家分享一下。 简介 信息网络在现实世界中普遍存在，例如航空公司网络，出版物网络，通信网络和万维网。这些信息网络的规模从几百个节点到">
-<meta name="twitter:image" content="https://img.tianle.me/image/20170630/1.png">
+<meta name="twitter:image" content="https://img.niucode.cn/image/20170630/1.png">
 
 <link rel="canonical" href="https://tianle.me/2017/06/30/SDNE/">
 
@@ -221,7 +221,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-02 16:47:22" itemprop="dateModified" datetime="2020-01-02T16:47:22+08:00">2020-01-02</time>
+                <time title="修改时间：2022-11-07 14:51:58" itemprop="dateModified" datetime="2022-11-07T14:51:58+08:00">2022-11-07</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -260,7 +260,7 @@
       
         <h1><span id="structural-deep-network-embedding">Structural Deep Network Embedding</span><a href="#structural-deep-network-embedding" class="header-anchor"> </a></h1>
 <p>论文阅读<a href="http://dl.acm.org/citation.cfm?id=2939753" target="_blank" rel="noopener">Structural Deep Network Embedding</a><br>
-本文的PDF版<a href="//img.tianle.me/image/20170630/web.pdf">深层网络结构嵌入</a><br>
+本文的PDF版<a href="//img.niucode.cn/image/20170630/web.pdf">深层网络结构嵌入</a><br>
 这学期选了非线性电路与系统，最近又在做网络表示的相关研究，特将平时看过比较好的论文写一写，和大家分享一下。</p>
 <h2><span id="简介">简介</span><a href="#简介" class="header-anchor"> </a></h2>
 <p>信息网络在现实世界中普遍存在，例如航空公司网络，出版物网络，通信网络和万维网。这些信息网络的规模从几百个节点到数百万和数十亿个节点不等。大规模信息网络的分析在学术界和工业界引起越来越多的关注。本文研究的是将信息网络嵌入到低维空间的问题，其中每个顶点都表示为一个低维向量。这种低维嵌入在各种应用中非常有用，如可视化，节点分类，链路预测和选择推荐。</p>
@@ -268,7 +268,7 @@
 <p>网络嵌入目前依旧面临许多挑战。（1）<strong>高维且非线性</strong>，深层的网络结构特征通常是非线性且高维的。因此，如何去描述学习这种高维非线性的特征是非常具有挑战性的。（2）<strong>结构保持</strong>，为了能够将结果应用到一些具体的网络分析任务中，网络嵌入方法需要能够将网络结构较好的保存下来，但是隐藏的网络结构是非常复杂并且难以发现的。节点的特性往往依赖于其局部和全局的网络结构。（3）<strong>稀疏性</strong>，真实世界中的大部分网络都是稀疏的，只能够利用极少数已发现的关系连接，因此还远远不能依此得到满意的效果。<br>
 近些年来，许多网络嵌入的方法相继被提出，它们采用了一些浅显的模型，比如说：IsoMAP，Laplacian Eigenmap(LE)，Line。由于这些模型的局限性，它们很难获得网络高维的非线性特征。为了解决这个难题，本文提出了深层模型来学习网络中的节点表示。我们受深度学习的启发，因为其展现出了强大的表示学习能力，能够从复杂的网络中学习特征。它已经在图像、文本、语音等方面取得了卓越的成绩。特别的，我们提出的模型设计了多层的网络结构，这些结构是由许多非线性函数构成，能够将网络数据映射到隐藏的非线性空间中，从而挖掘出网络的非线性结构。<br>
 为了处理网络结构保存以及稀疏性问题，我们把一阶相似度和二阶相似度相结合，并融于学习过程中。一阶相似度是两个顶点之间的局部点对的邻近度，但由于网络的稀疏性，许多真实存在的边可能缺失，因此，一阶相似度不足以表示网络结构。因此我们更进一步地提出了二阶相似度，一对顶点之间的接近程度表示在网络中其邻域网络结构之间的相似性。通过一阶相似度和二阶相似度，我们可以很好的捕获网络的局部特性与全局特性。为了保证网络的局部和全局特性在我们的模型中有较好的表示，我们提出了一种半监督的结构，其中，无监督部分重构了二阶相似度，以保持全局网络结构。而有监督的部分利用一阶相似度作为监督信息来保存网络的全局结构。因此，所学的表示能够很好的保存网络的局部和全局结构。此外，从图1可以看出，在许多网络中二阶相似度邻近点对的数目比一阶相似度多很多。由此可以得到，二阶相似度的引入能够在描述网络结构方面提供更多的信息。因此，我们的方法对稀疏网络是鲁棒的。<br>
-<img src="//img.tianle.me/image/20170630/1.png" alt="图一"><br>
+<img src="//img.niucode.cn/image/20170630/1.png" alt="图一"><br>
 图1</p>
 <h3><span id="主要贡献">主要贡献</span><a href="#主要贡献" class="header-anchor"> </a></h3>
 <ol>
@@ -307,7 +307,7 @@ ${r_{{v_i}}}$是点${v_i}$的向量表征, ${c_{{v_i}}}$是点${v_i}$上下文�
 <h3><span id="snde模型">SNDE模型</span><a href="#snde模型" class="header-anchor"> </a></h3>
 <h4><span id="算法框架">算法框架</span><a href="#算法框架" class="header-anchor"> </a></h4>
 <p>在本篇文章中，我们提出了一个半监督的网络嵌入深度框架，整体框架如图2所示。具体来说，为了捕捉高维非线性的网络结构，我们提出了一个深层的体系结构，它由多个非线性映射函数组成，将输入数据映射到一个高维非线性的隐藏空间，以捕获网络结构。为了解决网络结构保持和稀疏性问题，我们提出了一个半监督模型来利用一阶和二阶相似度。对于每个顶点，我们都可以得到它的邻域。因此，我们设计了无监督的组件来保持二阶相似度，并重建每个顶点的邻域结构。同时，对节点的一部分，我们可以获得他们的一阶相似度。因此，我们设计了有监督的组件，利用一阶相似度作为监督信息来改进隐藏空间中的表示。通过联合优化所提出的半监督深度模型，SDNE可以保持高维的非线性网络结构，保证稀疏网络的健壮性。在接下来的部分中，我们将详细介绍如何实现半监督的深度模型。<br>
-<img src="//img.tianle.me/image/20170630/2.png" alt="图2"><br>
+<img src="//img.niucode.cn/image/20170630/2.png" alt="图2"><br>
 图2.网络整体结构</p>
 <h3><span id="损失函数">损失函数</span><a href="#损失函数" class="header-anchor"> </a></h3>
 <p>我们首先描述无监督组件如何利用二阶近似保持全局网络结构。<br>
@@ -417,18 +417,18 @@ $$Micro - F1 = \frac{{2*\Pr *R}}{{\Pr  + R}}$$
 <h3><span id="实验结果">实验结果</span><a href="#实验结果" class="header-anchor"> </a></h3>
 <h4><span id="多标签分类">多标签分类</span><a href="#多标签分类" class="header-anchor"> </a></h4>
 <p>我们通过本实验中的多标签分类任务来评估不同网络表示的有效性。顶点的表示是从网络嵌入方法生成的，并被用作将每个顶点分成一组标签的特征。具体来说，我们采用LIBLINEAR软件包来训练分类器。训练分类器时，我们随机抽取标签节点的一部分作为训练数据，其余作为测试。对于BLOGCATALOG，我们随机抽取10％至90％的顶点作为训练样本，并使用剩余顶点来测试性能。对于FLICKR和YOUTUBE，我们随机抽取1％至10％的顶点作为训练样本，并使用剩余顶点来测试性能。另外，我们删除没有在YOUTUBE中被任何类别标记的顶点。我们重复进行5次实验，取Micro-F1和Macro-F1指标的平均值进行度量。结果分别如图3到图5所示。<br>
-<img src="//img.tianle.me/image/20170630/3.png" alt="图3"><br>
+<img src="//img.niucode.cn/image/20170630/3.png" alt="图3"><br>
 图3 .Micro-F1和Macro-F1在BLOGCATALOG上的表现<br>
-<img src="//img.tianle.me/image/20170630/4.png" alt="图4"><br>
+<img src="//img.niucode.cn/image/20170630/4.png" alt="图4"><br>
 图4 .Micro-F1和Macro-F1在FLICKR上的表现<br>
-<img src="//img.tianle.me/image/20170630/5.png" alt="图5"><br>
+<img src="//img.niucode.cn/image/20170630/5.png" alt="图5"><br>
 图5 .Micro-F1和Macro-F1在YOUTUBE上的表现<br>
 在图3到图5中，我们算法的曲线一直高于其他基准算法的曲线。它表明，在多标签分类任务中我们算法学习得到的网络表示比其他算法得到的效果更好。<br>
 在图3（BLOGCATALOG）中，当训练百分比从60％下降到10％时，我们的方法在基准线上的改善幅度更为明显。它表明当标签数据有限时，我们的方法可以比基准算法有更显着的改进。这样的优势对于现实世界的应用尤其重要，因为标记的数据通常很少。<br>
 在大多数情况下，DeepWalk的性能是网络嵌入方法中最差的。原因有两个方面。首先，DeepWalk没有明确的目标函数来捕获网络结构。其次，DeepWalk使用随机游走来获得顶点的邻居，由于随机性而引起了很多噪音，特别是对于度数高的顶点。</p>
 <h4><span id="可视化">可视化</span><a href="#可视化" class="header-anchor"> </a></h4>
 <p>网络嵌入的另一个重要应用是在二维空间上生成网络的可视化。对此我们在20-NEWSGROUP网络进行可视化的实验。我们使用不同网络嵌入方法学习的低维网络表示作为可视化工具t-SNE的输入。因此，每个新闻组文档被映射为二维向量。然后我们可以将每个向量可视化为二维空间上的一个点。对于被标记为不同类别的文档，我们在对应的点上使用不同的颜色。因此，良好的可视化结果能让相同颜色的点彼此靠近。可视化结果如图6所示。<br>
-<img src="//img.tianle.me/image/20170630/6.png" alt="图6"><br>
+<img src="//img.niucode.cn/image/20170630/6.png" alt="图6"><br>
 图6.  20-NEWSGROUP的可视化<br>
 每个点表示一个文档。点的颜色表示文档的类别。蓝色表示rec.sport.baseball的主题，红色表示comp.graphics的主题，绿色表示talk.politics.guns的主题。<br>
 从图7可以看出，LE和DeepWalk的结果并不理想，属于不同类别的点相互混合。对于LINE，形成不同类别的群集。然而，在中心部分，不同类别的文件仍然相互混合。对于GraRep，结果看起来更好，因为相同颜色的点分割成分组，但是，每个群体的边界不是很清楚。显然，SDNE的可视化效果在群体分离和边界方面都表现最好。</p>

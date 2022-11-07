@@ -29,12 +29,12 @@
 <meta property="og:site_name" content="Niu Code">
 <meta property="og:description" content="连续撸了一整个清明假期的挑战赛代码终于结束了。作为比赛的最后，做个小小的总结。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://img.tianle.me/image/20170406/2.png">
-<meta property="og:updated_time" content="2020-01-02T08:47:22.676Z">
+<meta property="og:image" content="https://img.niucode.cn/image/20170406/2.png">
+<meta property="og:updated_time" content="2022-11-07T06:51:58.393Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="2017华为软件精英挑战赛心得">
 <meta name="twitter:description" content="连续撸了一整个清明假期的挑战赛代码终于结束了。作为比赛的最后，做个小小的总结。">
-<meta name="twitter:image" content="https://img.tianle.me/image/20170406/2.png">
+<meta name="twitter:image" content="https://img.niucode.cn/image/20170406/2.png">
 
 <link rel="canonical" href="https://tianle.me/2017/04/06/huawei2017/">
 
@@ -216,7 +216,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-02 16:47:22" itemprop="dateModified" datetime="2020-01-02T16:47:22+08:00">2020-01-02</time>
+                <time title="修改时间：2022-11-07 14:51:58" itemprop="dateModified" datetime="2022-11-07T14:51:58+08:00">2022-11-07</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -264,15 +264,15 @@
 <li>团队的互相协助，是在比赛中陷入僵局时的解药。</li>
 </ol>
 <h3><span id="题目">题目</span><a href="#题目" class="header-anchor"> </a></h3>
-<p><a href="https://img.tianle.me/image/20170406/huawei2017.pdf" target="_blank" rel="noopener">【PDF】赛题</a></p>
+<p><a href="https://img.niucode.cn/image/20170406/huawei2017.pdf" target="_blank" rel="noopener">【PDF】赛题</a></p>
 <h3><span id="求解思路">求解思路</span><a href="#求解思路" class="header-anchor"> </a></h3>
 <p>基本思路是最小费用流+遗传<br>
 在刚看到题目的时候，很容易发现这是一个最优化问题，而且属于NP-难问题。因此我第一个想法就是，采用遗传或者粒子群算法进行求解，目标函数根据题意很快就可以写出，我们使用费用函数即可，但是却不知道怎么个编码，对服务器编码 or 网络流编码 or both。<br>
 直到我找到了最小费用最大流算法，使用该算法，输入服务器节点，即可计算出从服务器到满足各个消费节点需求的最小费用网络流路径。这样，结合第一个思路，算法的整体框架就很明确了。我们先通过遗传算法，产生一堆服务器节点，然后将这些服务器节点输入到最小费用流算法中，得出各条路径，通过路径和服务器信息我们既可以得出该方案下的网络费用，将费用作为遗传算法的适应度函数，再使用遗传算法中的变异、交叉、选择等操作，选出优秀的染色体，然后返回最小费用流算法，如此迭代循环。下面展示算法的流程图。<br>
-<img src="//img.tianle.me/image/20170406/2.png" alt="liuchengtu"></p>
+<img src="//img.niucode.cn/image/20170406/2.png" alt="liuchengtu"></p>
 <h3><span id="最大流-最小费用算法">最大流、最小费用算法</span><a href="#最大流-最小费用算法" class="header-anchor"> </a></h3>
 <p>算法的具体过程这里我就不展开了，放上比赛时，我们参考的一些文档与网页。<br>
-<a href="https://img.tianle.me/image/20170406/11_NF_3.pdf" target="_blank" rel="noopener">【PDF】网络流的应用</a><br>
+<a href="https://img.niucode.cn/image/20170406/11_NF_3.pdf" target="_blank" rel="noopener">【PDF】网络流的应用</a><br>
 <a href="https://riteme.github.io/blog/2016-2-2/mincost-maxflow.html" target="_blank" rel="noopener">最小费用最大流</a><br>
 <a href="https://artofproblemsolving.com/community/c1368h1020435__zkw" target="_blank" rel="noopener">从入门到精通: 最小费用流的“zkw算法”</a></p>
 <h3><span id="spfa算法">SPFA算法</span><a href="#spfa算法" class="header-anchor"> </a></h3>

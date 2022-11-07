@@ -29,14 +29,14 @@
 <meta property="og:site_name" content="Niu Code">
 <meta property="og:description" content="为了加速TensorFlow的计算，我们采用TensorFlow的GUP版本。其需要CUDA和cuDNN，本文将以Ubuntu为例。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://img.tianle.me/image/20170201/1.png">
-<meta property="og:image" content="https://img.tianle.me/image/20170201/2.png">
-<meta property="og:image" content="https://img.tianle.me/image/20170201/3.png">
-<meta property="og:updated_time" content="2020-01-02T08:47:22.676Z">
+<meta property="og:image" content="https://img.niucode.cn/image/20170201/1.png">
+<meta property="og:image" content="https://img.niucode.cn/image/20170201/2.png">
+<meta property="og:image" content="https://img.niucode.cn/image/20170201/3.png">
+<meta property="og:updated_time" content="2022-11-07T06:51:58.394Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用TensorFlow-GUP并在Ubuntu上安装CUDA cuDNN">
 <meta name="twitter:description" content="为了加速TensorFlow的计算，我们采用TensorFlow的GUP版本。其需要CUDA和cuDNN，本文将以Ubuntu为例。">
-<meta name="twitter:image" content="https://img.tianle.me/image/20170201/1.png">
+<meta name="twitter:image" content="https://img.niucode.cn/image/20170201/1.png">
 
 <link rel="canonical" href="https://tianle.me/2017/02/01/installCUDA/">
 
@@ -218,7 +218,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-02 16:47:22" itemprop="dateModified" datetime="2020-01-02T16:47:22+08:00">2020-01-02</time>
+                <time title="修改时间：2022-11-07 14:51:58" itemprop="dateModified" datetime="2022-11-07T14:51:58+08:00">2022-11-07</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -269,10 +269,10 @@ GPU： GeForce GT 635M</p>
 <h3><span id="cuda安装步骤">CUDA安装步骤</span><a href="#cuda安装步骤" class="header-anchor"> </a></h3>
 <h4><span id="安装显卡驱动">安装显卡驱动</span><a href="#安装显卡驱动" class="header-anchor"> </a></h4>
 <p>System Setting --&gt; Driver Manager 选择合适的驱动<br>
-<img src="//img.tianle.me/image/20170201/1.png" alt="driver manger"></p>
+<img src="//img.niucode.cn/image/20170201/1.png" alt="driver manger"></p>
 <h4><span id="下载cuda">下载CUDA</span><a href="#下载cuda" class="header-anchor"> </a></h4>
 <p><a href="https://developer.nvidia.com/cuda-downloads" target="_blank" rel="noopener">点击此处进行下载</a><br>
-<img src="//img.tianle.me/image/20170201/2.png" alt="cuda downloads"></p>
+<img src="//img.niucode.cn/image/20170201/2.png" alt="cuda downloads"></p>
 <h4><span id="运行安装cuda">运行安装CUDA</span><a href="#运行安装cuda" class="header-anchor"> </a></h4>
 <p>进入刚刚下载的目录，并在终端中运行<br>
 Run <code>sudo sh cuda_8.0.44_linux.run</code><br>
@@ -311,7 +311,7 @@ Follow the command-line prompts<br>
 </blockquote>
 <p>注册完账号后我们选择下载<br>
 选择<code>cuDNN v5.1 Library for Linux</code><br>
-<img src="//img.tianle.me/image/20170201/3.png" alt="cuDNN downloads"><br>
+<img src="//img.niucode.cn/image/20170201/3.png" alt="cuDNN downloads"><br>
 安装cuDNN非常简单，我们只需解压下载的包，并将其拷贝到<code>lib64</code>和<code>include</code>这两个目录即可</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ cd ~</span><br><span class="line">$ tar -zxf cudnn-8.0-linux-x64-v5.1.tgz</span><br><span class="line">$ cd cuda</span><br><span class="line">$ sudo cp lib64/* /usr/local/cuda/lib64/</span><br><span class="line">$ sudo cp include/* /usr/local/cuda/include/</span><br></pre></td></tr></table></figure>
 <p>恭喜你！ cuDNN 已经安装成功</p>

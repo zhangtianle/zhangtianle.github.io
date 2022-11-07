@@ -29,18 +29,18 @@
 <meta property="og:site_name" content="Niu Code">
 <meta property="og:description" content="在一般的机器学习任务中，已经有很多的数据预处理方法。本文要介绍的数据预处理方法是针对聚类算法。 在聚类中，通常将样本的所有特征数据组合成一个数值，然后计算两个样本之间的相似性。组合数据要求不同的特征具有相同的量纲。本文将讨论如何规范化、转换和创建分位数（normalizing, transforming, and creating quantiles），并讨论为什么分位数是转换任何数据分布的最佳默">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://img.tianle.me/image/20190514/NormalizeData.png">
-<meta property="og:image" content="https://img.tianle.me/image/20190514/LeftSkew.png">
-<meta property="og:image" content="https://img.tianle.me/image/20190514/NormalDistribution.png">
-<meta property="og:image" content="https://img.tianle.me/image/20190514/Preprocess.png">
-<meta property="og:image" content="https://img.tianle.me/image/20190514/LogTransform.png">
-<meta property="og:image" content="https://img.tianle.me/image/20190514/Quantize.png">
-<meta property="og:image" content="https://img.tianle.me/image/20190514/Distribution_Processing_B.png">
-<meta property="og:updated_time" content="2020-01-02T08:47:22.680Z">
+<meta property="og:image" content="https://img.niucode.cn/image/20190514/NormalizeData.png">
+<meta property="og:image" content="https://img.niucode.cn/image/20190514/LeftSkew.png">
+<meta property="og:image" content="https://img.niucode.cn/image/20190514/NormalDistribution.png">
+<meta property="og:image" content="https://img.niucode.cn/image/20190514/Preprocess.png">
+<meta property="og:image" content="https://img.niucode.cn/image/20190514/LogTransform.png">
+<meta property="og:image" content="https://img.niucode.cn/image/20190514/Quantize.png">
+<meta property="og:image" content="https://img.niucode.cn/image/20190514/Distribution_Processing_B.png">
+<meta property="og:updated_time" content="2022-11-07T06:51:58.337Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="聚类算法中的数据预处理">
 <meta name="twitter:description" content="在一般的机器学习任务中，已经有很多的数据预处理方法。本文要介绍的数据预处理方法是针对聚类算法。 在聚类中，通常将样本的所有特征数据组合成一个数值，然后计算两个样本之间的相似性。组合数据要求不同的特征具有相同的量纲。本文将讨论如何规范化、转换和创建分位数（normalizing, transforming, and creating quantiles），并讨论为什么分位数是转换任何数据分布的最佳默">
-<meta name="twitter:image" content="https://img.tianle.me/image/20190514/NormalizeData.png">
+<meta name="twitter:image" content="https://img.niucode.cn/image/20190514/NormalizeData.png">
 
 <link rel="canonical" href="https://tianle.me/2019/05/14/prepare-data-clustering/">
 
@@ -222,7 +222,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-02 16:47:22" itemprop="dateModified" datetime="2020-01-02T16:47:22+08:00">2020-01-02</time>
+                <time title="修改时间：2022-11-07 14:51:58" itemprop="dateModified" datetime="2022-11-07T14:51:58+08:00">2022-11-07</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -273,7 +273,7 @@ $$\begin{array}{*{20}{c}}
   {\sigma  = {\text{standard deviation}}} 
 \end{array}$$ 
 <p>让我们看看数据在标准化前后相似性变化的例子。在图1中发现红色与蓝色更相似，而不是黄色。这是因为，x轴和y轴上他们数据特征的量纲不同。因此，直接观察到的相似性可能是未经缩放的。使用z-score进行规范化后，所有特征具有相同的尺度。这时你会发现红色实际上更像黄色。因此，在对数据进行规范化之后，可以更准确地计算相似性。</p>
-<p><img src="//img.tianle.me/image/20190514/NormalizeData.png" alt><br>
+<p><img src="//img.niucode.cn/image/20190514/NormalizeData.png" alt><br>
 图1:规范化前后的特征数据比较。</p>
 <p>综上所述，当数据有如下之一情况时，推荐使用规范化：</p>
 <ol>
@@ -282,19 +282,19 @@ $$\begin{array}{*{20}{c}}
 </ol>
 <h2><span id="log转换">Log转换</span><a href="#log转换" class="header-anchor"> </a></h2>
 <p>当数据分布表现为长尾分布时，如图所示，红点看起来与黄点更加相似。
-<img src="//img.tianle.me/image/20190514/LeftSkew.png" alt><br>
+<img src="//img.niucode.cn/image/20190514/LeftSkew.png" alt><br>
 图2：幂率分布</p>
 <p>我们对图2幂率分布的数据应用log转换，让数据分布变得更加平滑。结果如图3所示，红色目前与蓝色更相似。</p>
-<p><img src="//img.tianle.me/image/20190514/NormalDistribution.png" alt><br>
+<p><img src="//img.niucode.cn/image/20190514/NormalDistribution.png" alt><br>
 图3：变化后的正态分布</p>
 <h2><span id="分位数">分位数</span><a href="#分位数" class="header-anchor"> </a></h2>
 <p>规范化和log转换依赖于特定的数据分布。如果数据不符合高斯分布或幂律分布怎么办，是否有适用于任何分布的数据预处理方法。</p>
 <p>尝试对如下分布进行预处理<br>
-<img src="//img.tianle.me/image/20190514/Preprocess.png" alt><br>
+<img src="//img.niucode.cn/image/20190514/Preprocess.png" alt><br>
 图4：无法归类的数据分布</p>
 <p>直观地说，如果两个样本之间只有少数几个样本，那么无论它们的值如何，这两个样本是相似的。相反，如果这两个样本之间有很多个其他样本，那么这两个样本就不那么相似了。因此，两个样本之间的相似性随着样本间的样本数量的增加而减少。</p>
 <p>如果对数据进行规范化（normalizing）只会复制数据分布，因为规范化是一个线性变换。应用log转换也不能反映相似性的原理，如图5所示。
-<img src="//img.tianle.me/image/20190514/LogTransform.png" alt><br>
+<img src="//img.niucode.cn/image/20190514/LogTransform.png" alt><br>
 图5：对数据分布进行log转换</p>
 <p>将数据划分为不同的区间，每个区间包含相同数量的样本。这些区间的边界称为分位数。</p>
 <p>执行以下步骤将数据转换为分位数:</p>
@@ -304,7 +304,7 @@ $$\begin{array}{*{20}{c}}
 <li>用样本所在区间的索引替代原先的样本值。</li>
 <li>将索引值缩放到[0,1]，使索引与其他特征的数据范围相同。</li>
 </ol>
-<p><img src="//img.tianle.me/image/20190514/Quantize.png" alt><br>
+<p><img src="//img.niucode.cn/image/20190514/Quantize.png" alt><br>
 图6：使用分位数转换后的数据分布</p>
 <p>将数据转换为分位数后，两个样本之间的相似性与这两个样本之间的样本数量成反比。在数学上，x是数据集中的任意一个样本：</p>
 $$sim(A,B) \approx 1 - |{\text{prob}}[x > A] - {\text{prob}}[x > B]|$$ 
@@ -312,7 +312,7 @@ $$sim(A,B) \approx 1 - |{\text{quantile}}(A) - {\text{quantile}}(B)|$$
 <p>分位数是转换数据的最佳默认选择。然而，要建立可靠的底层数据分布的分位数指标，需要大量数据支撑。以经验来说，要建立$n$个分位数指标，至少需要$10n$个样本。如果没有足够的数据，请仍旧使用标准化（normalization）。</p>
 <p>注意：
 对于如下数据分布，应当使用分位数处理，因为它不属于幂率分布，也不属于某个标准的数据分布形式<br>
-<img src="//img.tianle.me/image/20190514/Distribution_Processing_B.png" alt></p>
+<img src="//img.niucode.cn/image/20190514/Distribution_Processing_B.png" alt></p>
 <h2><span id="参考">参考</span><a href="#参考" class="header-anchor"> </a></h2>
 <p>本文主要内容翻译自<a href="https://developers.google.cn/machine-learning/clustering/prepare-data" target="_blank" rel="noopener">谷歌机器学习教程Clustering in Machine Learning-PrepareData</a></p>
 

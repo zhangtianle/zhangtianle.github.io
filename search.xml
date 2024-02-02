@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>我的2022</title>
+    <url>/2023/01/03/my2022/</url>
+    <content><![CDATA[<p>回看年度总结，上一次还是2019刚毕业那会儿写的，转眼间就到了2022年，中间断了两年</p>
+<a id="more"></a>]]></content>
+      <categories>
+        <category>生活记录</category>
+      </categories>
+      <tags>
+        <tag>随想</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>论文笔记-HGT Heterogeneous graph transformer</title>
     <url>/2021/06/12/hgt-reading/</url>
     <content><![CDATA[<p>核心思想：利用异构图的元关系来参数化异构相互注意力、消息传递和传播步骤的权重矩阵，从而获取不同类型节点的表示。</p>

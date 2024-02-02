@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>Niu Code</title>
+  <title>南山小马</title>
   
   <subtitle>南山小马</subtitle>
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://tianle.me/"/>
-  <updated>2022-11-07T06:53:38.958Z</updated>
+  <updated>2023-01-03T12:15:40.735Z</updated>
   <id>https://tianle.me/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>我的2022</title>
+    <link href="https://tianle.me/2023/01/03/my2022/"/>
+    <id>https://tianle.me/2023/01/03/my2022/</id>
+    <published>2023-01-03T12:13:00.000Z</published>
+    <updated>2023-01-03T12:15:40.735Z</updated>
+    
+    <content type="html"><![CDATA[<p>回看年度总结，上一次还是2019刚毕业那会儿写的，转眼间就到了2022年，中间断了两年</p><a id="more"></a>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;回看年度总结，上一次还是2019刚毕业那会儿写的，转眼间就到了2022年，中间断了两年&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="生活记录" scheme="https://tianle.me/categories/%E7%94%9F%E6%B4%BB%E8%AE%B0%E5%BD%95/"/>
+    
+    
+      <category term="随想" scheme="https://tianle.me/tags/%E9%9A%8F%E6%83%B3/"/>
+    
+  </entry>
   
   <entry>
     <title>论文笔记-HGT Heterogeneous graph transformer</title>
@@ -528,34 +550,6 @@ Spring Boot相对于传统的SSM(Spring MVC + Mybatis + Spring)框架用起来�
       <category term="java" scheme="https://tianle.me/tags/java/"/>
     
       <category term="虚拟机" scheme="https://tianle.me/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>动态规划</title>
-    <link href="https://tianle.me/2018/03/28/dynamic-programming/"/>
-    <id>https://tianle.me/2018/03/28/dynamic-programming/</id>
-    <published>2018-03-28T06:49:43.000Z</published>
-    <updated>2022-11-07T06:51:58.337Z</updated>
-    
-    <content type="html"><![CDATA[<p>动态规划是一种算法设计技术，是一种使多阶段决策过程最优的通用方法。</p><a id="more"></a><p>如果问题是由<strong>交叠</strong>的子问题构成的，我们就可以用动态规划技术来解决它。一般来说这样的子问题出现在对给定问题求解的递推关系中，这个递推关系中包含了相同类型的更小问题的解。<br>动态规划法建议，与其对交叠的子问题一次又一次地求解，还不如对每个较小的子问题只求解一次并把结果记录在表中，这样就可以从表中得出原始问题的解。<br>动态规划背后的基本思想非常简单。大致上，若要解一个给定问题，我们需要解其不同部分（即子问题），再合并子问题的解以得出原问题的解。</p><h2><span id="币值最大化问题">币值最大化问题</span><a href="#币值最大化问题" class="header-anchor"> </a></h2><p>问题：给定一排n个硬币，其面值均为整数c1, c2, …, cn, 这些整数并不一定两两不同。问如何选择硬币，使得在其原始位置互不相邻的条件下，所选硬币的总金额最大。</p><p>令：F(n)为最大可选金额，该题可分为两种情况，包括最后一枚硬币和不包括最后一枚硬币。第一种情况：可选硬币的最大金额为${c_n} + F\left( {n - 2} \right)$，即最后一枚硬币的面值加上之前的$n-2$枚硬币的可选最大金额。第二种情况，可选的最大金额为$F\left( {n - 1} \right)$，因此得到递推方程：</p>$$F\left( n \right) = \max \left\{ {{c_n} + F\left( {n - 2} \right),F\left( {n - 1} \right)} \right\},n > 1$$$$F\left( 0 \right) = 0,F\left( 1 \right) = {c_1}$$<p>算法：</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">maxCoinValue</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 输入的值</span></span><br><span class="line">    <span class="keyword">int</span>[] coins = <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;<span class="number">5</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">10</span>, <span class="number">6</span>, <span class="number">2</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span>[] f = <span class="keyword">new</span> <span class="keyword">int</span>[coins.length];</span><br><span class="line">    f[<span class="number">0</span>] = coins[<span class="number">0</span>];</span><br><span class="line">    f[<span class="number">1</span>] = Math.max(coins[<span class="number">0</span>], coins[<span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">2</span>; i &lt; coins.length; i++) &#123;</span><br><span class="line">        f[i] = Math.max(f[i - <span class="number">2</span>] + coins[i], f[i]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    System.out.println(f[f.length - <span class="number">1</span>]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2><span id="找零问题">找零问题</span><a href="#找零问题" class="header-anchor"> </a></h2><p>需找零金额为$n$，最少要用面值为${d_1} &lt; {d_2} &lt;  \cdots  &lt; {d_m}$的硬币？</p><p>设F(n)为总金额为n的数量最小的硬币数目，为方便起见定义F(n)=0. 获得n的途径只能是：在总金额为$n - {d_j}$的一堆硬币上加入一个面值为${d_j}$的硬币，并且$n \geqslant {d_j}$。因此，我们只需要考虑所有满足上述要求的${d_j}$并选择使得$F(n - {d_j}) + 1$最小的${d_j}$即可。于是可得递归公式：</p>$$\left\{ \begin{gathered}  F(n) = \mathop {\min }\limits_{j:n \geqslant {d_j}} \{ F(n - {d_j})\}  + 1,n > 0 \hfill \\  F(0) = 0 \hfill \\ \end{gathered}  \right.$$<p>算法：</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">changeMaking</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 输入数据</span></span><br><span class="line">    <span class="keyword">int</span>[] coins = <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;<span class="number">1</span>, <span class="number">3</span>, <span class="number">4</span>&#125;;</span><br><span class="line">    <span class="keyword">int</span> n = <span class="number">6</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// f(n) 为总金额为n的数量最小的硬币数目</span></span><br><span class="line">    <span class="keyword">int</span>[] f = <span class="keyword">new</span> <span class="keyword">int</span>[n + <span class="number">1</span>];</span><br><span class="line">    f[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">        <span class="keyword">int</span> min = Integer.MAX_VALUE;</span><br><span class="line">        <span class="keyword">int</span> j = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (j &lt; coins.length &amp;&amp; i &gt;= coins[j]) &#123;</span><br><span class="line">            min = Math.min(f[i - coins[j]], min);</span><br><span class="line">            j++;</span><br><span class="line">        &#125;</span><br><span class="line">        f[i] = min + <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println(f[n]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2><span id="硬币收集问题">硬币收集问题</span><a href="#硬币收集问题" class="header-anchor"> </a></h2><p>在n*m格木板中放有一些硬币，每格的硬币数目最多为一个，在木板左上方的一个机器人需要收集尽可能多的硬币并把它们带到右下方的单元格。每一步，机器人可以从当前的位置向右移动一格或向下移动一格。当机器人遇到一个有硬币的单元格时，就会将这枚硬币收集起来。设计一个算法找出机器人能找到的最大硬币数并给出相应的路径。<br><img src="//img.niucode.cn/image/20180328/1.png" alt="硬币收集问题1"><br><img src="//img.niucode.cn/image/20180328/2.png" alt="硬币收集问题2"></p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">robotCoinCollection</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 输入数据</span></span><br><span class="line">    <span class="keyword">int</span>[][] coins = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">5</span>][<span class="number">6</span>];</span><br><span class="line">    coins[<span class="number">0</span>][<span class="number">4</span>] = <span class="number">1</span>;</span><br><span class="line">    coins[<span class="number">1</span>][<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line">    coins[<span class="number">1</span>][<span class="number">3</span>] = <span class="number">1</span>;</span><br><span class="line">    coins[<span class="number">2</span>][<span class="number">3</span>] = <span class="number">1</span>;</span><br><span class="line">    coins[<span class="number">2</span>][<span class="number">5</span>] = <span class="number">1</span>;</span><br><span class="line">    coins[<span class="number">3</span>][<span class="number">2</span>] = <span class="number">1</span>;</span><br><span class="line">    coins[<span class="number">3</span>][<span class="number">5</span>] = <span class="number">1</span>;</span><br><span class="line">    coins[<span class="number">4</span>][<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">    coins[<span class="number">4</span>][<span class="number">4</span>] = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// f(i,j) 为机器人截止到 i, j 单元格能够收集到的最大硬币数</span></span><br><span class="line">    <span class="keyword">int</span>[][] f = <span class="keyword">new</span> <span class="keyword">int</span>[coins.length][coins[<span class="number">0</span>].length];</span><br><span class="line">    f[<span class="number">0</span>][<span class="number">0</span>] = coins[<span class="number">0</span>][<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; coins[<span class="number">0</span>].length; i++) &#123;</span><br><span class="line">        f[<span class="number">0</span>][i] = f[<span class="number">0</span>][i - <span class="number">1</span>] + coins[<span class="number">0</span>][i];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; coins.length; i++) &#123;</span><br><span class="line">        f[i][<span class="number">0</span>] = f[i - <span class="number">1</span>][<span class="number">0</span>] + coins[i][<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt; coins[<span class="number">0</span>].length; j++) &#123;</span><br><span class="line">            f[i][j] = Math.max(f[i - <span class="number">1</span>][j], f[i][j - <span class="number">1</span>]) + coins[i][j];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    System.out.println(f[coins.length - <span class="number">1</span>][coins[<span class="number">0</span>].length - <span class="number">1</span>]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;动态规划是一种算法设计技术，是一种使多阶段决策过程最优的通用方法。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="算法" scheme="https://tianle.me/categories/%E7%AE%97%E6%B3%95/"/>
-    
-    
-      <category term="算法" scheme="https://tianle.me/tags/%E7%AE%97%E6%B3%95/"/>
-    
-      <category term="动态规划" scheme="https://tianle.me/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/"/>
-    
-      <category term="刷题" scheme="https://tianle.me/tags/%E5%88%B7%E9%A2%98/"/>
-    
-      <category term="硬币问题" scheme="https://tianle.me/tags/%E7%A1%AC%E5%B8%81%E9%97%AE%E9%A2%98/"/>
     
   </entry>
   
